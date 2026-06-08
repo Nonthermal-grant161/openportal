@@ -24,13 +24,9 @@
 	},
 	"terminal": {
 		"title": "Terminal",
-		"description": "Run ADB shell commands on your Portal",
-		"placeholder": "Type a command and press Enter…",
-		"welcome": "OpenPortal shell. Type 'help' for tips, 'clear' to reset.",
-		"help": "Runs commands via 'adb shell'. Output is captured when the command finishes (not a live PTY). Use ↑/↓ for history.",
-		"running": "running…",
-		"clearedHint": "Use the history (↑/↓) to recall previous commands.",
-		"exitCode": "exit {{code}}"
+		"description": "A full interactive shell on your Portal",
+		"unsupported": "This device doesn't support an interactive shell",
+		"sessionEnded": "[session ended]"
 	},
 	"logcat": {
 		"title": "Logcat",

@@ -13,7 +13,7 @@ OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB
 - **File browser** — browse, download, upload, and delete files over ADB sync
 - **Screen mirroring** — your Portal screen on the dashboard, controllable with the mouse, with fullscreen and PNG screenshot (real **scrcpy** over H.264/WebCodecs)
 - **Logcat viewer** — live log streaming with tag, priority, and text filters, plus export
-- **Shell terminal** — run ADB shell commands with command history
+- **Shell terminal** — a real interactive PTY (xterm.js): `top`, `vi`, `su`, colors, Ctrl-C, resize
 - **Feature flags editor** — browse and edit `device_config` flags and internal settings (no exploits)
 - **Backup & restore** — export device settings + app list to JSON and restore them
 - **Device settings** — toggle dark mode, block OTA updates, disable package verification, keep screen on
@@ -101,7 +101,7 @@ The UI never imports `@yume-chan/*` directly — all ADB operations go through `
 
 ## Tech stack
 
-React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 7 · react-i18next (en/fr) · sonner · ya-webadb · Biome · PWA (service worker)
+React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 7 · react-i18next (en/fr) · sonner · ya-webadb · xterm.js · Biome · PWA (service worker)
 
 ## TODO
 
@@ -135,7 +135,7 @@ React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 
 ### Phase 3 — Developer tools
 
 - [x] Logcat viewer (real-time log streaming with tag/priority filters)
-- [x] Shell terminal (interactive shell; dependency-free, not xterm.js)
+- [x] Shell terminal (real interactive PTY via xterm.js)
 - [x] Feature flags browser/editor (`device_config` + internal settings)
 - [x] Live screen view (repeated framebuffer)
 - [x] Screen mirroring via scrcpy (H.264 → WebCodecs) with touch control (no audio on Android 10)

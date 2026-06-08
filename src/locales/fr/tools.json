@@ -24,13 +24,9 @@
 	},
 	"terminal": {
 		"title": "Terminal",
-		"description": "Exécutez des commandes shell ADB sur votre Portal",
-		"placeholder": "Tapez une commande puis Entrée…",
-		"welcome": "Shell OpenPortal. Tapez « help » pour des astuces, « clear » pour réinitialiser.",
-		"help": "Exécute les commandes via « adb shell ». La sortie est capturée à la fin de la commande (pas un PTY en direct). Utilisez ↑/↓ pour l'historique.",
-		"running": "en cours…",
-		"clearedHint": "Utilisez l'historique (↑/↓) pour rappeler les commandes précédentes.",
-		"exitCode": "code {{code}}"
+		"description": "Un shell interactif complet sur votre Portal",
+		"unsupported": "Cet appareil ne supporte pas le shell interactif",
+		"sessionEnded": "[session terminée]"
 	},
 	"logcat": {
 		"title": "Logcat",
