@@ -11,7 +11,7 @@ OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB
 - **Drag & drop APK install** — sideload any APK directly from your browser
 - **Installed apps manager** — uninstall, clear data, force stop, inspect permissions
 - **File browser** — browse, download, upload, and delete files over ADB sync
-- **Screen capture & mirroring** — PNG screenshots, a framebuffer live view, and real **scrcpy** mirroring with touch control (H.264 via WebCodecs)
+- **Screen mirroring** — your Portal screen on the dashboard, controllable with the mouse, with fullscreen and PNG screenshot (real **scrcpy** over H.264/WebCodecs)
 - **Logcat viewer** — live log streaming with tag, priority, and text filters, plus export
 - **Shell terminal** — run ADB shell commands with command history
 - **Feature flags editor** — browse and edit `device_config` flags and internal settings (no exploits)
