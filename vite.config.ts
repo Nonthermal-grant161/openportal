@@ -15,5 +15,8 @@ export default defineConfig({
 	},
 	build: {
 		target: "es2022",
+		// The core chunk bundles the ya-webadb ADB/WebUSB stack, which is large
+		// by nature; advanced tools (scrcpy, etc.) are already split out lazily.
+		chunkSizeWarningLimit: 600,
 	},
 });

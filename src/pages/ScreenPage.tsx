@@ -1,12 +1,25 @@
 import { Button, Card, PageHeader } from "@/components/ui/primitives";
 import {
+	AndroidMotionEventAction,
+	type ScrcpySession,
+	isScrcpySupported,
+	startScrcpy,
+} from "@/lib/adb/scrcpy";
+import {
 	canvasToPngBlob,
 	captureScreen,
 	drawScreenshot,
 } from "@/lib/adb/screen";
 import { downloadBlob } from "@/lib/utils/download";
 import { useDeviceStore } from "@/store/device-store";
-import { Camera, Download, Monitor, Play, Square } from "lucide-react";
+import {
+	Camera,
+	Download,
+	Monitor,
+	MonitorPlay,
+	Play,
+	Square,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -20,19 +33,36 @@ export function ScreenPage() {
 	const [hasImage, setHasImage] = useState(false);
 	const [capturing, setCapturing] = useState(false);
 	const [mirroring, setMirroring] = useState(false);
+	const [scrcpyActive, setScrcpyActive] = useState(false);
+	const [scrcpyStarting, setScrcpyStarting] = useState(false);
 	const [fps, setFps] = useState<number>(2);
 
 	const mirroringRef = useRef(false);
+	const scrcpyRef = useRef<ScrcpySession | null>(null);
+	const pointerDownRef = useRef(false);
 	const fpsRef = useRef(fps);
 	fpsRef.current = fps;
 
-	const grab = useCallback(async (): Promise<boolean> => {
-		if (!adb || !canvasRef.current) return false;
+	const scrcpySupported = isScrcpySupported();
+
+	const grab = useCallback(async (): Promise<void> => {
+		if (!adb || !canvasRef.current) return;
 		const shot = await captureScreen(adb);
 		drawScreenshot(canvasRef.current, shot);
 		setHasImage(true);
-		return true;
 	}, [adb]);
+
+	const stopScrcpy = useCallback(async () => {
+		const session = scrcpyRef.current;
+		scrcpyRef.current = null;
+		setScrcpyActive(false);
+		if (session) await session.stop().catch(() => {});
+	}, []);
+
+	const stopMirror = useCallback(() => {
+		mirroringRef.current = false;
+		setMirroring(false);
+	}, []);
 
 	const handleCapture = async () => {
 		setCapturing(true);
@@ -46,11 +76,6 @@ export function ScreenPage() {
 			setCapturing(false);
 		}
 	};
-
-	const stopMirror = useCallback(() => {
-		mirroringRef.current = false;
-		setMirroring(false);
-	}, []);
 
 	const startMirror = useCallback(() => {
 		if (mirroringRef.current) return;
@@ -71,15 +96,72 @@ export function ScreenPage() {
 					return;
 				}
 				const elapsed = performance.now() - startedAt;
-				const wait = Math.max(0, 1000 / fpsRef.current - elapsed);
-				await new Promise((r) => setTimeout(r, wait));
+				await new Promise((r) =>
+					setTimeout(r, Math.max(0, 1000 / fpsRef.current - elapsed)),
+				);
 			}
 		};
 		void loop();
 	}, [grab, stopMirror, t]);
 
-	// Stop the capture loop when leaving the page.
-	useEffect(() => () => stopMirror(), [stopMirror]);
+	const startMirrorScrcpy = async () => {
+		if (!adb || !canvasRef.current || scrcpyRef.current) return;
+		stopMirror();
+		setScrcpyStarting(true);
+		try {
+			const session = await startScrcpy(
+				adb,
+				canvasRef.current,
+				`${import.meta.env.BASE_URL}scrcpy-server`,
+			);
+			scrcpyRef.current = session;
+			setScrcpyActive(true);
+			setHasImage(true);
+		} catch (err) {
+			toast.error(t("screen.scrcpyError"), {
+				description: err instanceof Error ? err.message : undefined,
+			});
+		} finally {
+			setScrcpyStarting(false);
+		}
+	};
+
+	// Tear everything down when leaving the page.
+	useEffect(() => {
+		return () => {
+			mirroringRef.current = false;
+			scrcpyRef.current?.stop().catch(() => {});
+			scrcpyRef.current = null;
+		};
+	}, []);
+
+	const normalized = (e: React.PointerEvent<HTMLCanvasElement>) => {
+		const rect = e.currentTarget.getBoundingClientRect();
+		const nx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+		const ny = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+		return { nx, ny };
+	};
+
+	const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+		if (!scrcpyRef.current) return;
+		pointerDownRef.current = true;
+		e.currentTarget.setPointerCapture(e.pointerId);
+		const { nx, ny } = normalized(e);
+		void scrcpyRef.current.injectTouch(AndroidMotionEventAction.Down, nx, ny);
+	};
+
+	const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+		if (!scrcpyRef.current || !pointerDownRef.current) return;
+		const { nx, ny } = normalized(e);
+		void scrcpyRef.current.injectTouch(AndroidMotionEventAction.Move, nx, ny);
+	};
+
+	const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+		if (!scrcpyRef.current || !pointerDownRef.current) return;
+		pointerDownRef.current = false;
+		const { nx, ny } = normalized(e);
+		void scrcpyRef.current.injectTouch(AndroidMotionEventAction.Up, nx, ny);
+	};
 
 	const handleDownload = async () => {
 		if (!canvasRef.current || !hasImage) return;
@@ -94,6 +176,8 @@ export function ScreenPage() {
 		}
 	};
 
+	const liveBusy = mirroring || scrcpyActive || scrcpyStarting;
+
 	return (
 		<div className="mx-auto max-w-4xl space-y-6">
 			<PageHeader
@@ -107,11 +191,31 @@ export function ScreenPage() {
 						variant="primary"
 						onClick={handleCapture}
 						loading={capturing}
-						disabled={mirroring}
+						disabled={liveBusy}
 					>
 						<Camera className="h-4 w-4" />
 						{t("screen.capture")}
 					</Button>
+
+					{scrcpyActive ? (
+						<Button variant="danger" onClick={stopScrcpy}>
+							<Square className="h-4 w-4" />
+							{t("screen.stopScrcpy")}
+						</Button>
+					) : (
+						<Button
+							variant="secondary"
+							onClick={startMirrorScrcpy}
+							loading={scrcpyStarting}
+							disabled={!scrcpySupported || mirroring}
+							title={
+								scrcpySupported ? undefined : t("screen.scrcpyUnsupported")
+							}
+						>
+							<MonitorPlay className="h-4 w-4" />
+							{t("screen.mirrorScrcpy")}
+						</Button>
+					)}
 
 					{mirroring ? (
 						<Button variant="danger" onClick={stopMirror}>
@@ -119,25 +223,33 @@ export function ScreenPage() {
 							{t("screen.stopMirror")}
 						</Button>
 					) : (
-						<Button variant="secondary" onClick={startMirror}>
+						<Button
+							variant="ghost"
+							onClick={startMirror}
+							disabled={scrcpyActive || scrcpyStarting}
+						>
 							<Play className="h-4 w-4" />
 							{t("screen.startMirror")}
 						</Button>
 					)}
 
 					<div className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
-						<span>{t("screen.refreshRate")}</span>
-						<select
-							value={fps}
-							onChange={(e) => setFps(Number(e.target.value))}
-							className="rounded-md border border-border bg-background px-2 py-1 text-sm"
-						>
-							{FPS_OPTIONS.map((option) => (
-								<option key={option} value={option}>
-									{t("screen.fps", { fps: option })}
-								</option>
-							))}
-						</select>
+						{!scrcpyActive && (
+							<>
+								<span>{t("screen.refreshRate")}</span>
+								<select
+									value={fps}
+									onChange={(e) => setFps(Number(e.target.value))}
+									className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+								>
+									{FPS_OPTIONS.map((option) => (
+										<option key={option} value={option}>
+											{t("screen.fps", { fps: option })}
+										</option>
+									))}
+								</select>
+							</>
+						)}
 						<Button
 							variant="ghost"
 							onClick={handleDownload}
@@ -150,10 +262,14 @@ export function ScreenPage() {
 				</div>
 
 				<div className="flex items-center justify-center overflow-auto rounded-lg border border-border bg-black/40 p-2">
-					{/* Canvas is always mounted so refs are stable; hidden until first frame. */}
 					<canvas
 						ref={canvasRef}
-						className={`max-h-[70vh] w-auto max-w-full rounded ${hasImage ? "" : "hidden"}`}
+						onPointerDown={handlePointerDown}
+						onPointerMove={handlePointerMove}
+						onPointerUp={handlePointerUp}
+						className={`max-h-[70vh] w-auto max-w-full rounded ${
+							hasImage ? "" : "hidden"
+						} ${scrcpyActive ? "cursor-pointer touch-none" : ""}`}
 					/>
 					{!hasImage && (
 						<div className="flex flex-col items-center gap-2 py-20 text-center text-muted-foreground">
@@ -163,6 +279,11 @@ export function ScreenPage() {
 					)}
 				</div>
 
+				{scrcpyActive && (
+					<p className="mt-3 text-xs text-muted-foreground">
+						{t("screen.controlHint")}
+					</p>
+				)}
 				<p className="mt-3 text-xs text-muted-foreground">
 					{t("screen.mirrorNote")}
 				</p>

@@ -11,7 +11,7 @@ OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB
 - **Drag & drop APK install** — sideload any APK directly from your browser
 - **Installed apps manager** — uninstall, clear data, force stop, inspect permissions
 - **File browser** — browse, download, upload, and delete files over ADB sync
-- **Screen capture & live view** — take PNG screenshots or mirror the screen via repeated framebuffer capture
+- **Screen capture & mirroring** — PNG screenshots, a framebuffer live view, and real **scrcpy** mirroring with touch control (H.264 via WebCodecs)
 - **Logcat viewer** — live log streaming with tag, priority, and text filters, plus export
 - **Shell terminal** — run ADB shell commands with command history
 - **Feature flags editor** — browse and edit `device_config` flags and internal settings (no exploits)
@@ -79,7 +79,7 @@ The `dist/` folder is a static site ready to deploy anywhere with HTTPS (GitHub 
 src/
 ├── lib/
 │   ├── adb/          # ADB protocol layer (connection, shell, file-system, screen,
-│   │                 #   logcat, device-config, app-manager, settings, backup)
+│   │                 #   scrcpy, logcat, device-config, app-manager, settings, backup)
 │   ├── portal/       # Portal-specific logic (device models, catalog.json, presets)
 │   └── utils/        # Formatters, download helper, platform detection
 ├── store/            # Zustand stores (device, UI, apps)
@@ -137,7 +137,8 @@ React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 
 - [x] Logcat viewer (real-time log streaming with tag/priority filters)
 - [x] Shell terminal (interactive shell; dependency-free, not xterm.js)
 - [x] Feature flags browser/editor (`device_config` + internal settings)
-- [x] Live screen view (repeated framebuffer); full scrcpy mirroring is future work
+- [x] Live screen view (repeated framebuffer)
+- [x] Screen mirroring via scrcpy (H.264 → WebCodecs) with touch control (no audio on Android 10)
 
 ### Phase 4 — Community & polish
 
@@ -151,6 +152,10 @@ React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 
 ## Legal
 
 Meta [officially enabled ADB access](https://developers.meta.com/horizon/blog/build-apps-for-portal-with-ai/) on Portal devices. This tool uses only public ADB commands — no exploits, no root, no bootloader unlock.
+
+Screen mirroring bundles the [`scrcpy`](https://github.com/Genymobile/scrcpy)
+server binary (`public/scrcpy-server`, v2.3), which is licensed under
+Apache-2.0. It is pushed to the device on demand and never modifies the device.
 
 ## License
 

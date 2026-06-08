@@ -55,13 +55,19 @@
 		"capture": "Capturer l'écran",
 		"startMirror": "Démarrer la vue en direct",
 		"stopMirror": "Arrêter la vue en direct",
+		"mirrorScrcpy": "Recopier avec contrôle",
+		"stopScrcpy": "Arrêter la recopie",
+		"connecting": "Démarrage de la recopie…",
 		"download": "Télécharger le PNG",
 		"fps": "{{fps}} i/s",
 		"refreshRate": "Fréquence de rafraîchissement",
 		"empty": "Aucune image — capturez un écran ou lancez la vue en direct",
 		"captureError": "La capture d'écran a échoué",
+		"scrcpyError": "Impossible de démarrer la recopie scrcpy",
+		"scrcpyUnsupported": "La recopie en direct nécessite WebCodecs (utilisez un navigateur Chromium récent)",
 		"forbidden": "Cet appareil bloque l'accès au framebuffer",
-		"mirrorNote": "La vue en direct capture le framebuffer en boucle. Pour une recopie à faible latence avec audio et saisie, le support complet de scrcpy est prévu."
+		"controlHint": "Cliquez-glissez sur l'écran pour contrôler l'appareil. L'audio est indisponible sur Android 10.",
+		"mirrorNote": "« Vue en direct » interroge le framebuffer (sans saisie). « Recopier avec contrôle » diffuse du H.264 via scrcpy avec saisie tactile — pas d'audio sur Android 10."
 	},
 	"flags": {
 		"title": "Indicateurs de fonctionnalités",

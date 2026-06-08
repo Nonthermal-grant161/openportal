@@ -55,13 +55,19 @@
 		"capture": "Capture screenshot",
 		"startMirror": "Start live view",
 		"stopMirror": "Stop live view",
+		"mirrorScrcpy": "Mirror with control",
+		"stopScrcpy": "Stop mirroring",
+		"connecting": "Starting mirror…",
 		"download": "Download PNG",
 		"fps": "{{fps}} fps",
 		"refreshRate": "Refresh rate",
 		"empty": "No image yet — capture a screenshot or start the live view",
 		"captureError": "Screen capture failed",
+		"scrcpyError": "Could not start scrcpy mirroring",
+		"scrcpyUnsupported": "Live mirroring needs WebCodecs (use a recent Chromium browser)",
 		"forbidden": "This device blocks framebuffer access",
-		"mirrorNote": "Live view repeatedly captures the framebuffer. For low-latency mirroring with audio and input, full scrcpy support is planned."
+		"controlHint": "Click and drag on the screen to control the device. Audio is unavailable on Android 10.",
+		"mirrorNote": "“Live view” polls the framebuffer (no input). “Mirror with control” streams H.264 via scrcpy with touch input — no audio on Android 10."
 	},
 	"flags": {
 		"title": "Feature Flags",
