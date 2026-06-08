@@ -1,7 +1,6 @@
 {
 	"files": {
 		"title": "Files",
-		"description": "Browse, download, and upload files on your Portal",
 		"upload": "Upload",
 		"newFolder": "New folder",
 		"newFolderPrompt": "Folder name",
@@ -29,7 +28,6 @@
 	},
 	"logcat": {
 		"title": "Logcat",
-		"description": "Live system log stream",
 		"start": "Start",
 		"stop": "Stop",
 		"clear": "Clear",
@@ -46,7 +44,6 @@
 	},
 	"screen": {
 		"title": "Screen",
-		"description": "View and control your Portal screen",
 		"show": "Show screen",
 		"starting": "Connecting to the screen…",
 		"screenshot": "Screenshot",

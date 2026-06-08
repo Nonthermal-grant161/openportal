@@ -140,10 +140,7 @@ export function LogcatPage() {
 
 	return (
 		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-4">
-			<PageHeader
-				title={t("logcat.title")}
-				description={t("logcat.description")}
-			/>
+			<PageHeader title={t("logcat.title")} />
 
 			<div className="flex flex-wrap items-center gap-2">
 				{running ? (

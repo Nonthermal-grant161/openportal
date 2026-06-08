@@ -1,7 +1,6 @@
 {
 	"files": {
 		"title": "Fichiers",
-		"description": "Parcourez, téléchargez et envoyez des fichiers sur votre Portal",
 		"upload": "Envoyer",
 		"newFolder": "Nouveau dossier",
 		"newFolderPrompt": "Nom du dossier",
@@ -29,7 +28,6 @@
 	},
 	"logcat": {
 		"title": "Logcat",
-		"description": "Flux des journaux système en direct",
 		"start": "Démarrer",
 		"stop": "Arrêter",
 		"clear": "Effacer",
@@ -46,7 +44,6 @@
 	},
 	"screen": {
 		"title": "Écran",
-		"description": "Voyez et contrôlez l'écran de votre Portal",
 		"show": "Afficher l'écran",
 		"starting": "Connexion à l'écran…",
 		"screenshot": "Capture",
