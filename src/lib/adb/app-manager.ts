@@ -92,6 +92,28 @@ export async function uninstallPackage(
 	}
 }
 
+export interface InstalledVersion {
+	versionName: string;
+	versionCode: number;
+}
+
+export async function getInstalledVersion(
+	adb: Adb,
+	packageName: string,
+): Promise<InstalledVersion | null> {
+	const { stdout } = await execShell(
+		adb,
+		`dumpsys package ${packageName} | grep -E "versionName=|versionCode=" | head -n 4`,
+	);
+	const nameMatch = /versionName=(\S+)/.exec(stdout);
+	const codeMatch = /versionCode=(\d+)/.exec(stdout);
+	if (!nameMatch && !codeMatch) return null;
+	return {
+		versionName: nameMatch?.[1] ?? "",
+		versionCode: codeMatch?.[1] ? Number(codeMatch[1]) : 0,
+	};
+}
+
 export async function runPostInstall(
 	adb: Adb,
 	commands: string[],
@@ -178,6 +200,21 @@ export async function setDefaultLauncher(
 	componentName: string,
 ): Promise<void> {
 	await execShell(adb, `cmd package set-home-activity ${componentName}`);
+}
+
+/** Returns the package name of the current default launcher (home app). */
+export async function getDefaultLauncher(adb: Adb): Promise<string> {
+	const { stdout } = await execShell(
+		adb,
+		"cmd package resolve-activity --brief -c android.intent.category.HOME -a android.intent.action.MAIN",
+	);
+	const component = stdout
+		.split("\n")
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.reverse()
+		.find((line) => line.includes("/"));
+	return component ? (component.split("/")[0] ?? "") : "";
 }
 
 export async function disableOverlay(
