@@ -1,0 +1,32 @@
+{
+	"title": "Apps",
+	"catalog": "App Catalog",
+	"catalogDescription": "Community-verified apps that work on Meta Portal devices",
+	"installApk": "Install APK",
+	"dragDropApk": "Drag & drop an APK file here, or click to browse",
+	"browseFiles": "Browse files",
+	"installedApps": "Installed Apps",
+	"searchApps": "Search apps...",
+	"category": {
+		"launcher": "Launchers",
+		"store": "App Stores",
+		"media": "Media",
+		"photo": "Photos",
+		"smartHome": "Smart Home",
+		"assistant": "Assistants",
+		"utility": "Utilities"
+	},
+	"verified": "Verified",
+	"featured": "Featured",
+	"setAsDefault": "Set as default launcher",
+	"installAndSetup": "Install & Setup",
+	"version": "Version {{version}}",
+	"packageName": "Package: {{name}}",
+	"systemApp": "System",
+	"userApp": "User",
+	"disabled": "Disabled",
+	"clearData": "Clear Data",
+	"forceStop": "Force Stop",
+	"permissions": "Permissions",
+	"uninstallConfirm": "Are you sure you want to uninstall {{name}}?"
+}
