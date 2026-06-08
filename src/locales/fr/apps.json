@@ -42,6 +42,7 @@
 	"clearData": "Effacer les données",
 	"forceStop": "Forcer l'arrêt",
 	"permissions": "Autorisations",
+	"uninstall": "Désinstaller",
 	"uninstallConfirm": "Voulez-vous vraiment désinstaller {{name}} ?",
 	"manageInstalled": "Applications installées",
 	"manageInstalledDesc": "Gérez les applications installées sur votre Portal",

@@ -1,3 +1,4 @@
+import { ConfirmDialog } from "@/components/ui/primitives";
 import { getInstalledVersion, runPostInstall } from "@/lib/adb/app-manager";
 import { type InstallStage, installFromUrl } from "@/lib/adb/online-install";
 import type { CatalogApp } from "@/lib/portal/catalog";
@@ -8,7 +9,13 @@ import {
 } from "@/lib/portal/sources";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
-import { ArrowUpCircle, Download, ExternalLink, Loader2 } from "lucide-react";
+import {
+	ArrowUpCircle,
+	Download,
+	ExternalLink,
+	Loader2,
+	Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -19,10 +26,13 @@ export function AppCard({ app }: { app: CatalogApp }) {
 	const adb = useDeviceStore((s) => s.adb);
 	const isInstalled = useAppStore((s) => s.isInstalled(app.packageName));
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
+	const uninstall = useAppStore((s) => s.uninstall);
 
 	const [stage, setStage] = useState<InstallStage | null>(null);
 	const [updateUrl, setUpdateUrl] = useState<string | null>(null);
 	const [postInstalling, setPostInstalling] = useState(false);
+	const [uninstalling, setUninstalling] = useState(false);
+	const [confirmUninstall, setConfirmUninstall] = useState(false);
 
 	const autoInstallable = canAutoInstall(app);
 
@@ -88,6 +98,21 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		}
 	};
 
+	const handleUninstall = async () => {
+		setUninstalling(true);
+		try {
+			await uninstall(app.packageName);
+			toast.success(t("uninstalled", { name: app.name }));
+			setUpdateUrl(null);
+		} catch (err) {
+			toast.error(app.name, {
+				description: err instanceof Error ? err.message : undefined,
+			});
+		} finally {
+			setUninstalling(false);
+		}
+	};
+
 	return (
 		<div className="flex items-start gap-4 rounded-xl border border-border bg-card p-4">
 			<AppIcon
@@ -113,39 +138,59 @@ export function AppCard({ app }: { app: CatalogApp }) {
 					{app.description}
 				</p>
 			</div>
-			<div className="flex shrink-0 flex-col items-end gap-2">
+
+			<div className="flex shrink-0 items-center gap-2">
 				{stage ? (
 					<span className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium">
 						<Loader2 className="h-3 w-3 animate-spin" />
 						{t(stage === "installing" ? "installingApp" : "downloading")}
 					</span>
-				) : updateUrl ? (
-					<button
-						type="button"
-						onClick={handleInstall}
-						className="flex items-center gap-1.5 rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
-					>
-						<ArrowUpCircle className="h-3 w-3" />
-						{t("update")}
-					</button>
 				) : isInstalled ? (
-					<div className="flex items-center gap-2">
-						<span className="text-xs text-emerald-500">{t("installed")}</span>
-						{app.postInstallCommands && (
+					<>
+						{updateUrl ? (
 							<button
 								type="button"
-								onClick={handlePostInstall}
-								disabled={postInstalling}
-								className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
+								onClick={handleInstall}
+								className="flex items-center gap-1.5 rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
 							>
-								{postInstalling ? (
-									<Loader2 className="h-3 w-3 animate-spin" />
-								) : (
-									t(app.postInstallLabelKey ?? "installAndSetup")
-								)}
+								<ArrowUpCircle className="h-3 w-3" />
+								{t("update")}
 							</button>
+						) : (
+							<>
+								<span className="text-xs text-emerald-500">
+									{t("installed")}
+								</span>
+								{app.postInstallCommands && (
+									<button
+										type="button"
+										onClick={handlePostInstall}
+										disabled={postInstalling}
+										className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
+									>
+										{postInstalling ? (
+											<Loader2 className="h-3 w-3 animate-spin" />
+										) : (
+											t(app.postInstallLabelKey ?? "installAndSetup")
+										)}
+									</button>
+								)}
+							</>
 						)}
-					</div>
+						<button
+							type="button"
+							onClick={() => setConfirmUninstall(true)}
+							disabled={uninstalling}
+							title={t("uninstall")}
+							className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 disabled:opacity-50"
+						>
+							{uninstalling ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<Trash2 className="h-4 w-4" />
+							)}
+						</button>
+					</>
 				) : autoInstallable ? (
 					<button
 						type="button"
@@ -169,6 +214,16 @@ export function AppCard({ app }: { app: CatalogApp }) {
 					)
 				)}
 			</div>
+
+			<ConfirmDialog
+				open={confirmUninstall}
+				onClose={() => setConfirmUninstall(false)}
+				onConfirm={handleUninstall}
+				title={t("uninstall")}
+				message={t("uninstallConfirm", { name: app.name })}
+				confirmLabel={t("uninstall")}
+				danger
+			/>
 		</div>
 	);
 }

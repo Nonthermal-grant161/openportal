@@ -42,6 +42,7 @@
 	"clearData": "Clear Data",
 	"forceStop": "Force Stop",
 	"permissions": "Permissions",
+	"uninstall": "Uninstall",
 	"uninstallConfirm": "Are you sure you want to uninstall {{name}}?",
 	"manageInstalled": "Installed Apps",
 	"manageInstalledDesc": "Manage apps installed on your Portal",
