@@ -1,6 +1,6 @@
+import { getPlatformSupport } from "@/lib/utils/platform";
 import { AlertTriangle, Chrome, Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { getPlatformSupport } from "@/lib/utils/platform";
 
 export function BrowserCheck() {
 	const { t } = useTranslation();

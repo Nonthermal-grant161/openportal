@@ -1,8 +1,9 @@
+import { PRESETS, applyPreset } from "@/lib/adb/settings";
+import { useDeviceStore } from "@/store/device-store";
 import { Check, Loader2, Zap } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { applyPreset, PRESETS } from "@/lib/adb/settings";
-import { useDeviceStore } from "@/store/device-store";
+import { toast } from "sonner";
 
 export function PresetsPanel() {
 	const { t } = useTranslation("settings");
@@ -24,9 +25,7 @@ export function PresetsPanel() {
 	);
 }
 
-function PresetButton({
-	preset,
-}: { preset: (typeof PRESETS)[number] }) {
+function PresetButton({ preset }: { preset: (typeof PRESETS)[number] }) {
 	const { t } = useTranslation();
 	const [loading, setLoading] = useState(false);
 	const [done, setDone] = useState(false);
@@ -40,7 +39,14 @@ function PresetButton({
 			await applyPreset(adb, preset);
 			setDone(true);
 			await refreshDeviceInfo();
+			toast.success(t(preset.nameKey), {
+				description: t("settings:presetApplied"),
+			});
 			setTimeout(() => setDone(false), 2000);
+		} catch (err) {
+			toast.error(t(preset.nameKey), {
+				description: err instanceof Error ? err.message : undefined,
+			});
 		} finally {
 			setLoading(false);
 		}

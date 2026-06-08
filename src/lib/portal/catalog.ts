@@ -1,118 +1,35 @@
+import rawCatalog from "./catalog.json";
+
+export type CatalogCategory =
+	| "launcher"
+	| "store"
+	| "media"
+	| "photo"
+	| "smartHome"
+	| "assistant"
+	| "utility";
+
 export interface CatalogApp {
 	id: string;
 	name: string;
 	packageName: string;
 	description: string;
-	category: "launcher" | "store" | "media" | "photo" | "smartHome" | "assistant" | "utility";
+	category: CatalogCategory;
 	version: string;
 	verified: boolean;
 	featured: boolean;
 	downloadUrl?: string;
+	/** Optional remote icon URL; falls back to an initials avatar when absent. */
+	iconUrl?: string;
+	/** Shell commands run after the app is installed to finish setup. */
 	postInstallCommands?: string[];
+	/** i18n key (apps namespace) for the post-install button label. */
+	postInstallLabelKey?: string;
 }
 
-export const APP_CATALOG: CatalogApp[] = [
-	{
-		id: "immortal-launcher",
-		name: "Immortal Launcher",
-		packageName: "com.immortal.launcher",
-		description:
-			"Full replacement home screen with app store, photo frame screensaver, weather, and folders",
-		category: "launcher",
-		version: "latest",
-		verified: true,
-		featured: true,
-		downloadUrl: "https://github.com/starbrightlab/immortal/releases/latest",
-		postInstallCommands: [
-			"cmd package set-home-activity com.immortal.launcher/.HomeActivity",
-			"cmd overlay disable --user 0 com.facebook.aloha.rro.niu.android",
-		],
-	},
-	{
-		id: "aurora-store",
-		name: "Aurora Store",
-		packageName: "com.aurora.store",
-		description:
-			"Open-source alternative to Google Play Store for downloading Android apps",
-		category: "store",
-		version: "4.6.1",
-		verified: true,
-		featured: true,
-	},
-	{
-		id: "google-photos-screensaver",
-		name: "Google Photos Screensaver",
-		packageName: "com.ram.nat.portalgphotos",
-		description:
-			"Use your Google Photos albums as a screensaver on your Portal",
-		category: "photo",
-		version: "latest",
-		verified: true,
-		featured: true,
-		downloadUrl: "https://github.com/ram-nat/portal-gphotos/releases/latest",
-	},
-	{
-		id: "fdroid",
-		name: "F-Droid",
-		packageName: "org.fdroid.fdroid",
-		description: "Open-source app store with free and open-source apps",
-		category: "store",
-		version: "1.21.0",
-		verified: true,
-		featured: false,
-	},
-	{
-		id: "vlc",
-		name: "VLC",
-		packageName: "org.videolan.vlc",
-		description: "Free and open-source media player for video and audio",
-		category: "media",
-		version: "3.6.4",
-		verified: true,
-		featured: false,
-	},
-	{
-		id: "jellyfin",
-		name: "Jellyfin",
-		packageName: "org.jellyfin.mobile",
-		description: "Self-hosted media streaming client",
-		category: "media",
-		version: "2.6.2",
-		verified: true,
-		featured: false,
-	},
-	{
-		id: "home-assistant",
-		name: "Home Assistant",
-		packageName: "io.homeassistant.companion.android",
-		description: "Control your smart home from your Portal",
-		category: "smartHome",
-		version: "2024.12",
-		verified: true,
-		featured: false,
-	},
-	{
-		id: "alexa",
-		name: "Amazon Alexa",
-		packageName: "com.amazon.dee.app",
-		description:
-			"Amazon Alexa assistant (works within app only, no wake word)",
-		category: "assistant",
-		version: "2.2.508613.0",
-		verified: true,
-		featured: false,
-	},
-	{
-		id: "material-files",
-		name: "Material Files",
-		packageName: "me.zhanghai.android.files",
-		description: "File manager with FTP server for wireless file transfer",
-		category: "utility",
-		version: "1.8.0",
-		verified: true,
-		featured: false,
-	},
-];
+// The catalog is data-only and lives in catalog.json so the community can submit
+// new apps via simple PRs. See CONTRIBUTING.md for the submission format.
+export const APP_CATALOG: CatalogApp[] = rawCatalog as CatalogApp[];
 
 export function getCatalogByCategory(): Map<string, CatalogApp[]> {
 	const map = new Map<string, CatalogApp[]>();

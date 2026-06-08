@@ -28,6 +28,8 @@
 	"applySettings": "Apply Recommended Settings",
 	"applySettingsDesc": "Enable developer settings, disable package verification, keep screen on while plugged in",
 	"allProperties": "All Properties",
+	"actionApplied": "Done",
+	"immortalNotInstalled": "Install Immortal Launcher first (drag & drop the APK on the Apps page)",
 	"active": "Active",
 	"inactive": "Inactive",
 	"locked": "Locked",

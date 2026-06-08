@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useUIStore } from "@/store/ui-store";
+import { useEffect } from "react";
 
 export function useTheme() {
 	const theme = useUIStore((s) => s.theme);

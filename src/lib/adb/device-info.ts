@@ -1,6 +1,6 @@
 import type { Adb } from "@yume-chan/adb";
-import type { DeviceInfo } from "./types";
 import { execShell, getAllProps } from "./shell";
+import type { DeviceInfo } from "./types";
 
 export async function getDeviceInfo(adb: Adb): Promise<DeviceInfo> {
 	const [props, kernelResult, storageResult, otaResult] = await Promise.all([

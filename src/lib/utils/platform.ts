@@ -8,7 +8,9 @@ export function isSecureContext(): boolean {
 
 export function isChromiumBrowser(): boolean {
 	const ua = navigator.userAgent;
-	return /Chrome|Chromium|Edg|Brave|OPR|Vivaldi/i.test(ua) && !/Firefox/i.test(ua);
+	return (
+		/Chrome|Chromium|Edg|Brave|OPR|Vivaldi/i.test(ua) && !/Firefox/i.test(ua)
+	);
 }
 
 export function getPlatformSupport(): {

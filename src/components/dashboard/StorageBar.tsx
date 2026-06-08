@@ -1,7 +1,7 @@
+import { formatBytes, formatStoragePercent } from "@/lib/utils/format";
+import { useDeviceStore } from "@/store/device-store";
 import { HardDrive } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useDeviceStore } from "@/store/device-store";
-import { formatBytes, formatStoragePercent } from "@/lib/utils/format";
 
 export function StorageBar() {
 	const { t } = useTranslation("dashboard");
@@ -25,7 +25,11 @@ export function StorageBar() {
 			<div className="mb-2 h-2 overflow-hidden rounded-full bg-secondary">
 				<div
 					className={`h-full rounded-full transition-all ${
-						percent > 90 ? "bg-red-500" : percent > 70 ? "bg-amber-500" : "bg-emerald-500"
+						percent > 90
+							? "bg-red-500"
+							: percent > 70
+								? "bg-amber-500"
+								: "bg-emerald-500"
 					}`}
 					style={{ width: `${percent}%` }}
 				/>
@@ -37,7 +41,9 @@ export function StorageBar() {
 						total: formatBytes(deviceInfo.storageTotal),
 					})}
 				</span>
-				<span>{t("storageFree", { free: formatBytes(deviceInfo.storageFree) })}</span>
+				<span>
+					{t("storageFree", { free: formatBytes(deviceInfo.storageFree) })}
+				</span>
 			</div>
 		</div>
 	);

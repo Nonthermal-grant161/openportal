@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { getCatalogByCategory } from "@/lib/portal/catalog";
 import { useUIStore } from "@/store/ui-store";
+import { useTranslation } from "react-i18next";
 import { AppCard } from "./AppCard";
 
 const CATEGORY_ORDER = [

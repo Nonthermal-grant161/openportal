@@ -1,0 +1,104 @@
+[
+	{
+		"id": "immortal-launcher",
+		"name": "Immortal Launcher",
+		"packageName": "com.immortal.launcher",
+		"description": "Full replacement home screen with app store, photo frame screensaver, weather, and folders",
+		"category": "launcher",
+		"version": "latest",
+		"verified": true,
+		"featured": true,
+		"downloadUrl": "https://github.com/starbrightlab/immortal/releases/latest",
+		"postInstallCommands": [
+			"cmd package set-home-activity com.immortal.launcher/.HomeActivity",
+			"cmd overlay disable --user 0 com.facebook.aloha.rro.niu.android"
+		],
+		"postInstallLabelKey": "setAsDefault"
+	},
+	{
+		"id": "aurora-store",
+		"name": "Aurora Store",
+		"packageName": "com.aurora.store",
+		"description": "Open-source alternative to Google Play Store for downloading Android apps",
+		"category": "store",
+		"version": "4.6.1",
+		"verified": true,
+		"featured": true
+	},
+	{
+		"id": "google-photos-screensaver",
+		"name": "Google Photos Screensaver",
+		"packageName": "com.ram.nat.portalgphotos",
+		"description": "Use your Google Photos albums as a screensaver on your Portal",
+		"category": "photo",
+		"version": "latest",
+		"verified": true,
+		"featured": true,
+		"downloadUrl": "https://github.com/ram-nat/portal-gphotos/releases/latest",
+		"postInstallCommands": [
+			"settings put secure screensaver_components com.ram.nat.portalgphotos/.ScreensaverService",
+			"settings put secure screensaver_enabled 1"
+		],
+		"postInstallLabelKey": "setAsScreensaver"
+	},
+	{
+		"id": "fdroid",
+		"name": "F-Droid",
+		"packageName": "org.fdroid.fdroid",
+		"description": "Open-source app store with free and open-source apps",
+		"category": "store",
+		"version": "1.21.0",
+		"verified": true,
+		"featured": false
+	},
+	{
+		"id": "vlc",
+		"name": "VLC",
+		"packageName": "org.videolan.vlc",
+		"description": "Free and open-source media player for video and audio",
+		"category": "media",
+		"version": "3.6.4",
+		"verified": true,
+		"featured": false
+	},
+	{
+		"id": "jellyfin",
+		"name": "Jellyfin",
+		"packageName": "org.jellyfin.mobile",
+		"description": "Self-hosted media streaming client",
+		"category": "media",
+		"version": "2.6.2",
+		"verified": true,
+		"featured": false
+	},
+	{
+		"id": "home-assistant",
+		"name": "Home Assistant",
+		"packageName": "io.homeassistant.companion.android",
+		"description": "Control your smart home from your Portal",
+		"category": "smartHome",
+		"version": "2024.12",
+		"verified": true,
+		"featured": false
+	},
+	{
+		"id": "alexa",
+		"name": "Amazon Alexa",
+		"packageName": "com.amazon.dee.app",
+		"description": "Amazon Alexa assistant (works within app only, no wake word)",
+		"category": "assistant",
+		"version": "2.2.508613.0",
+		"verified": true,
+		"featured": false
+	},
+	{
+		"id": "material-files",
+		"name": "Material Files",
+		"packageName": "me.zhanghai.android.files",
+		"description": "File manager with FTP server for wireless file transfer",
+		"category": "utility",
+		"version": "1.8.0",
+		"verified": true,
+		"featured": false
+	}
+]

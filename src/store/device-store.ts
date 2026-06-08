@@ -1,15 +1,18 @@
-import type { Adb } from "@yume-chan/adb";
-import type { AdbDaemonWebUsbDevice } from "@yume-chan/adb-daemon-webusb";
-import { create } from "zustand";
+import i18n from "@/i18n";
 import {
 	connectDevice,
 	disconnectDevice,
 	requestDevice,
+	watchDisconnect,
 } from "@/lib/adb/connection";
 import { getDeviceInfo } from "@/lib/adb/device-info";
 import type { ConnectionState, DeviceInfo } from "@/lib/adb/types";
 import { resolveModel } from "@/lib/portal/models";
 import type { PortalModelInfo } from "@/lib/portal/models";
+import type { Adb } from "@yume-chan/adb";
+import type { AdbDaemonWebUsbDevice } from "@yume-chan/adb-daemon-webusb";
+import { toast } from "sonner";
+import { create } from "zustand";
 
 interface DeviceStore {
 	state: ConnectionState;
@@ -18,8 +21,9 @@ interface DeviceStore {
 	error: string | null;
 	deviceInfo: DeviceInfo | null;
 	portalModel: PortalModelInfo | null;
+	unwatch: (() => void) | null;
 
-	connect: () => Promise<void>;
+	connect: (preselected?: AdbDaemonWebUsbDevice) => Promise<void>;
 	disconnect: () => Promise<void>;
 	refreshDeviceInfo: () => Promise<void>;
 }
@@ -31,12 +35,13 @@ export const useDeviceStore = create<DeviceStore>((set, get) => ({
 	error: null,
 	deviceInfo: null,
 	portalModel: null,
+	unwatch: null,
 
-	connect: async () => {
+	connect: async (preselected?: AdbDaemonWebUsbDevice) => {
 		try {
 			set({ state: "connecting", error: null });
 
-			const device = await requestDevice();
+			const device = preselected ?? (await requestDevice());
 			if (!device) {
 				set({ state: "disconnected" });
 				return;
@@ -44,19 +49,39 @@ export const useDeviceStore = create<DeviceStore>((set, get) => ({
 
 			set({ state: "authenticating", device });
 			const adb = await connectDevice(device);
-			set({ state: "connected", adb });
+
+			// Recover gracefully if the cable is pulled out.
+			const unwatch = watchDisconnect(device, () => {
+				const current = get();
+				if (current.device === device) {
+					current.unwatch?.();
+					toast.warning(i18n.t("deviceLost"));
+					set({
+						state: "disconnected",
+						adb: null,
+						device: null,
+						deviceInfo: null,
+						portalModel: null,
+						unwatch: null,
+					});
+				}
+			});
+
+			set({ state: "connected", adb, unwatch });
 
 			await get().refreshDeviceInfo();
+			toast.success(i18n.t("deviceConnected", { name: device.name }));
 		} catch (err) {
-			set({
-				state: "error",
-				error: err instanceof Error ? err.message : "Connection failed",
-			});
+			const message =
+				err instanceof Error ? err.message : i18n.t("connectionFailed");
+			set({ state: "error", error: message });
+			toast.error(i18n.t("connectionFailed"), { description: message });
 		}
 	},
 
 	disconnect: async () => {
-		const { adb } = get();
+		const { adb, unwatch } = get();
+		unwatch?.();
 		if (adb) {
 			try {
 				await disconnectDevice(adb);
@@ -71,6 +96,7 @@ export const useDeviceStore = create<DeviceStore>((set, get) => ({
 			deviceInfo: null,
 			portalModel: null,
 			error: null,
+			unwatch: null,
 		});
 	},
 

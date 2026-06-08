@@ -29,5 +29,14 @@
 	"value": "Value",
 	"currentValue": "Current: {{value}}",
 	"settingApplied": "Setting applied",
-	"presetApplied": "Preset applied successfully"
+	"presetApplied": "Preset applied successfully",
+	"backup": "Backup & Restore",
+	"backupDesc": "Export your device settings and app list to a JSON file, or restore them",
+	"exportProfile": "Export profile",
+	"importProfile": "Import profile",
+	"profileExported": "Profile exported",
+	"profileImported": "Restored {{count}} settings",
+	"invalidProfile": "That file is not a valid OpenPortal profile",
+	"missingPackagesNote": "{{count}} apps from the profile are not installed",
+	"restoreConfirm": "Apply settings from this profile to the connected device?"
 }

@@ -1,10 +1,11 @@
+import { disableOverlay, setDefaultLauncher } from "@/lib/adb/app-manager";
+import { PRESETS, applyPreset, putSetting } from "@/lib/adb/settings";
+import { useAppStore } from "@/store/app-store";
+import { useDeviceStore } from "@/store/device-store";
 import { Download, Shield, Zap } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { disableOverlay, setDefaultLauncher } from "@/lib/adb/app-manager";
-import { applyPreset, PRESETS, putSetting } from "@/lib/adb/settings";
-import { useAppStore } from "@/store/app-store";
-import { useDeviceStore } from "@/store/device-store";
+import { toast } from "sonner";
 
 export function QuickActions() {
 	const { t } = useTranslation("dashboard");
@@ -49,6 +50,7 @@ function ActionButton({
 	description: string;
 	action: "immortal" | "ota" | "settings";
 }) {
+	const { t } = useTranslation("dashboard");
 	const [loading, setLoading] = useState(false);
 	const [done, setDone] = useState(false);
 	const adb = useDeviceStore((s) => s.adb);
@@ -61,25 +63,18 @@ function ActionButton({
 		try {
 			switch (action) {
 				case "immortal": {
-					if (isInstalled("com.immortal.launcher")) {
-						await setDefaultLauncher(
-							adb,
-							"com.immortal.launcher/.HomeActivity",
-						);
-						await disableOverlay(
-							adb,
-							"com.facebook.aloha.rro.niu.android",
-						);
+					if (!isInstalled("com.immortal.launcher")) {
+						toast.error(label, {
+							description: t("immortalNotInstalled"),
+						});
+						return;
 					}
+					await setDefaultLauncher(adb, "com.immortal.launcher/.HomeActivity");
+					await disableOverlay(adb, "com.facebook.aloha.rro.niu.android");
 					break;
 				}
 				case "ota":
-					await putSetting(
-						adb,
-						"global",
-						"ota_disable_automatic_update",
-						"1",
-					);
+					await putSetting(adb, "global", "ota_disable_automatic_update", "1");
 					break;
 				case "settings": {
 					const preset = PRESETS.find((p) => p.id === "recommended");
@@ -89,7 +84,12 @@ function ActionButton({
 			}
 			setDone(true);
 			await refreshDeviceInfo();
+			toast.success(label, { description: t("actionApplied") });
 			setTimeout(() => setDone(false), 2000);
+		} catch (err) {
+			toast.error(label, {
+				description: err instanceof Error ? err.message : undefined,
+			});
 		} finally {
 			setLoading(false);
 		}

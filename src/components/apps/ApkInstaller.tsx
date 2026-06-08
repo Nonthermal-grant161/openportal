@@ -1,7 +1,8 @@
+import { useAppStore } from "@/store/app-store";
 import { FileUp, Loader2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppStore } from "@/store/app-store";
+import { toast } from "sonner";
 
 export function ApkInstaller() {
 	const { t } = useTranslation("apps");
@@ -12,14 +13,20 @@ export function ApkInstaller() {
 
 	const handleFile = useCallback(
 		async (file: File) => {
-			if (!file.name.endsWith(".apk")) return;
+			if (!file.name.endsWith(".apk")) {
+				toast.error(t("notAnApk"), { description: file.name });
+				return;
+			}
 			try {
 				await installFile(file);
-			} catch {
-				// error is in the task state
+				toast.success(t("installed"), { description: file.name });
+			} catch (err) {
+				toast.error(t("installFailed"), {
+					description: err instanceof Error ? err.message : file.name,
+				});
 			}
 		},
-		[installFile],
+		[installFile, t],
 	);
 
 	const handleDrop = useCallback(

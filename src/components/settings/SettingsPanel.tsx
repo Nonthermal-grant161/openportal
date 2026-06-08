@@ -1,9 +1,10 @@
-import { Loader2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { getSetting, putSetting } from "@/lib/adb/settings";
 import type { SettingsNamespace } from "@/lib/adb/settings";
 import { useDeviceStore } from "@/store/device-store";
+import { Loader2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 interface SettingToggle {
 	labelKey: string;
@@ -99,6 +100,10 @@ function SettingRow({ toggle }: { toggle: SettingToggle }) {
 			const newValue = isOn ? toggle.offValue : toggle.onValue;
 			await putSetting(adb, toggle.namespace, toggle.settingKey, newValue);
 			setValue(newValue);
+		} catch (err) {
+			toast.error(t(toggle.labelKey), {
+				description: err instanceof Error ? err.message : undefined,
+			});
 		} finally {
 			setLoading(false);
 		}

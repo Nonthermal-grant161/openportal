@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { useUIStore } from "@/store/ui-store";
+import { useTranslation } from "react-i18next";
 
 export function ModeToggle() {
 	const { t } = useTranslation();

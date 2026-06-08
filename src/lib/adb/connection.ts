@@ -1,7 +1,7 @@
 import { Adb, AdbDaemonTransport } from "@yume-chan/adb";
 import {
-	AdbDaemonWebUsbDeviceManager,
 	type AdbDaemonWebUsbDevice,
+	AdbDaemonWebUsbDeviceManager,
 } from "@yume-chan/adb-daemon-webusb";
 import { credentialStore } from "./credential-store";
 
@@ -35,7 +35,7 @@ export async function requestDevice(): Promise<
 export async function getPairedDevices(): Promise<AdbDaemonWebUsbDevice[]> {
 	const mgr = getManager();
 	if (!mgr) return [];
-	return mgr.getDevices();
+	return mgr.getDevices({ filters: [USB_FILTER] });
 }
 
 export async function connectDevice(
@@ -54,4 +54,25 @@ export async function connectDevice(
 
 export async function disconnectDevice(adb: Adb): Promise<void> {
 	await adb.close();
+}
+
+/**
+ * Fires `onDisconnect` when the given device is physically unplugged.
+ * Returns an unsubscribe function. No-op when WebUSB is unavailable.
+ */
+export function watchDisconnect(
+	device: AdbDaemonWebUsbDevice,
+	onDisconnect: () => void,
+): () => void {
+	const usb = globalThis.navigator?.usb;
+	if (!usb) return () => {};
+
+	const handler = (event: USBConnectionEvent) => {
+		if (event.device === device.raw) {
+			onDisconnect();
+		}
+	};
+
+	usb.addEventListener("disconnect", handler);
+	return () => usb.removeEventListener("disconnect", handler);
 }

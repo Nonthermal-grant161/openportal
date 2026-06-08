@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { DeviceCard } from "@/components/dashboard/DeviceCard";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { StatusGrid } from "@/components/dashboard/StatusGrid";
 import { StorageBar } from "@/components/dashboard/StorageBar";
 import { useAppStore } from "@/store/app-store";
 import { useUIStore } from "@/store/ui-store";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export function DashboardPage() {
 	const { t } = useTranslation("dashboard");

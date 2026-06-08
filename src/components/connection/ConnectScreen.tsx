@@ -1,7 +1,7 @@
-import { Usb, Monitor, ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { useDeviceStore } from "@/store/device-store";
 import { getPlatformSupport } from "@/lib/utils/platform";
+import { useDeviceStore } from "@/store/device-store";
+import { ArrowRight, Monitor, Usb } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { BrowserCheck } from "./BrowserCheck";
 
 export function ConnectScreen() {
@@ -18,9 +18,7 @@ export function ConnectScreen() {
 					<div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-foreground/5">
 						<Monitor className="h-8 w-8" />
 					</div>
-					<h1 className="text-3xl font-bold tracking-tight">
-						{t("appName")}
-					</h1>
+					<h1 className="text-3xl font-bold tracking-tight">{t("appName")}</h1>
 					<p className="mt-2 text-muted-foreground">
 						{t("connectDescription")}
 					</p>
@@ -30,7 +28,7 @@ export function ConnectScreen() {
 
 				<button
 					type="button"
-					onClick={connect}
+					onClick={() => connect()}
 					disabled={!support.supported || isConnecting}
 					className="flex w-full items-center justify-center gap-3 rounded-xl bg-foreground px-6 py-4 text-lg font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
 				>
@@ -53,6 +51,13 @@ export function ConnectScreen() {
 					<Step number={2} text={t("step2")} />
 					<Step number={3} text={t("step3")} />
 				</div>
+
+				<details className="rounded-lg border border-border bg-card/50 px-4 py-3 text-sm">
+					<summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+						{t("usbGuideTitle")}
+					</summary>
+					<p className="mt-2 text-muted-foreground">{t("usbGuidePortalGo")}</p>
+				</details>
 			</div>
 		</div>
 	);

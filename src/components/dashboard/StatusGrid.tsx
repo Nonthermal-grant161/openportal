@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
+import { useTranslation } from "react-i18next";
 
 interface StatusItem {
 	labelKey: string;
@@ -18,12 +18,45 @@ export function StatusGrid() {
 	if (!deviceInfo) return null;
 
 	const items: StatusItem[] = [
-		{ labelKey: "testHarness", value: deviceInfo.testHarnessActive, positiveKey: "active", negativeKey: "inactive" },
-		{ labelKey: "adbPersistent", value: deviceInfo.adbPersistent, positiveKey: "active", negativeKey: "inactive" },
-		{ labelKey: "otaBlocked", value: deviceInfo.otaBlocked, positiveKey: "blocked", negativeKey: "active" },
-		{ labelKey: "hiddenApiUnlocked", value: deviceInfo.hiddenApiDisabled, positiveKey: "unlocked", negativeKey: "locked", advancedOnly: true },
-		{ labelKey: "bootloaderLocked", value: deviceInfo.bootloaderLocked, positiveKey: "locked", negativeKey: "unlocked", advancedOnly: true },
-		{ labelKey: "oemUnlockAllowed", value: deviceInfo.oemUnlockAllowed, positiveKey: "allowed", negativeKey: "blocked", advancedOnly: true },
+		{
+			labelKey: "testHarness",
+			value: deviceInfo.testHarnessActive,
+			positiveKey: "active",
+			negativeKey: "inactive",
+		},
+		{
+			labelKey: "adbPersistent",
+			value: deviceInfo.adbPersistent,
+			positiveKey: "active",
+			negativeKey: "inactive",
+		},
+		{
+			labelKey: "otaBlocked",
+			value: deviceInfo.otaBlocked,
+			positiveKey: "blocked",
+			negativeKey: "active",
+		},
+		{
+			labelKey: "hiddenApiUnlocked",
+			value: deviceInfo.hiddenApiDisabled,
+			positiveKey: "unlocked",
+			negativeKey: "locked",
+			advancedOnly: true,
+		},
+		{
+			labelKey: "bootloaderLocked",
+			value: deviceInfo.bootloaderLocked,
+			positiveKey: "locked",
+			negativeKey: "unlocked",
+			advancedOnly: true,
+		},
+		{
+			labelKey: "oemUnlockAllowed",
+			value: deviceInfo.oemUnlockAllowed,
+			positiveKey: "allowed",
+			negativeKey: "blocked",
+			advancedOnly: true,
+		},
 	];
 
 	const visibleItems = items.filter(
@@ -51,7 +84,11 @@ export function StatusGrid() {
 								{t(item.labelKey)}
 							</div>
 							<div className="text-sm font-medium">
-								{t(item.value ? (item.positiveKey ?? "active") : (item.negativeKey ?? "inactive"))}
+								{t(
+									item.value
+										? (item.positiveKey ?? "active")
+										: (item.negativeKey ?? "inactive"),
+								)}
 							</div>
 						</div>
 					</div>

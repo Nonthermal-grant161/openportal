@@ -1,6 +1,6 @@
+import { useDeviceStore } from "@/store/device-store";
 import { Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useDeviceStore } from "@/store/device-store";
 
 export function DeviceCard() {
 	const { t } = useTranslation("dashboard");
@@ -24,7 +24,10 @@ export function DeviceCard() {
 					<InfoRow label={t("soc")} value={deviceInfo.socModel.toUpperCase()} />
 					<InfoRow label={t("serial")} value={deviceInfo.serial} mono />
 					<InfoRow label={t("kernel")} value={deviceInfo.kernelVersion} />
-					<InfoRow label={t("securityPatch")} value={deviceInfo.securityPatch} />
+					<InfoRow
+						label={t("securityPatch")}
+						value={deviceInfo.securityPatch}
+					/>
 				</div>
 			</div>
 		</div>

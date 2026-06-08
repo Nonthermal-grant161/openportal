@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { useDeviceStore } from "@/store/device-store";
+import { useTranslation } from "react-i18next";
 
 export function ConnectionStatus() {
 	const { t } = useTranslation();
@@ -8,7 +8,10 @@ export function ConnectionStatus() {
 	const statusConfig = {
 		disconnected: { color: "bg-zinc-500", label: t("disconnected") },
 		connecting: { color: "bg-amber-500 animate-pulse", label: t("connecting") },
-		authenticating: { color: "bg-amber-500 animate-pulse", label: t("connecting") },
+		authenticating: {
+			color: "bg-amber-500 animate-pulse",
+			label: t("connecting"),
+		},
 		connected: {
 			color: "bg-emerald-500",
 			label: portalModel?.displayName ?? t("connected"),

@@ -1,42 +1,42 @@
 {
-  "name": "openportal",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "description": "Manage your Meta Portal from the browser via WebUSB + ADB",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "lint": "biome check .",
-    "format": "biome format --write ."
-  },
-  "dependencies": {
-    "@yume-chan/adb": "^2.3.0",
-    "@yume-chan/adb-credential-web": "^2.1.0",
-    "@yume-chan/adb-daemon-webusb": "^2.3.0",
-    "@yume-chan/stream-extra": "^2.3.0",
-    "clsx": "^2.1.1",
-    "i18next": "^25.2.1",
-    "i18next-browser-languagedetector": "^8.0.5",
-    "lucide-react": "^0.511.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-i18next": "^15.5.3",
-    "react-router": "^7.6.2",
-    "sonner": "^2.0.3",
-    "tailwind-merge": "^3.6.0",
-    "zustand": "^5.0.5"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@tailwindcss/vite": "^4.1.8",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.6",
-    "@types/w3c-web-usb": "^1.0.10",
-    "@vitejs/plugin-react": "^4.5.2",
-    "tailwindcss": "^4.1.8",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
-  }
+	"name": "openportal",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"description": "Manage your Meta Portal from the browser via WebUSB + ADB",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc --noEmit && vite build",
+		"preview": "vite preview",
+		"lint": "biome check .",
+		"format": "biome format --write ."
+	},
+	"dependencies": {
+		"@yume-chan/adb": "^2.3.0",
+		"@yume-chan/adb-credential-web": "^2.1.0",
+		"@yume-chan/adb-daemon-webusb": "^2.3.0",
+		"@yume-chan/stream-extra": "^2.3.0",
+		"clsx": "^2.1.1",
+		"i18next": "^25.2.1",
+		"i18next-browser-languagedetector": "^8.0.5",
+		"lucide-react": "^0.511.0",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"react-i18next": "^15.5.3",
+		"react-router": "^7.6.2",
+		"sonner": "^2.0.3",
+		"tailwind-merge": "^3.6.0",
+		"zustand": "^5.0.5"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@tailwindcss/vite": "^4.1.8",
+		"@types/react": "^19.1.6",
+		"@types/react-dom": "^19.1.6",
+		"@types/w3c-web-usb": "^1.0.10",
+		"@vitejs/plugin-react": "^4.5.2",
+		"tailwindcss": "^4.1.8",
+		"typescript": "^5.8.3",
+		"vite": "^6.3.5"
+	}
 }

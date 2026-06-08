@@ -1,6 +1,10 @@
+import {
+	installApk,
+	listPackages,
+	uninstallPackage,
+} from "@/lib/adb/app-manager";
+import type { InstallTask, InstalledPackage } from "@/lib/adb/types";
 import { create } from "zustand";
-import { installApk, listPackages } from "@/lib/adb/app-manager";
-import type { InstalledPackage, InstallTask } from "@/lib/adb/types";
 import { useDeviceStore } from "./device-store";
 
 interface AppStore {
@@ -10,6 +14,7 @@ interface AppStore {
 
 	refreshInstalled: () => Promise<void>;
 	installFile: (file: File) => Promise<void>;
+	uninstall: (packageName: string) => Promise<void>;
 	isInstalled: (packageName: string) => boolean;
 }
 
@@ -83,6 +88,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
 			}));
 			throw err;
 		}
+	},
+
+	uninstall: async (packageName: string) => {
+		const adb = useDeviceStore.getState().adb;
+		if (!adb) throw new Error("Not connected");
+		await uninstallPackage(adb, packageName);
+		await get().refreshInstalled();
 	},
 
 	isInstalled: (packageName: string) => {

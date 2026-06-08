@@ -1,9 +1,12 @@
+import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+	// Set VITE_BASE (e.g. "/openportal/") when deploying under a sub-path,
+	// such as a GitHub Pages project site. Defaults to root for custom domains.
+	base: process.env.VITE_BASE || "/",
 	plugins: [react(), tailwindcss()],
 	resolve: {
 		alias: {
