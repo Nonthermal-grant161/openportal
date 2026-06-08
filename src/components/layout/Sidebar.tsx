@@ -21,13 +21,13 @@ const NAV_ITEMS = [
 		labelKey: "dashboard",
 		mode: "all" as const,
 	},
+	{ to: "/apps", icon: Package, labelKey: "apps", mode: "all" as const },
 	{
 		to: "/screen",
 		icon: MonitorSmartphone,
 		labelKey: "screen",
 		mode: "all" as const,
 	},
-	{ to: "/apps", icon: Package, labelKey: "apps", mode: "all" as const },
 	{
 		to: "/settings",
 		icon: Settings,
