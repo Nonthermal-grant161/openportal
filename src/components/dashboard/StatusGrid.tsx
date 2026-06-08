@@ -23,24 +23,13 @@ export function StatusGrid() {
 			value: deviceInfo.testHarnessActive,
 			positiveKey: "active",
 			negativeKey: "inactive",
+			advancedOnly: true,
 		},
 		{
 			labelKey: "adbPersistent",
 			value: deviceInfo.adbPersistent,
 			positiveKey: "active",
 			negativeKey: "inactive",
-		},
-		{
-			labelKey: "otaBlocked",
-			value: deviceInfo.otaBlocked,
-			positiveKey: "blocked",
-			negativeKey: "active",
-		},
-		{
-			labelKey: "hiddenApiUnlocked",
-			value: deviceInfo.hiddenApiDisabled,
-			positiveKey: "unlocked",
-			negativeKey: "locked",
 			advancedOnly: true,
 		},
 		{
@@ -50,18 +39,14 @@ export function StatusGrid() {
 			negativeKey: "unlocked",
 			advancedOnly: true,
 		},
-		{
-			labelKey: "oemUnlockAllowed",
-			value: deviceInfo.oemUnlockAllowed,
-			positiveKey: "allowed",
-			negativeKey: "blocked",
-			advancedOnly: true,
-		},
 	];
 
 	const visibleItems = items.filter(
 		(item) => !item.advancedOnly || mode === "advanced",
 	);
+
+	// Nothing to show (e.g. Classic mode) — hide the whole section.
+	if (visibleItems.length === 0) return null;
 
 	return (
 		<div className="rounded-xl border border-border bg-card p-6">
