@@ -30,6 +30,7 @@
 	"installFailed": "Échec de l'installation",
 	"postInstallDone": "Configuration post-installation terminée",
 	"setAsDefault": "Définir comme launcher par défaut",
+	"defaultLauncher": "Launcher par défaut",
 	"setAsScreensaver": "Définir comme économiseur d'écran",
 	"installAndSetup": "Configurer",
 	"getApk": "Obtenir l'APK",

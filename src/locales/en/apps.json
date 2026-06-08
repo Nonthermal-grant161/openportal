@@ -30,6 +30,7 @@
 	"installFailed": "Install failed",
 	"postInstallDone": "Post-install setup complete",
 	"setAsDefault": "Set as default launcher",
+	"defaultLauncher": "Default launcher",
 	"setAsScreensaver": "Set as screensaver",
 	"installAndSetup": "Run setup",
 	"getApk": "Get APK",

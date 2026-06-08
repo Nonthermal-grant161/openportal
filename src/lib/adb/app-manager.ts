@@ -202,6 +202,21 @@ export async function setDefaultLauncher(
 	await execShell(adb, `cmd package set-home-activity ${componentName}`);
 }
 
+/** Returns the package name of the current default launcher (home app). */
+export async function getDefaultLauncher(adb: Adb): Promise<string> {
+	const { stdout } = await execShell(
+		adb,
+		"cmd package resolve-activity --brief -c android.intent.category.HOME -a android.intent.action.MAIN",
+	);
+	const component = stdout
+		.split("\n")
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.reverse()
+		.find((line) => line.includes("/"));
+	return component ? (component.split("/")[0] ?? "") : "";
+}
+
 export async function disableOverlay(
 	adb: Adb,
 	overlayPackage: string,

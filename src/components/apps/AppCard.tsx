@@ -1,5 +1,9 @@
 import { ConfirmDialog } from "@/components/ui/primitives";
-import { getInstalledVersion, runPostInstall } from "@/lib/adb/app-manager";
+import {
+	getDefaultLauncher,
+	getInstalledVersion,
+	runPostInstall,
+} from "@/lib/adb/app-manager";
 import { type InstallStage, installFromUrl } from "@/lib/adb/online-install";
 import type { CatalogApp } from "@/lib/portal/catalog";
 import {
@@ -11,12 +15,13 @@ import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
 import {
 	ArrowUpCircle,
+	Check,
 	Download,
 	ExternalLink,
 	Loader2,
 	Trash2,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AppIcon } from "./AppIcon";
@@ -33,8 +38,25 @@ export function AppCard({ app }: { app: CatalogApp }) {
 	const [postInstalling, setPostInstalling] = useState(false);
 	const [uninstalling, setUninstalling] = useState(false);
 	const [confirmUninstall, setConfirmUninstall] = useState(false);
+	const [isDefaultLauncher, setIsDefaultLauncher] = useState(false);
 
 	const autoInstallable = canAutoInstall(app);
+	const isLauncher = app.category === "launcher";
+
+	const refreshDefaultLauncher = useCallback(async () => {
+		if (!adb || !isLauncher) return;
+		try {
+			const current = await getDefaultLauncher(adb);
+			setIsDefaultLauncher(current === app.packageName);
+		} catch {
+			// Best-effort; ignore.
+		}
+	}, [adb, isLauncher, app.packageName]);
+
+	useEffect(() => {
+		if (isInstalled) refreshDefaultLauncher();
+		else setIsDefaultLauncher(false);
+	}, [isInstalled, refreshDefaultLauncher]);
 
 	// Best-effort "update available" check for installed, auto-installable apps.
 	useEffect(() => {
@@ -89,6 +111,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		try {
 			await runPostInstall(adb, app.postInstallCommands);
 			toast.success(app.name, { description: t("postInstallDone") });
+			await refreshDefaultLauncher();
 		} catch (err) {
 			toast.error(app.name, {
 				description: err instanceof Error ? err.message : undefined,
@@ -161,19 +184,26 @@ export function AppCard({ app }: { app: CatalogApp }) {
 								<span className="text-xs text-emerald-500">
 									{t("installed")}
 								</span>
-								{app.postInstallCommands && (
-									<button
-										type="button"
-										onClick={handlePostInstall}
-										disabled={postInstalling}
-										className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
-									>
-										{postInstalling ? (
-											<Loader2 className="h-3 w-3 animate-spin" />
-										) : (
-											t(app.postInstallLabelKey ?? "installAndSetup")
-										)}
-									</button>
+								{isLauncher && isDefaultLauncher ? (
+									<span className="flex items-center gap-1 px-1 text-xs font-medium text-emerald-500">
+										<Check className="h-3 w-3" />
+										{t("defaultLauncher")}
+									</span>
+								) : (
+									app.postInstallCommands && (
+										<button
+											type="button"
+											onClick={handlePostInstall}
+											disabled={postInstalling}
+											className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
+										>
+											{postInstalling ? (
+												<Loader2 className="h-3 w-3 animate-spin" />
+											) : (
+												t(app.postInstallLabelKey ?? "installAndSetup")
+											)}
+										</button>
+									)
 								)}
 							</>
 						)}
