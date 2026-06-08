@@ -44,12 +44,9 @@ OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB
 
 ### Finding the USB port
 
-Every Portal exposes a **USB-C** port for data:
-
-- **Portal Go** — the port is hidden behind the kickstand on the back. Flip the
-  stand open to reach it.
-- **Portal Mini / Portal / Portal+ / Portal TV** — the USB-C port is on the back
-  near the power connector.
+Every Portal exposes a **USB-C** port on the back for data. On some models it's
+tucked away — you may need to remove a small cover or flip out the stand to
+reach it.
 
 Use a known-good **data** USB-C cable (charge-only cables won't enumerate the
 device).

@@ -56,7 +56,7 @@ export function ConnectScreen() {
 					<summary className="cursor-pointer text-muted-foreground hover:text-foreground">
 						{t("usbGuideTitle")}
 					</summary>
-					<p className="mt-2 text-muted-foreground">{t("usbGuidePortalGo")}</p>
+					<p className="mt-2 text-muted-foreground">{t("usbGuideBody")}</p>
 				</details>
 			</div>
 		</div>
