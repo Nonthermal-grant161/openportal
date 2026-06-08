@@ -55,6 +55,7 @@ export function LogcatPage() {
 	const [autoscroll, setAutoscroll] = useState(true);
 
 	const handleRef = useRef<LogcatHandle | null>(null);
+	const startingRef = useRef(false);
 	const bufferRef = useRef<LogLine[]>([]);
 	const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -79,7 +80,8 @@ export function LogcatPage() {
 	}, []);
 
 	const start = useCallback(async () => {
-		if (!adb || handleRef.current) return;
+		if (!adb || handleRef.current || startingRef.current) return;
+		startingRef.current = true;
 		setRunning(true);
 		try {
 			handleRef.current = await streamLogcat(
@@ -97,16 +99,19 @@ export function LogcatPage() {
 				description: err instanceof Error ? err.message : undefined,
 			});
 			setRunning(false);
+		} finally {
+			startingRef.current = false;
 		}
 	}, [adb]);
 
-	// Clean up the remote process when leaving the page.
+	// Start streaming as soon as the page opens, and stop on leave.
 	useEffect(() => {
+		start();
 		return () => {
 			handleRef.current?.stop();
 			handleRef.current = null;
 		};
-	}, []);
+	}, [start]);
 
 	const filtered = useMemo(() => {
 		const tag = tagFilter.toLowerCase();
@@ -134,7 +139,7 @@ export function LogcatPage() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full max-w-5xl flex-col space-y-4">
+		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-4">
 			<PageHeader
 				title={t("logcat.title")}
 				description={t("logcat.description")}

@@ -9,7 +9,7 @@ export function SettingsPage() {
 	const mode = useUIStore((s) => s.mode);
 
 	return (
-		<div className="mx-auto max-w-3xl space-y-6">
+		<div className="mx-auto max-w-4xl space-y-6">
 			<h1 className="text-2xl font-bold">{t("title")}</h1>
 			<PresetsPanel />
 			<SettingsPanel />

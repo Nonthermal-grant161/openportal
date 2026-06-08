@@ -71,6 +71,9 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--font-sans: "Geist Variable", system-ui, -apple-system, sans-serif;
+	--font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo,
+		Consolas, monospace;
 }
 
 @layer base {
@@ -79,6 +82,6 @@
 	}
 	body {
 		@apply bg-background text-foreground antialiased;
-		font-family: system-ui, -apple-system, sans-serif;
+		font-family: var(--font-sans);
 	}
 }
