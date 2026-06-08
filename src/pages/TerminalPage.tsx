@@ -24,7 +24,7 @@ export function TerminalPage() {
 			cursorBlink: true,
 			fontSize: 13,
 			fontFamily:
-				'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+				'"Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 			theme: {
 				background: "#0a0a0a",
 				foreground: "#e5e5e5",
