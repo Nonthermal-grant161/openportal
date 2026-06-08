@@ -51,17 +51,16 @@
 	},
 	"screen": {
 		"title": "Screen",
-		"description": "Capture a screenshot or mirror the Portal screen",
-		"capture": "Capture screenshot",
-		"startMirror": "Start live view",
-		"stopMirror": "Stop live view",
-		"download": "Download PNG",
-		"fps": "{{fps}} fps",
-		"refreshRate": "Refresh rate",
-		"empty": "No image yet — capture a screenshot or start the live view",
-		"captureError": "Screen capture failed",
-		"forbidden": "This device blocks framebuffer access",
-		"mirrorNote": "Live view repeatedly captures the framebuffer. For low-latency mirroring with audio and input, full scrcpy support is planned."
+		"description": "View and control your Portal screen",
+		"show": "Show screen",
+		"starting": "Connecting to the screen…",
+		"screenshot": "Screenshot",
+		"fullscreen": "Fullscreen",
+		"close": "Close",
+		"retry": "Retry",
+		"error": "Could not display the screen",
+		"unsupported": "Screen mirroring needs a recent Chromium browser",
+		"demoUnavailable": "Screen preview isn't available in demo mode"
 	},
 	"flags": {
 		"title": "Feature Flags",

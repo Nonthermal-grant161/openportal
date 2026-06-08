@@ -23,6 +23,12 @@ const NAV_ITEMS = [
 	},
 	{ to: "/apps", icon: Package, labelKey: "apps", mode: "all" as const },
 	{
+		to: "/screen",
+		icon: MonitorSmartphone,
+		labelKey: "screen",
+		mode: "all" as const,
+	},
+	{
 		to: "/settings",
 		icon: Settings,
 		labelKey: "settings",
@@ -32,12 +38,6 @@ const NAV_ITEMS = [
 		to: "/files",
 		icon: FolderOpen,
 		labelKey: "files",
-		mode: "advanced" as const,
-	},
-	{
-		to: "/screen",
-		icon: MonitorSmartphone,
-		labelKey: "screen",
 		mode: "advanced" as const,
 	},
 	{

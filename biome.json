@@ -10,7 +10,8 @@
 			"dist",
 			"node_modules",
 			"pnpm-lock.yaml",
-			"src/lib/portal/catalog.json"
+			"src/lib/portal/catalog.json",
+			"public/scrcpy-server"
 		]
 	},
 	"organizeImports": {

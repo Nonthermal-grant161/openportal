@@ -1,5 +1,6 @@
 {
 	"title": "Dashboard",
+	"showScreen": "Show screen",
 	"deviceInfo": "Device Info",
 	"model": "Model",
 	"firmware": "Firmware",

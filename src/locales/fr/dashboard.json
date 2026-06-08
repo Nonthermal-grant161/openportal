@@ -1,5 +1,6 @@
 {
 	"title": "Tableau de bord",
+	"showScreen": "Afficher l'écran",
 	"deviceInfo": "Informations appareil",
 	"model": "Modèle",
 	"firmware": "Firmware",

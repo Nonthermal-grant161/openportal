@@ -51,17 +51,16 @@
 	},
 	"screen": {
 		"title": "Écran",
-		"description": "Capturez une copie d'écran ou recopiez l'écran du Portal",
-		"capture": "Capturer l'écran",
-		"startMirror": "Démarrer la vue en direct",
-		"stopMirror": "Arrêter la vue en direct",
-		"download": "Télécharger le PNG",
-		"fps": "{{fps}} i/s",
-		"refreshRate": "Fréquence de rafraîchissement",
-		"empty": "Aucune image — capturez un écran ou lancez la vue en direct",
-		"captureError": "La capture d'écran a échoué",
-		"forbidden": "Cet appareil bloque l'accès au framebuffer",
-		"mirrorNote": "La vue en direct capture le framebuffer en boucle. Pour une recopie à faible latence avec audio et saisie, le support complet de scrcpy est prévu."
+		"description": "Voyez et contrôlez l'écran de votre Portal",
+		"show": "Afficher l'écran",
+		"starting": "Connexion à l'écran…",
+		"screenshot": "Capture",
+		"fullscreen": "Plein écran",
+		"close": "Fermer",
+		"retry": "Réessayer",
+		"error": "Impossible d'afficher l'écran",
+		"unsupported": "La recopie d'écran nécessite un navigateur Chromium récent",
+		"demoUnavailable": "L'aperçu de l'écran n'est pas disponible en mode démo"
 	},
 	"flags": {
 		"title": "Indicateurs de fonctionnalités",
