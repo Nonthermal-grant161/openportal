@@ -7,7 +7,7 @@ OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB
 ## Features
 
 - **Connect via USB** — plug in your Portal, click Connect, done. Graceful recovery if the cable is pulled out
-- **App Catalog** — install community-verified apps (Immortal Launcher, Aurora Store, Google Photos Screensaver, VLC, Home Assistant, Alexa, ...) with one-click post-install setup
+- **App Catalog** — one-click install of community-verified apps: the Portal downloads the APK itself (GitHub releases or F-Droid, so no CORS proxy or backend is needed) and installs it, with update detection and post-install setup
 - **Drag & drop APK install** — sideload any APK directly from your browser
 - **Installed apps manager** — uninstall, clear data, force stop, inspect permissions
 - **File browser** — browse, download, upload, and delete files over ADB sync

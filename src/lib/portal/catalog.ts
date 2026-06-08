@@ -9,6 +9,8 @@ export type CatalogCategory =
 	| "assistant"
 	| "utility";
 
+export type AppSource = "github" | "fdroid" | "url" | "external";
+
 export interface CatalogApp {
 	id: string;
 	name: string;
@@ -18,6 +20,15 @@ export interface CatalogApp {
 	version: string;
 	verified: boolean;
 	featured: boolean;
+	/**
+	 * Where the APK comes from. `github`/`fdroid`/`url` can be installed
+	 * automatically (the device downloads them); `external` only opens a page.
+	 */
+	source?: AppSource;
+	/** `owner/repo` for `source: "github"`. */
+	repo?: string;
+	/** Direct APK URL for `source: "url"`. */
+	apkUrl?: string;
 	downloadUrl?: string;
 	/** Optional remote icon URL; falls back to an initials avatar when absent. */
 	iconUrl?: string;

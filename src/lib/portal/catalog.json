@@ -8,6 +8,8 @@
 		"version": "latest",
 		"verified": true,
 		"featured": true,
+		"source": "github",
+		"repo": "starbrightlab/immortal",
 		"downloadUrl": "https://github.com/starbrightlab/immortal/releases/latest",
 		"postInstallCommands": [
 			"cmd package set-home-activity com.immortal.launcher/.HomeActivity",
@@ -23,7 +25,8 @@
 		"category": "store",
 		"version": "4.6.1",
 		"verified": true,
-		"featured": true
+		"featured": true,
+		"source": "fdroid"
 	},
 	{
 		"id": "google-photos-screensaver",
@@ -34,6 +37,8 @@
 		"version": "latest",
 		"verified": true,
 		"featured": true,
+		"source": "github",
+		"repo": "ram-nat/portal-gphotos",
 		"downloadUrl": "https://github.com/ram-nat/portal-gphotos/releases/latest",
 		"postInstallCommands": [
 			"settings put secure screensaver_components com.ram.nat.portalgphotos/.ScreensaverService",
@@ -49,7 +54,8 @@
 		"category": "store",
 		"version": "1.21.0",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "fdroid"
 	},
 	{
 		"id": "vlc",
@@ -59,7 +65,8 @@
 		"category": "media",
 		"version": "3.6.4",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "fdroid"
 	},
 	{
 		"id": "jellyfin",
@@ -69,7 +76,8 @@
 		"category": "media",
 		"version": "2.6.2",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "fdroid"
 	},
 	{
 		"id": "home-assistant",
@@ -79,7 +87,9 @@
 		"category": "smartHome",
 		"version": "2024.12",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "external",
+		"downloadUrl": "https://play.google.com/store/apps/details?id=io.homeassistant.companion.android"
 	},
 	{
 		"id": "alexa",
@@ -89,7 +99,9 @@
 		"category": "assistant",
 		"version": "2.2.508613.0",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "external",
+		"downloadUrl": "https://www.amazon.com/gp/mas/get/amazonapp"
 	},
 	{
 		"id": "material-files",
@@ -99,6 +111,7 @@
 		"category": "utility",
 		"version": "1.8.0",
 		"verified": true,
-		"featured": false
+		"featured": false,
+		"source": "fdroid"
 	}
 ]

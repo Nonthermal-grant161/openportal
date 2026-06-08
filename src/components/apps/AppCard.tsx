@@ -1,18 +1,77 @@
-import { runPostInstall } from "@/lib/adb/app-manager";
+import { getInstalledVersion, runPostInstall } from "@/lib/adb/app-manager";
+import { type InstallStage, installFromUrl } from "@/lib/adb/online-install";
 import type { CatalogApp } from "@/lib/portal/catalog";
+import {
+	canAutoInstall,
+	isNewerVersion,
+	resolveApk,
+} from "@/lib/portal/sources";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
-import { Download, ExternalLink, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpCircle, Download, ExternalLink, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AppIcon } from "./AppIcon";
 
 export function AppCard({ app }: { app: CatalogApp }) {
 	const { t } = useTranslation("apps");
-	const isInstalled = useAppStore((s) => s.isInstalled(app.packageName));
-	const [postInstalling, setPostInstalling] = useState(false);
 	const adb = useDeviceStore((s) => s.adb);
+	const isInstalled = useAppStore((s) => s.isInstalled(app.packageName));
+	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
+
+	const [stage, setStage] = useState<InstallStage | null>(null);
+	const [updateUrl, setUpdateUrl] = useState<string | null>(null);
+	const [postInstalling, setPostInstalling] = useState(false);
+
+	const autoInstallable = canAutoInstall(app);
+
+	// Best-effort "update available" check for installed, auto-installable apps.
+	useEffect(() => {
+		if (!adb || !isInstalled || !autoInstallable) return;
+		let cancelled = false;
+		(async () => {
+			try {
+				const [latest, installed] = await Promise.all([
+					resolveApk(adb, app),
+					getInstalledVersion(adb, app.packageName),
+				]);
+				if (
+					!cancelled &&
+					installed &&
+					isNewerVersion(latest.version, installed.versionName)
+				) {
+					setUpdateUrl(latest.url);
+				}
+			} catch {
+				// Update checks are best-effort; ignore failures.
+			}
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, [adb, isInstalled, autoInstallable, app]);
+
+	const handleInstall = async () => {
+		if (!adb || stage) return;
+		const updating = updateUrl !== null;
+		setStage("downloading");
+		try {
+			const url = updateUrl ?? (await resolveApk(adb, app)).url;
+			await installFromUrl(adb, url, (s) => setStage(s));
+			toast.success(app.name, {
+				description: t(updating ? "updated" : "installed"),
+			});
+			setUpdateUrl(null);
+			await refreshInstalled();
+		} catch (err) {
+			toast.error(app.name, {
+				description: err instanceof Error ? err.message : t("installFailed"),
+			});
+		} finally {
+			setStage(null);
+		}
+	};
 
 	const handlePostInstall = async () => {
 		if (!adb || !app.postInstallCommands?.length) return;
@@ -44,24 +103,32 @@ export function AppCard({ app }: { app: CatalogApp }) {
 							{t("verified")}
 						</span>
 					)}
-					{app.downloadUrl && (
-						<a
-							href={app.downloadUrl}
-							target="_blank"
-							rel="noreferrer"
-							className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground"
-						>
-							<ExternalLink className="h-3 w-3" />
-							{t("getApk")}
-						</a>
+					{updateUrl && (
+						<span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-500">
+							{t("updateAvailable")}
+						</span>
 					)}
 				</div>
 				<p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
 					{app.description}
 				</p>
 			</div>
-			<div className="shrink-0">
-				{isInstalled ? (
+			<div className="flex shrink-0 flex-col items-end gap-2">
+				{stage ? (
+					<span className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium">
+						<Loader2 className="h-3 w-3 animate-spin" />
+						{t(stage === "installing" ? "installingApp" : "downloading")}
+					</span>
+				) : updateUrl ? (
+					<button
+						type="button"
+						onClick={handleInstall}
+						className="flex items-center gap-1.5 rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
+					>
+						<ArrowUpCircle className="h-3 w-3" />
+						{t("update")}
+					</button>
+				) : isInstalled ? (
 					<div className="flex items-center gap-2">
 						<span className="text-xs text-emerald-500">{t("installed")}</span>
 						{app.postInstallCommands && (
@@ -79,16 +146,27 @@ export function AppCard({ app }: { app: CatalogApp }) {
 							</button>
 						)}
 					</div>
-				) : (
+				) : autoInstallable ? (
 					<button
 						type="button"
-						disabled
-						className="flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-1.5 text-xs font-medium text-background opacity-50"
-						title={t("dragDropToInstall")}
+						onClick={handleInstall}
+						className="flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90"
 					>
 						<Download className="h-3 w-3" />
 						{t("install")}
 					</button>
+				) : (
+					app.downloadUrl && (
+						<a
+							href={app.downloadUrl}
+							target="_blank"
+							rel="noreferrer"
+							className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent"
+						>
+							<ExternalLink className="h-3 w-3" />
+							{t("openPage")}
+						</a>
+					)
 				)}
 			</div>
 		</div>

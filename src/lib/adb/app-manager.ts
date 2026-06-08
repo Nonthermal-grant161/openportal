@@ -92,6 +92,28 @@ export async function uninstallPackage(
 	}
 }
 
+export interface InstalledVersion {
+	versionName: string;
+	versionCode: number;
+}
+
+export async function getInstalledVersion(
+	adb: Adb,
+	packageName: string,
+): Promise<InstalledVersion | null> {
+	const { stdout } = await execShell(
+		adb,
+		`dumpsys package ${packageName} | grep -E "versionName=|versionCode=" | head -n 4`,
+	);
+	const nameMatch = /versionName=(\S+)/.exec(stdout);
+	const codeMatch = /versionCode=(\d+)/.exec(stdout);
+	if (!nameMatch && !codeMatch) return null;
+	return {
+		versionName: nameMatch?.[1] ?? "",
+		versionCode: codeMatch?.[1] ? Number(codeMatch[1]) : 0,
+	};
+}
+
 export async function runPostInstall(
 	adb: Adb,
 	commands: string[],
