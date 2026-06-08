@@ -92,11 +92,8 @@ export function Sidebar({
 					mobileOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
 			>
-				<div className="flex items-center gap-2 px-4 py-5">
-					<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background text-sm font-bold">
-						OP
-					</div>
-					<span className="text-sm font-semibold">{t("appName")}</span>
+				<div className="flex items-center px-4 py-5">
+					<span className="text-base font-semibold">{t("appName")}</span>
 				</div>
 
 				<nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
