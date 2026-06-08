@@ -134,7 +134,7 @@ export function LogcatPage() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full max-w-5xl flex-col space-y-4">
+		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-4">
 			<PageHeader
 				title={t("logcat.title")}
 				description={t("logcat.description")}
