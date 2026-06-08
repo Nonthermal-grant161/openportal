@@ -24,7 +24,6 @@
 	},
 	"terminal": {
 		"title": "Terminal",
-		"description": "Un shell interactif complet sur votre Portal",
 		"unsupported": "Cet appareil ne supporte pas le shell interactif",
 		"sessionEnded": "[session terminée]"
 	},
