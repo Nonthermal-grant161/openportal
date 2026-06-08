@@ -141,8 +141,8 @@ export function Modal({
 			onKeyDown={() => {}}
 			role="presentation"
 		>
-			<dialog
-				open
+			<div
+				role="dialog"
 				aria-modal="true"
 				className="w-full max-w-md rounded-xl border border-border bg-card text-foreground shadow-xl"
 				onClick={(e) => e.stopPropagation()}
@@ -164,7 +164,7 @@ export function Modal({
 						{footer}
 					</div>
 				)}
-			</dialog>
+			</div>
 		</div>
 	);
 }
