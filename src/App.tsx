@@ -13,7 +13,7 @@ import { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 
-// Advanced tools are split into their own chunks — most users never open them.
+// Advanced tools are split into their own chunks; most users never open them.
 const FilesPage = lazy(() =>
 	import("@/pages/FilesPage").then((m) => ({ default: m.FilesPage })),
 );

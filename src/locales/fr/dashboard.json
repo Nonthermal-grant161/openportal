@@ -20,7 +20,7 @@
 	"bootloaderLocked": "Bootloader verrouillé",
 	"quickActions": "Actions rapides",
 	"installImmortal": "Installer Immortal Launcher",
-	"installImmortalDesc": "Remplacez le launcher d'origine par Immortal — un écran d'accueil complet avec magasin d'applis et cadre photo",
+	"installImmortalDesc": "Remplacez le launcher d'origine par Immortal, un écran d'accueil complet avec magasin d'applis et cadre photo",
 	"blockOta": "Bloquer les mises à jour OTA",
 	"blockOtaDesc": "Empêche Meta de pousser des mises à jour de firmware qui pourraient retirer des fonctionnalités",
 	"applySettings": "Appliquer les réglages recommandés",

@@ -58,5 +58,5 @@
 	"shortcutToggleMode": "Basculer le mode Classique / Avancé",
 	"shortcutNavigate": "Naviguer",
 	"usbGuideTitle": "Vous ne trouvez pas le port USB ?",
-	"usbGuideBody": "Sur certains modèles de Portal, le port USB-C est dissimulé à l'arrière — il faut parfois retirer un petit cache ou déplier le pied pour y accéder."
+	"usbGuideBody": "Sur certains modèles de Portal, le port USB-C est dissimulé à l'arrière. Il faut parfois retirer un petit cache ou déplier le pied pour y accéder."
 }

@@ -76,7 +76,7 @@ export function ApkInstaller() {
 						<div>
 							<p className="text-sm font-medium">{activeTask.fileName}</p>
 							<p className="text-xs text-muted-foreground">
-								{activeTask.status} — {activeTask.progress}%
+								{activeTask.status}, {activeTask.progress}%
 							</p>
 						</div>
 						<div className="h-1.5 w-48 overflow-hidden rounded-full bg-secondary">

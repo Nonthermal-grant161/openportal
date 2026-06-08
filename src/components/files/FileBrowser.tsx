@@ -274,7 +274,7 @@ export function FileBrowser() {
 										</button>
 									</td>
 									<td className="hidden px-4 py-2 text-muted-foreground sm:table-cell">
-										{entry.type === "file" ? formatBytes(entry.size) : "—"}
+										{entry.type === "file" ? formatBytes(entry.size) : "-"}
 									</td>
 									<td className="hidden px-4 py-2 text-muted-foreground md:table-cell">
 										{formatTimestamp(entry.mtime)}

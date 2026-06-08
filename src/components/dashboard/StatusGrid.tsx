@@ -45,7 +45,7 @@ export function StatusGrid() {
 		(item) => !item.advancedOnly || mode === "advanced",
 	);
 
-	// Nothing to show (e.g. Classic mode) — hide the whole section.
+	// Nothing to show (e.g. Classic mode); hide the whole section.
 	if (visibleItems.length === 0) return null;
 
 	return (

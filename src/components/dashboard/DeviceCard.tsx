@@ -43,7 +43,7 @@ function InfoRow({
 		<div className="flex items-baseline gap-2">
 			<span className="text-muted-foreground">{label}</span>
 			<span className={`truncate ${mono ? "font-mono text-xs" : ""}`}>
-				{value || "—"}
+				{value || "-"}
 			</span>
 		</div>
 	);

@@ -13,9 +13,9 @@ export function formatStoragePercent(used: number, total: number): number {
 
 /** Formats a unix timestamp (seconds) as a short local date-time string. */
 export function formatTimestamp(seconds: number): string {
-	if (!seconds) return "—";
+	if (!seconds) return "-";
 	const date = new Date(seconds * 1000);
-	if (Number.isNaN(date.getTime())) return "—";
+	if (Number.isNaN(date.getTime())) return "-";
 	return date.toLocaleString(undefined, {
 		year: "numeric",
 		month: "short",

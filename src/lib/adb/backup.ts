@@ -15,7 +15,7 @@ export interface DeviceProfile {
 	userPackages: string[];
 }
 
-// Settings the app manages — the ones worth carrying between devices.
+// Settings the app manages: the ones worth carrying between devices.
 const BACKUP_KEYS: { namespace: SettingsNamespace; key: string }[] = [
 	{ namespace: "global", key: "adb_enabled" },
 	{ namespace: "global", key: "development_settings_enabled" },

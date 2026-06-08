@@ -37,7 +37,7 @@
 		"autoscroll": "Défilement auto",
 		"paused": "En pause",
 		"streaming": "En direct",
-		"empty": "Aucune ligne pour l'instant — appuyez sur Démarrer pour lancer le flux",
+		"empty": "Aucune ligne pour l'instant. Appuyez sur Démarrer pour lancer le flux",
 		"lines": "{{count}} lignes",
 		"priorityAll": "Toutes",
 		"download": "Exporter"

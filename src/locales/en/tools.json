@@ -37,7 +37,7 @@
 		"autoscroll": "Auto-scroll",
 		"paused": "Paused",
 		"streaming": "Streaming",
-		"empty": "No log lines yet — press Start to begin streaming",
+		"empty": "No log lines yet. Press Start to begin streaming",
 		"lines": "{{count}} lines",
 		"priorityAll": "All",
 		"download": "Export"

@@ -20,7 +20,7 @@
 	"bootloaderLocked": "Bootloader Locked",
 	"quickActions": "Quick Actions",
 	"installImmortal": "Install Immortal Launcher",
-	"installImmortalDesc": "Replace the stock launcher with Immortal — a full-featured home screen with app store and photo frame",
+	"installImmortalDesc": "Replace the stock launcher with Immortal, a full-featured home screen with app store and photo frame",
 	"blockOta": "Block OTA Updates",
 	"blockOtaDesc": "Prevent Meta from pushing firmware updates that could remove features",
 	"applySettings": "Apply Recommended Settings",

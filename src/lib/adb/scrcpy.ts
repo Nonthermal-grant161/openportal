@@ -43,7 +43,7 @@ export interface StartScrcpyOptions {
  * Starts scrcpy: pushes the server, opens the video + control streams, and
  * decodes H.264 onto `canvas` via WebCodecs.
  *
- * Audio is disabled — the Portal runs Android 10 and scrcpy audio needs 11+.
+ * Audio is disabled; the Portal runs Android 10 and scrcpy audio needs 11+.
  */
 export async function startScrcpy(
 	adb: Adb,
