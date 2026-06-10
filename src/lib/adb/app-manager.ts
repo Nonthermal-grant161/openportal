@@ -41,19 +41,34 @@ export async function installApk(
 	const remotePath = `/data/local/tmp/${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 
 	onProgress?.("pushing", 0);
-	const buffer = await file.arrayBuffer();
-	const data = new Uint8Array(buffer);
+
+	const chunkSize = 64 * 1024;
+	const total = file.size;
+	let sent = 0;
+	let pending: Uint8Array | null = null;
+	const reader = file.stream().getReader();
 
 	const fileStream = new AdbReadableStream<Uint8Array>({
-		start(controller) {
-			const chunkSize = 64 * 1024;
-			let offset = 0;
-			while (offset < data.length) {
-				const end = Math.min(offset + chunkSize, data.length);
-				controller.enqueue(data.slice(offset, end));
-				offset = end;
+		async pull(controller) {
+			if (!pending) {
+				const { done, value } = await reader.read();
+				if (done) {
+					controller.close();
+					return;
+				}
+				pending = value;
 			}
-			controller.close();
+			const slice = pending.subarray(0, chunkSize);
+			pending =
+				pending.byteLength > chunkSize ? pending.subarray(chunkSize) : null;
+			sent += slice.byteLength;
+			if (total > 0) {
+				onProgress?.("pushing", Math.min(99, Math.round((sent / total) * 100)));
+			}
+			controller.enqueue(slice);
+		},
+		cancel(reason) {
+			return reader.cancel(reason);
 		},
 	});
 
@@ -70,7 +85,7 @@ export async function installApk(
 	}
 
 	onProgress?.("pushing", 100);
-	onProgress?.("installing", 50);
+	onProgress?.("installing", 100);
 
 	const result = await execShell(adb, `pm install -r "${remotePath}"`);
 	await execShell(adb, `rm "${remotePath}"`);

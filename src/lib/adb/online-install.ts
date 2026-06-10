@@ -48,14 +48,35 @@ export async function deviceFetchText(adb: Adb, url: string): Promise<string> {
 	return stdout;
 }
 
+async function getRemoteSize(
+	adb: Adb,
+	downloader: Downloader,
+	url: string,
+): Promise<number | null> {
+	if (downloader !== "curl") return null;
+	try {
+		const { stdout } = await execShell(adb, `curl -fsSLI "${url}"`, {
+			timeoutMs: 15_000,
+		});
+		const matches = [...stdout.matchAll(/content-length:\s*(\d+)/gi)];
+		const size = Number(matches.at(-1)?.[1]);
+		return Number.isFinite(size) && size > 0 ? size : null;
+	} catch {
+		return null;
+	}
+}
+
 /**
  * Downloads an APK on the device and installs it. The whole transfer happens
  * device-side (no CORS, no browser memory), then `pm install` runs locally.
+ * Download progress is approximated by polling the destination file size
+ * against the URL's Content-Length; `percent` is null when the size is
+ * unknown or the stage has no measurable progress.
  */
 export async function installFromUrl(
 	adb: Adb,
 	url: string,
-	onStage?: (stage: InstallStage) => void,
+	onProgress?: (stage: InstallStage, percent: number | null) => void,
 ): Promise<void> {
 	const downloader = await detectDownloader(adb);
 	if (!downloader) {
@@ -66,12 +87,44 @@ export async function installFromUrl(
 
 	const dest = `/data/local/tmp/openportal-${Date.now()}.apk`;
 
-	onStage?.("downloading");
+	onProgress?.("downloading", null);
+	const total = await getRemoteSize(adb, downloader, url);
+
 	const download =
 		downloader === "curl"
 			? `curl -fsSL -o "${dest}" "${url}"`
 			: `wget -q -O "${dest}" "${url}"`;
-	const downloadResult = await execShell(adb, download, { timeoutMs: 180_000 });
+
+	let downloadDone = false;
+	const downloadPromise = execShell(adb, download, {
+		timeoutMs: 180_000,
+	}).finally(() => {
+		downloadDone = true;
+	});
+
+	const progressLoop = (async () => {
+		if (!total) return;
+		while (!downloadDone) {
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			if (downloadDone) break;
+			try {
+				const { stdout } = await execShell(
+					adb,
+					`wc -c < "${dest}" 2>/dev/null || echo 0`,
+				);
+				const bytes = Number(stdout.trim());
+				if (bytes > 0) {
+					onProgress?.(
+						"downloading",
+						Math.min(99, Math.round((bytes / total) * 100)),
+					);
+				}
+			} catch {}
+		}
+	})();
+
+	const downloadResult = await downloadPromise;
+	await progressLoop;
 	if (downloadResult.exitCode !== 0) {
 		await execShell(adb, `rm -f "${dest}"`);
 		throw new Error("Download failed on the device");
@@ -87,7 +140,8 @@ export async function installFromUrl(
 		throw new Error("Downloaded file is empty");
 	}
 
-	onStage?.("installing");
+	onProgress?.("downloading", 100);
+	onProgress?.("installing", null);
 	const install = await execShell(adb, `pm install -r "${dest}"`, {
 		timeoutMs: 180_000,
 	});
@@ -96,5 +150,5 @@ export async function installFromUrl(
 		throw new Error(install.stdout || "Install failed");
 	}
 
-	onStage?.("done");
+	onProgress?.("done", null);
 }

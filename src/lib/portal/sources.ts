@@ -120,12 +120,28 @@ export async function resolveApk(
 	}
 }
 
-/** Loose version comparison for a best-effort "update available" signal. */
+/**
+ * Numeric segment-by-segment comparison for a best-effort "update available"
+ * signal. Missing or non-numeric segments count as 0, so "2.3" == "2.3.0" ==
+ * "2.3-beta", and an installed version *newer* than the published release
+ * (e.g. a beta) never reports a phantom update.
+ */
 export function isNewerVersion(latest: string, installed: string): boolean {
-	const a = latest.trim().replace(/^v/i, "");
-	const b = installed.trim().replace(/^v/i, "");
-	if (!a || !b) return false;
-	if (a === b) return false;
-	// Treat "2.3" and "2.3.0" / "2.3-foo" as the same.
-	return !a.startsWith(b) && !b.startsWith(a);
+	const segments = (value: string) =>
+		value
+			.trim()
+			.replace(/^v/i, "")
+			.split(/[.\-_+]/)
+			.map((part) => Number.parseInt(part, 10));
+	const a = segments(latest);
+	const b = segments(installed);
+	if (a.every(Number.isNaN) || b.every(Number.isNaN)) return false;
+	for (let i = 0; i < Math.max(a.length, b.length); i++) {
+		const x = a[i];
+		const y = b[i];
+		const left = x === undefined || Number.isNaN(x) ? 0 : x;
+		const right = y === undefined || Number.isNaN(y) ? 0 : y;
+		if (left !== right) return left > right;
+	}
+	return false;
 }

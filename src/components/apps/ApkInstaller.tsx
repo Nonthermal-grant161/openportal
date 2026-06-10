@@ -56,6 +56,15 @@ export function ApkInstallModal({
 	);
 	const errored = installTasks.filter((task) => task.status === "error");
 
+	const statusLabel = (status: string) =>
+		t(
+			status === "pushing"
+				? "statusPushing"
+				: status === "installing"
+					? "installingApp"
+					: "statusQueued",
+		);
+
 	return (
 		<Modal open={open} onClose={onClose} title={t("installApk")}>
 			<div className="space-y-3">
@@ -85,13 +94,19 @@ export function ApkInstallModal({
 							<span className="truncate font-medium">{task.fileName}</span>
 							<span className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
 								<Loader2 className="h-3 w-3 animate-spin" />
-								{task.status}, {task.progress}%
+								{statusLabel(task.status)}
+								{task.status === "pushing" && <> {task.progress}%</>}
 							</span>
 						</div>
 						<div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
 							<div
-								className="h-full rounded-full bg-foreground transition-all"
-								style={{ width: `${task.progress}%` }}
+								className={cn(
+									"h-full rounded-full bg-foreground transition-all",
+									task.status === "installing" && "animate-pulse",
+								)}
+								style={{
+									width: `${task.status === "installing" ? 100 : task.progress}%`,
+								}}
 							/>
 						</div>
 					</div>

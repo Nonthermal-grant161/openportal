@@ -15,16 +15,30 @@ type Tab = "catalog" | "installed";
 export function AppsPage() {
 	const { t } = useTranslation("apps");
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
+	const checkUpdates = useAppStore((s) => s.checkUpdates);
+	const refreshDefaultLauncher = useAppStore((s) => s.refreshDefaultLauncher);
 	const installedPackages = useAppStore((s) => s.installedPackages);
+	const updates = useAppStore((s) => s.updates);
 	const loading = useAppStore((s) => s.loading);
 	const [tab, setTab] = useState<Tab>("catalog");
 	const [apkOpen, setApkOpen] = useState(false);
 
 	useEffect(() => {
-		refreshInstalled();
-	}, [refreshInstalled]);
+		refreshInstalled().then(() => {
+			checkUpdates();
+			refreshDefaultLauncher();
+		});
+	}, [refreshInstalled, checkUpdates, refreshDefaultLauncher]);
+
+	const handleRefresh = () => {
+		refreshInstalled().then(() => {
+			checkUpdates(true);
+			refreshDefaultLauncher();
+		});
+	};
 
 	const userCount = installedPackages.filter((p) => !p.isSystem).length;
+	const updateCount = Object.keys(updates).length;
 	const isCatalog = tab === "catalog";
 
 	return (
@@ -48,21 +62,19 @@ export function AppsPage() {
 								value: "installed",
 								label: t("tabInstalled"),
 								badge: userCount || undefined,
+								dot: updateCount > 0,
 							},
 						]}
 					/>
-					{!isCatalog && (
-						<button
-							type="button"
-							onClick={() => refreshInstalled()}
-							title={t("refresh")}
-							className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-						>
-							<RefreshCw
-								className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-							/>
-						</button>
-					)}
+					<button
+						type="button"
+						onClick={handleRefresh}
+						title={t("refresh")}
+						aria-label={t("refresh")}
+						className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					>
+						<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+					</button>
 					<Button variant="primary" onClick={() => setApkOpen(true)}>
 						<FileUp className="h-4 w-4" />
 						{t("installApk")}
@@ -70,7 +82,12 @@ export function AppsPage() {
 				</div>
 			</div>
 
-			{isCatalog ? <AppCatalog /> : <InstalledAppsList />}
+			<div className={isCatalog ? undefined : "hidden"}>
+				<AppCatalog />
+			</div>
+			<div className={isCatalog ? "hidden" : undefined}>
+				<InstalledAppsList />
+			</div>
 
 			<ApkInstallModal open={apkOpen} onClose={() => setApkOpen(false)} />
 			<ApkDropOverlay />

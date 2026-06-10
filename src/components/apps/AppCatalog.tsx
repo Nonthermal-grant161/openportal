@@ -78,7 +78,8 @@ export function AppCatalog() {
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 						placeholder={t("searchApps")}
-						className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm"
+						aria-label={t("searchApps")}
+						className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 					/>
 				</div>
 				<div className="-mx-1 overflow-x-auto px-1 pb-1 sm:flex-1">

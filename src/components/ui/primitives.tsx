@@ -94,6 +94,7 @@ export interface SegmentedOption<T extends string> {
 	value: T;
 	label: string;
 	badge?: number | string;
+	dot?: boolean;
 }
 
 export function Segmented<T extends string>({
@@ -139,6 +140,12 @@ export function Segmented<T extends string>({
 							>
 								{opt.badge}
 							</span>
+						)}
+						{opt.dot && (
+							<span
+								aria-hidden="true"
+								className="h-1.5 w-1.5 rounded-full bg-amber-500"
+							/>
 						)}
 					</button>
 				);
