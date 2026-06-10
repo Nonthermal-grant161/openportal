@@ -8,7 +8,7 @@ export function ScreenPage() {
 	return (
 		<div className="mx-auto max-w-4xl space-y-6">
 			<PageHeader title={t("screen.title")} />
-			<ScreenMirror autoStart />
+			<ScreenMirror autoStart textInput />
 		</div>
 	);
 }

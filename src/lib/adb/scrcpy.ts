@@ -1,6 +1,8 @@
 import type { Adb } from "@yume-chan/adb";
 import { AdbScrcpyClient, AdbScrcpyOptions2_3 } from "@yume-chan/adb-scrcpy";
 import {
+	AndroidKeyCode,
+	AndroidKeyEventAction,
 	AndroidMotionEventAction,
 	DefaultServerPath,
 	type ScrcpyControlMessageWriter,
@@ -17,7 +19,12 @@ const SERVER_VERSION = "2.3";
 // scrcpy uses negative pointer ids for synthetic pointers; -1 = mouse.
 const MOUSE_POINTER_ID = -1n;
 
-export { AndroidMotionEventAction };
+// scrcpy's text injection turns characters into key events via the device's
+// key-character map, which only covers printable ASCII. Anything outside that
+// (accents, emoji…) is silently dropped, so we paste it via the clipboard.
+const PRINTABLE_ASCII = /^[\x20-\x7e]*$/;
+
+export { AndroidMotionEventAction, AndroidKeyCode };
 export type TouchAction =
 	(typeof AndroidMotionEventAction)[keyof typeof AndroidMotionEventAction];
 
@@ -31,6 +38,14 @@ export interface ScrcpySession {
 	readonly hasControl: boolean;
 	/** Inject a touch at normalized coordinates (0..1). */
 	injectTouch(action: TouchAction, normX: number, normY: number): Promise<void>;
+	/**
+	 * Type text into the field currently focused on the device. Printable ASCII
+	 * goes through scrcpy's text injection; anything else is pasted via the
+	 * device clipboard so accents and emoji survive.
+	 */
+	injectText(text: string): Promise<void>;
+	/** Press (down then up) a single Android key, e.g. Enter or Backspace. */
+	pressKey(keyCode: AndroidKeyCode): Promise<void>;
 	stop: () => Promise<void>;
 }
 
@@ -133,6 +148,34 @@ export async function startScrcpy(
 				pressure: isUp ? 0 : 1,
 				actionButton: isTap ? 1 : 0,
 				buttons: isUp ? 0 : 1,
+			});
+		},
+		async injectText(text) {
+			if (!controller || !text) return;
+			if (PRINTABLE_ASCII.test(text)) {
+				await controller.injectText(text);
+			} else {
+				// sequence 0 = fire-and-forget, the device sends no acknowledgement.
+				await controller.setClipboard({
+					sequence: 0n,
+					paste: true,
+					content: text,
+				});
+			}
+		},
+		async pressKey(keyCode) {
+			if (!controller) return;
+			await controller.injectKeyCode({
+				action: AndroidKeyEventAction.Down,
+				keyCode,
+				repeat: 0,
+				metaState: 0,
+			});
+			await controller.injectKeyCode({
+				action: AndroidKeyEventAction.Up,
+				keyCode,
+				repeat: 0,
+				metaState: 0,
 			});
 		},
 		async stop() {

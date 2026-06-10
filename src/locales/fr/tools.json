@@ -52,7 +52,12 @@
 		"retry": "Réessayer",
 		"error": "Impossible d'afficher l'écran",
 		"unsupported": "La recopie d'écran nécessite un navigateur Chromium récent",
-		"demoUnavailable": "L'aperçu de l'écran n'est pas disponible en mode démo"
+		"demoUnavailable": "L'aperçu de l'écran n'est pas disponible en mode démo",
+		"typePlaceholder": "Tapez du texte…",
+		"typeHint": "Touchez d'abord un champ sur l'appareil, puis tapez ici",
+		"send": "Envoyer le texte",
+		"enter": "Entrée",
+		"backspace": "Retour arrière"
 	},
 	"flags": {
 		"title": "Indicateurs de fonctionnalités",

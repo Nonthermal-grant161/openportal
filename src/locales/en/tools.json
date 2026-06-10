@@ -52,7 +52,12 @@
 		"retry": "Retry",
 		"error": "Could not display the screen",
 		"unsupported": "Screen mirroring needs a recent Chromium browser",
-		"demoUnavailable": "Screen preview isn't available in demo mode"
+		"demoUnavailable": "Screen preview isn't available in demo mode",
+		"typePlaceholder": "Type text…",
+		"typeHint": "Tap a text field on the device first, then type here",
+		"send": "Send text",
+		"enter": "Enter",
+		"backspace": "Backspace"
 	},
 	"flags": {
 		"title": "Feature Flags",
