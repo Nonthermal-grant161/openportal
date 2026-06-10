@@ -5,17 +5,15 @@ import { StorageBar } from "@/components/dashboard/StorageBar";
 import { ScreenMirror } from "@/components/screen/ScreenMirror";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
-import { useUIStore } from "@/store/ui-store";
 import { MonitorSmartphone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export function DashboardPage() {
 	const { t } = useTranslation("dashboard");
-	const { mode } = useUIStore();
 	const adb = useDeviceStore((s) => s.adb);
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
-	const [showScreen, setShowScreen] = useState(true);
+	const [showScreen, setShowScreen] = useState(false);
 
 	useEffect(() => {
 		refreshInstalled();
@@ -42,7 +40,7 @@ export function DashboardPage() {
 			<DeviceCard />
 			<StatusGrid />
 			<StorageBar />
-			{mode === "classic" && <QuickActions />}
+			<QuickActions />
 		</div>
 	);
 }
