@@ -1,6 +1,6 @@
 import { getPlatformSupport } from "@/lib/utils/platform";
 import { useDeviceStore } from "@/store/device-store";
-import { ArrowRight, Monitor, Usb } from "lucide-react";
+import { ArrowRight, Github, Monitor, Usb } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { BrowserCheck } from "./BrowserCheck";
 
@@ -12,7 +12,7 @@ export function ConnectScreen() {
 	const isConnecting = state === "connecting" || state === "authenticating";
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center px-6">
+		<div className="relative flex min-h-screen flex-col items-center justify-center px-6">
 			<div className="w-full max-w-md space-y-8">
 				<div className="text-center">
 					<div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-foreground/5">
@@ -60,6 +60,16 @@ export function ConnectScreen() {
 					<Step number={3} text={t("step3")} />
 				</div>
 			</div>
+
+			<a
+				href="https://github.com/andronedev/openportal"
+				target="_blank"
+				rel="noreferrer"
+				className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+			>
+				<Github className="h-4 w-4" />
+				{t("sourceCode")}
+			</a>
 		</div>
 	);
 }

@@ -1,8 +1,10 @@
+import { ConfirmDialog } from "@/components/ui/primitives";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
 import {
 	FileText,
 	FolderOpen,
+	Github,
 	LayoutDashboard,
 	LogOut,
 	MonitorSmartphone,
@@ -10,6 +12,7 @@ import {
 	SlidersHorizontal,
 	Terminal,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
@@ -63,6 +66,7 @@ export function Sidebar({
 	const { t } = useTranslation();
 	const { mode } = useUIStore();
 	const disconnect = useDeviceStore((s) => s.disconnect);
+	const [confirmDisconnect, setConfirmDisconnect] = useState(false);
 
 	const visibleItems = NAV_ITEMS.filter(
 		(item) => item.mode === "all" || mode === "advanced",
@@ -111,9 +115,18 @@ export function Sidebar({
 				</nav>
 
 				<div className="border-t border-border p-3">
+					<a
+						href="https://github.com/andronedev/openportal"
+						target="_blank"
+						rel="noreferrer"
+						className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
+					>
+						<Github className="h-4 w-4" />
+						{t("sourceCode")}
+					</a>
 					<button
 						type="button"
-						onClick={disconnect}
+						onClick={() => setConfirmDisconnect(true)}
 						className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
 					>
 						<LogOut className="h-4 w-4" />
@@ -121,6 +134,16 @@ export function Sidebar({
 					</button>
 				</div>
 			</aside>
+
+			<ConfirmDialog
+				open={confirmDisconnect}
+				onClose={() => setConfirmDisconnect(false)}
+				onConfirm={disconnect}
+				title={t("disconnectConfirmTitle")}
+				message={t("disconnectConfirmMessage")}
+				confirmLabel={t("disconnect")}
+				danger
+			/>
 		</>
 	);
 }
