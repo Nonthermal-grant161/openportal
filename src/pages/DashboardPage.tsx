@@ -2,7 +2,6 @@ import { DeviceCard } from "@/components/dashboard/DeviceCard";
 import { DeviceHero } from "@/components/dashboard/DeviceHero";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { SetupGuide } from "@/components/dashboard/SetupGuide";
-import { StatusGrid } from "@/components/dashboard/StatusGrid";
 import { StorageBar } from "@/components/dashboard/StorageBar";
 import { ScreenMirror } from "@/components/screen/ScreenMirror";
 import { useAppStore } from "@/store/app-store";
@@ -55,7 +54,6 @@ export function DashboardPage() {
 			<h1 className="text-2xl font-bold">{t("title")}</h1>
 			{screenBlock}
 			<DeviceCard />
-			<StatusGrid />
 			<StorageBar />
 			<QuickActions />
 		</div>

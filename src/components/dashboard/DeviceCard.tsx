@@ -2,11 +2,39 @@ import { useDeviceStore } from "@/store/device-store";
 import { Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+interface StatusFlag {
+	labelKey: string;
+	value: boolean;
+	positiveKey: string;
+	negativeKey: string;
+}
+
 export function DeviceCard() {
 	const { t } = useTranslation("dashboard");
 	const { deviceInfo, portalModel } = useDeviceStore();
 
 	if (!deviceInfo || !portalModel) return null;
+
+	const flags: StatusFlag[] = [
+		{
+			labelKey: "testHarness",
+			value: deviceInfo.testHarnessActive,
+			positiveKey: "active",
+			negativeKey: "inactive",
+		},
+		{
+			labelKey: "adb",
+			value: deviceInfo.adbPersistent,
+			positiveKey: "active",
+			negativeKey: "inactive",
+		},
+		{
+			labelKey: "bootloaderLocked",
+			value: deviceInfo.bootloaderLocked,
+			positiveKey: "locked",
+			negativeKey: "unlocked",
+		},
+	];
 
 	return (
 		<div className="flex items-start gap-6 rounded-xl border border-border bg-card p-6">
@@ -28,6 +56,26 @@ export function DeviceCard() {
 						label={t("securityPatch")}
 						value={deviceInfo.securityPatch}
 					/>
+				</div>
+				<div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
+					{flags.map((flag) => (
+						<div
+							key={flag.labelKey}
+							className="flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-1.5"
+						>
+							<div
+								className={`h-2 w-2 shrink-0 rounded-full ${
+									flag.value ? "bg-emerald-500" : "bg-zinc-500"
+								}`}
+							/>
+							<span className="text-xs text-muted-foreground">
+								{t(flag.labelKey)}
+							</span>
+							<span className="text-xs font-medium">
+								{t(flag.value ? flag.positiveKey : flag.negativeKey)}
+							</span>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>
