@@ -11,6 +11,20 @@ export type CatalogCategory =
 
 export type AppSource = "github" | "fdroid" | "url" | "external";
 
+/**
+ * Post-install configuration for an app.
+ *
+ * - `commands`: declarative shell commands run to finish setup. Set `auto: true`
+ *   to run them silently right after install (e.g. a launcher that becomes the
+ *   default); otherwise they run when the user clicks the setup gear.
+ * - `custom`: setup needs a UI (e.g. uploading credentials). `id` maps to a
+ *   panel registered in `src/components/apps/setup/registry.ts`. This is the one
+ *   case where a catalog entry also needs a matching code change.
+ */
+export type AppSetup =
+	| { kind: "commands"; commands: string[]; auto?: boolean; labelKey?: string }
+	| { kind: "custom"; id: string; labelKey?: string };
+
 export interface CatalogApp {
 	id: string;
 	name: string;
@@ -32,10 +46,8 @@ export interface CatalogApp {
 	downloadUrl?: string;
 	/** Optional remote icon URL; falls back to an initials avatar when absent. */
 	iconUrl?: string;
-	/** Shell commands run after the app is installed to finish setup. */
-	postInstallCommands?: string[];
-	/** i18n key (apps namespace) for the post-install button label. */
-	postInstallLabelKey?: string;
+	/** Optional post-install configuration (see {@link AppSetup}). */
+	setup?: AppSetup;
 }
 
 // The catalog is data-only and lives in catalog.json so the community can submit

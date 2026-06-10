@@ -64,8 +64,11 @@ array:
   "featured": false,
   "downloadUrl": "https://...",
   "iconUrl": "https://...",
-  "postInstallCommands": ["settings put secure ..."],
-  "postInstallLabelKey": "setAsScreensaver"
+  "setup": {
+    "kind": "commands",
+    "commands": ["settings put secure ..."],
+    "labelKey": "setAsDefault"
+  }
 }
 ```
 
@@ -77,9 +80,17 @@ Field reference:
   `assistant`, `utility`
 - `verified` — `true` only if the app was tested on a Portal
 - `featured` — featured apps are the ones shown in Classic mode
-- `downloadUrl`, `iconUrl`, `postInstallCommands`, `postInstallLabelKey` —
-  optional. `postInstallLabelKey` is an i18n key in
-  `src/locales/<lang>/apps.json`.
+- `downloadUrl`, `iconUrl` — optional
+- `setup` — optional post-install configuration, one of two shapes:
+  - `{ "kind": "commands", "commands": [...], "auto"?: boolean, "labelKey"?: string }`
+    — shell commands to finish setup. `auto: true` runs them silently right
+    after install (e.g. a launcher becoming the default); otherwise they run
+    when the user clicks the setup gear on the app card. `labelKey` is an i18n
+    key in `src/locales/<lang>/apps.json` used for the gear's tooltip.
+  - `{ "kind": "custom", "id": "...", "labelKey"?: string }` — setup that needs
+    a UI (e.g. uploading credentials). The `id` must match a panel registered in
+    `src/components/apps/setup/registry.ts`. **This is the only catalog change
+    that also requires code** — most apps should use `commands`.
 
 Guidelines:
 

@@ -36,8 +36,9 @@
 	"postInstallDone": "Configuration post-installation terminée",
 	"setAsDefault": "Définir comme launcher par défaut",
 	"defaultLauncher": "Launcher par défaut",
-	"setAsScreensaver": "Définir comme économiseur d'écran",
-	"installAndSetup": "Configurer",
+	"setUpGphotos": "Configurer l'économiseur",
+	"runSetup": "Lancer la configuration",
+	"installAndConfigure": "Installer et configurer",
 	"getApk": "Obtenir l'APK",
 	"dragDropToInstall": "Glissez-déposez l'APK pour l'installer",
 	"version": "Version {{version}}",
@@ -69,5 +70,16 @@
 	"refresh": "Actualiser",
 	"openApp": "Ouvrir l'application",
 	"launched": "{{name}} lancé",
-	"fromCatalog": "Catalogue"
+	"fromCatalog": "Catalogue",
+	"gphotos": {
+		"intro": "Affichez vos albums Google Photos en économiseur d'écran. Cela nécessite vos propres identifiants OAuth Google Cloud.",
+		"step1": "Créez un projet Google Cloud et activez l'API Photos Picker.",
+		"step2": "Configurez l'écran de consentement OAuth (Externe) et ajoutez-vous comme testeur.",
+		"step3": "Créez un client OAuth « Application de bureau » et téléchargez son client_secret.json.",
+		"guideLink": "Guide d'installation complet",
+		"credentialsLabel": "Identifiants OAuth (client_secret.json)",
+		"chooseFile": "Choisir un fichier",
+		"apply": "Appliquer et lancer",
+		"done": "Économiseur configuré — terminez la connexion sur le Portal."
+	}
 }

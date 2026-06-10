@@ -20,6 +20,7 @@ import {
 	Download,
 	ExternalLink,
 	Loader2,
+	Settings,
 	SquareArrowOutUpRight,
 	Trash2,
 } from "lucide-react";
@@ -27,6 +28,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { AppIcon } from "./AppIcon";
+import { AppSetupPanel } from "./setup/AppSetupPanel";
 
 export function AppCard({ app }: { app: CatalogApp }) {
 	const { t } = useTranslation("apps");
@@ -40,10 +42,15 @@ export function AppCard({ app }: { app: CatalogApp }) {
 	const [postInstalling, setPostInstalling] = useState(false);
 	const [uninstalling, setUninstalling] = useState(false);
 	const [confirmUninstall, setConfirmUninstall] = useState(false);
+	const [setupOpen, setSetupOpen] = useState(false);
 	const [isDefaultLauncher, setIsDefaultLauncher] = useState(false);
 
 	const autoInstallable = canAutoInstall(app);
 	const isLauncher = app.category === "launcher";
+	const setup = app.setup;
+	// A launcher with auto setup runs on install; the gear is only a fallback for
+	// when it has drifted from being the default again.
+	const autoSetup = setup?.kind === "commands" && setup.auto === true;
 
 	const refreshDefaultLauncher = useCallback(async () => {
 		if (!adb || !isLauncher) return;
@@ -98,6 +105,16 @@ export function AppCard({ app }: { app: CatalogApp }) {
 			});
 			setUpdateUrl(null);
 			await refreshInstalled();
+			// Auto setup (e.g. set a launcher as default) runs silently right after
+			// a fresh install; the install button already advertises it.
+			if (!updating && setup?.kind === "commands" && setup.auto) {
+				try {
+					await runPostInstall(adb, setup.commands);
+					await refreshDefaultLauncher();
+				} catch {
+					// Best-effort; the setup gear stays available to retry.
+				}
+			}
 		} catch (err) {
 			toast.error(app.name, {
 				description: err instanceof Error ? err.message : t("installFailed"),
@@ -107,11 +124,11 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		}
 	};
 
-	const handlePostInstall = async () => {
-		if (!adb || !app.postInstallCommands?.length) return;
+	const runCommands = async (commands: string[]) => {
+		if (!adb || !commands.length) return;
 		setPostInstalling(true);
 		try {
-			await runPostInstall(adb, app.postInstallCommands);
+			await runPostInstall(adb, commands);
 			toast.success(app.name, { description: t("postInstallDone") });
 			await refreshDefaultLauncher();
 		} catch (err) {
@@ -121,6 +138,12 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		} finally {
 			setPostInstalling(false);
 		}
+	};
+
+	const handleSetup = () => {
+		if (!setup) return;
+		if (setup.kind === "custom") setSetupOpen(true);
+		else runCommands(setup.commands);
 	};
 
 	const handleOpen = async () => {
@@ -149,11 +172,11 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		}
 	};
 
-	const showSetup =
-		isInstalled &&
-		!updateUrl &&
-		!!app.postInstallCommands &&
-		!(isLauncher && isDefaultLauncher);
+	// The setup gear is the single entry point for finishing an app's setup —
+	// running its commands, or opening its custom panel. Hidden once an auto
+	// launcher is already the default (nothing left to do).
+	const showSetupGear =
+		isInstalled && !updateUrl && !!setup && !(isLauncher && isDefaultLauncher);
 
 	return (
 		<div className="flex flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/30">
@@ -207,24 +230,26 @@ export function AppCard({ app }: { app: CatalogApp }) {
 								<ArrowUpCircle className="h-3.5 w-3.5" />
 								{t("update")}
 							</button>
-						) : showSetup ? (
-							<button
-								type="button"
-								onClick={handlePostInstall}
-								disabled={postInstalling}
-								className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
-							>
-								{postInstalling ? (
-									<Loader2 className="h-3.5 w-3.5 animate-spin" />
-								) : (
-									t(app.postInstallLabelKey ?? "installAndSetup")
-								)}
-							</button>
 						) : (
 							<span className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-500">
 								<Check className="h-3.5 w-3.5" />
 								{t("installed")}
 							</span>
+						)}
+						{showSetupGear && setup && (
+							<button
+								type="button"
+								onClick={handleSetup}
+								disabled={postInstalling}
+								title={t(setup.labelKey ?? "runSetup")}
+								className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-50"
+							>
+								{postInstalling ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<Settings className="h-4 w-4" />
+								)}
+							</button>
 						)}
 						<button
 							type="button"
@@ -255,7 +280,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 						className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-foreground px-3 py-2 text-xs font-medium text-background transition-opacity hover:opacity-90"
 					>
 						<Download className="h-3.5 w-3.5" />
-						{t("install")}
+						{t(autoSetup ? "installAndConfigure" : "install")}
 					</button>
 				) : (
 					app.downloadUrl && (
@@ -280,6 +305,12 @@ export function AppCard({ app }: { app: CatalogApp }) {
 				message={t("uninstallConfirm", { name: app.name })}
 				confirmLabel={t("uninstall")}
 				danger
+			/>
+
+			<AppSetupPanel
+				app={app}
+				open={setupOpen}
+				onClose={() => setSetupOpen(false)}
 			/>
 		</div>
 	);

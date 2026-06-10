@@ -207,13 +207,6 @@ export async function getAppPermissions(
 		.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function setDefaultLauncher(
-	adb: Adb,
-	componentName: string,
-): Promise<void> {
-	await execShell(adb, `cmd package set-home-activity ${componentName}`);
-}
-
 /** Returns the package name of the current default launcher (home app). */
 export async function getDefaultLauncher(adb: Adb): Promise<string> {
 	const { stdout } = await execShell(

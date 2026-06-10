@@ -36,8 +36,9 @@
 	"postInstallDone": "Post-install setup complete",
 	"setAsDefault": "Set as default launcher",
 	"defaultLauncher": "Default launcher",
-	"setAsScreensaver": "Set as screensaver",
-	"installAndSetup": "Run setup",
+	"setUpGphotos": "Set up screensaver",
+	"runSetup": "Run setup",
+	"installAndConfigure": "Install & set up",
 	"getApk": "Get APK",
 	"dragDropToInstall": "Drag & drop the APK to install",
 	"version": "Version {{version}}",
@@ -69,5 +70,16 @@
 	"refresh": "Refresh",
 	"openApp": "Open app",
 	"launched": "Launched {{name}}",
-	"fromCatalog": "Catalog"
+	"fromCatalog": "Catalog",
+	"gphotos": {
+		"intro": "Show your Google Photos albums as a screensaver. This needs your own Google Cloud OAuth credentials.",
+		"step1": "Create a Google Cloud project and enable the Photos Picker API.",
+		"step2": "Configure the OAuth consent screen (External) and add yourself as a test user.",
+		"step3": "Create a Desktop OAuth client and download its client_secret.json.",
+		"guideLink": "Full setup guide",
+		"credentialsLabel": "OAuth credentials (client_secret.json)",
+		"chooseFile": "Choose file",
+		"apply": "Apply & launch",
+		"done": "Screensaver configured — finish signing in on the Portal."
+	}
 }

@@ -11,11 +11,15 @@
 		"source": "github",
 		"repo": "starbrightlab/immortal",
 		"downloadUrl": "https://github.com/starbrightlab/immortal/releases/latest",
-		"postInstallCommands": [
-			"cmd package set-home-activity com.immortal.launcher/.HomeActivity",
-			"cmd overlay disable --user 0 com.facebook.aloha.rro.niu.android"
-		],
-		"postInstallLabelKey": "setAsDefault"
+		"setup": {
+			"kind": "commands",
+			"auto": true,
+			"commands": [
+				"cmd package set-home-activity com.immortal.launcher/.HomeActivity",
+				"cmd overlay disable --user 0 com.facebook.aloha.rro.niu.android"
+			],
+			"labelKey": "setAsDefault"
+		}
 	},
 	{
 		"id": "aurora-store",
@@ -31,7 +35,7 @@
 	{
 		"id": "google-photos-screensaver",
 		"name": "Google Photos Screensaver",
-		"packageName": "com.ram.nat.portalgphotos",
+		"packageName": "com.ramnat.portalgphotos",
 		"description": "Use your Google Photos albums as a screensaver on your Portal",
 		"category": "photo",
 		"version": "latest",
@@ -40,11 +44,11 @@
 		"source": "github",
 		"repo": "ram-nat/portal-gphotos",
 		"downloadUrl": "https://github.com/ram-nat/portal-gphotos/releases/latest",
-		"postInstallCommands": [
-			"settings put secure screensaver_components com.ram.nat.portalgphotos/.ScreensaverService",
-			"settings put secure screensaver_enabled 1"
-		],
-		"postInstallLabelKey": "setAsScreensaver"
+		"setup": {
+			"kind": "custom",
+			"id": "gphotos",
+			"labelKey": "setUpGphotos"
+		}
 	},
 	{
 		"id": "fdroid",
