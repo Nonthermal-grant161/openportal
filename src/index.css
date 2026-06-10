@@ -85,6 +85,12 @@
 		font-family: var(--font-sans);
 	}
 
+	/* Tailwind v4 no longer sets cursor: pointer on buttons — restore it */
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+
 	/* Custom scrollbar — Firefox */
 	* {
 		scrollbar-width: thin;
