@@ -81,6 +81,9 @@ Field reference:
 - `verified` — `true` only if the app was tested on a Portal
 - `featured` — featured apps are the ones shown in Classic mode
 - `downloadUrl`, `iconUrl` — optional
+- `skipUpdateCheck` — optional; set `true` to suppress the "update available"
+  check when upstream versioning is unreliable (e.g. a release tag that doesn't
+  match the APK's embedded versionName, which would flag a phantom update)
 - `setup` — optional post-install configuration, one of two shapes:
   - `{ "kind": "commands", "commands": [...], "auto"?: boolean, "labelKey"?: string }`
     — shell commands to finish setup. `auto: true` runs them silently right

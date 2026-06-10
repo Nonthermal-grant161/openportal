@@ -44,6 +44,7 @@
 		"source": "github",
 		"repo": "ram-nat/portal-gphotos",
 		"downloadUrl": "https://github.com/ram-nat/portal-gphotos/releases/latest",
+		"skipUpdateCheck": true,
 		"setup": {
 			"kind": "custom",
 			"id": "gphotos",

@@ -48,6 +48,12 @@ export interface CatalogApp {
 	iconUrl?: string;
 	/** Optional post-install configuration (see {@link AppSetup}). */
 	setup?: AppSetup;
+	/**
+	 * Skip the "update available" check for this app. Set it when upstream
+	 * versioning is unreliable (e.g. release tags that don't match the APK's
+	 * embedded versionName), which would otherwise surface a phantom update.
+	 */
+	skipUpdateCheck?: boolean;
 }
 
 // The catalog is data-only and lives in catalog.json so the community can submit

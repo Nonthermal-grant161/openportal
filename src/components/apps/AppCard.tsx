@@ -73,7 +73,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 
 	// Best-effort "update available" check for installed, auto-installable apps.
 	useEffect(() => {
-		if (!adb || !isInstalled || !autoInstallable) return;
+		if (!adb || !isInstalled || !autoInstallable || app.skipUpdateCheck) return;
 		let cancelled = false;
 		(async () => {
 			try {

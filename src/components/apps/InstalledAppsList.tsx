@@ -71,7 +71,10 @@ export function InstalledAppsList() {
 		if (!adb) return;
 		const candidates = packages
 			.map((pkg) => getCatalogApp(pkg.packageName))
-			.filter((app): app is CatalogApp => !!app && canAutoInstall(app));
+			.filter(
+				(app): app is CatalogApp =>
+					!!app && canAutoInstall(app) && !app.skipUpdateCheck,
+			);
 		if (candidates.length === 0) {
 			setUpdates({});
 			return;
