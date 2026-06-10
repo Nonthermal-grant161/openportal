@@ -90,6 +90,63 @@ export function Spinner({ className }: { className?: string }) {
 	return <Loader2 className={cn("h-5 w-5 animate-spin", className)} />;
 }
 
+export interface SegmentedOption<T extends string> {
+	value: T;
+	label: string;
+	badge?: number | string;
+}
+
+export function Segmented<T extends string>({
+	value,
+	onChange,
+	options,
+	className,
+	size = "md",
+}: {
+	value: T;
+	onChange: (value: T) => void;
+	options: SegmentedOption<T>[];
+	className?: string;
+	size?: "sm" | "md";
+}) {
+	const pad = size === "sm" ? "px-2.5 py-1 text-xs" : "px-3 py-1.5 text-sm";
+	return (
+		<div className={cn("inline-flex rounded-lg bg-secondary p-1", className)}>
+			{options.map((opt) => {
+				const active = opt.value === value;
+				return (
+					<button
+						key={opt.value}
+						type="button"
+						onClick={() => onChange(opt.value)}
+						className={cn(
+							"inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-colors",
+							pad,
+							active
+								? "bg-background text-foreground shadow-sm"
+								: "text-muted-foreground hover:text-foreground",
+						)}
+					>
+						{opt.label}
+						{opt.badge !== undefined && opt.badge !== null && (
+							<span
+								className={cn(
+									"rounded-full px-1.5 text-[10px] font-semibold tabular-nums",
+									active
+										? "bg-secondary text-foreground"
+										: "bg-background/60 text-muted-foreground",
+								)}
+							>
+								{opt.badge}
+							</span>
+						)}
+					</button>
+				);
+			})}
+		</div>
+	);
+}
+
 export function EmptyState({
 	icon: Icon,
 	title,
