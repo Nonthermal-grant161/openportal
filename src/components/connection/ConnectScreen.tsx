@@ -46,7 +46,9 @@ export function ConnectScreen() {
 						{error.toLowerCase().includes("already") && (
 							<p className="mt-1 text-red-300">
 								{t("adbAlreadyRunningHint")}{" "}
-								<code className="rounded bg-red-500/20 px-1 font-mono">adb kill-server</code>
+								<code className="rounded bg-red-500/20 px-1 font-mono">
+									adb kill-server
+								</code>
 							</p>
 						)}
 					</div>
@@ -57,7 +59,6 @@ export function ConnectScreen() {
 					<Step number={2} text={t("step2")} />
 					<Step number={3} text={t("step3")} />
 				</div>
-
 			</div>
 		</div>
 	);
