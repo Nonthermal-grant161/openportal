@@ -10,14 +10,22 @@ import {
 	clearAppData,
 	forceStopApp,
 	getAppPermissions,
+	getInstalledVersion,
 	launchApp,
 } from "@/lib/adb/app-manager";
+import { installFromUrl } from "@/lib/adb/online-install";
 import type { InstalledPackage } from "@/lib/adb/types";
-import { getCatalogApp } from "@/lib/portal/catalog";
+import { type CatalogApp, getCatalogApp } from "@/lib/portal/catalog";
+import {
+	canAutoInstall,
+	isNewerVersion,
+	resolveApk,
+} from "@/lib/portal/sources";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
 import {
+	ArrowUpCircle,
 	Boxes,
 	KeyRound,
 	Loader2,
@@ -50,10 +58,51 @@ export function InstalledAppsList() {
 	const [toUninstall, setToUninstall] = useState<InstalledPackage | null>(null);
 	const [toClear, setToClear] = useState<InstalledPackage | null>(null);
 	const [permsFor, setPermsFor] = useState<InstalledPackage | null>(null);
+	// Catalog package name -> APK url of an available update (best-effort).
+	const [updates, setUpdates] = useState<Record<string, string>>({});
 
 	useEffect(() => {
 		refreshInstalled();
 	}, [refreshInstalled]);
+
+	// Surface "update available" here too, mirroring the catalog: for every
+	// installed app we know how to fetch, compare the latest version on offer.
+	useEffect(() => {
+		if (!adb) return;
+		const candidates = packages
+			.map((pkg) => getCatalogApp(pkg.packageName))
+			.filter((app): app is CatalogApp => !!app && canAutoInstall(app));
+		if (candidates.length === 0) {
+			setUpdates({});
+			return;
+		}
+		let cancelled = false;
+		(async () => {
+			const found: Record<string, string> = {};
+			await Promise.all(
+				candidates.map(async (app) => {
+					try {
+						const [latest, installed] = await Promise.all([
+							resolveApk(adb, app),
+							getInstalledVersion(adb, app.packageName),
+						]);
+						if (
+							installed &&
+							isNewerVersion(latest.version, installed.versionName)
+						) {
+							found[app.packageName] = latest.url;
+						}
+					} catch {
+						// Update checks are best-effort; ignore failures.
+					}
+				}),
+			);
+			if (!cancelled) setUpdates(found);
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, [adb, packages]);
 
 	// Classic mode only ever deals with user-installed apps.
 	const effectiveFilter: Filter = advanced ? filter : "user";
@@ -88,6 +137,18 @@ export function InstalledAppsList() {
 		} finally {
 			setBusy(null);
 		}
+	};
+
+	const applyUpdate = (pkg: InstalledPackage, url: string) => {
+		if (!adb) return;
+		runAction(
+			pkg,
+			async () => {
+				await installFromUrl(adb, url);
+				await refreshInstalled();
+			},
+			t("updated"),
+		);
 	};
 
 	return (
@@ -127,6 +188,7 @@ export function InstalledAppsList() {
 					<div className="divide-y divide-border">
 						{filtered.map((pkg) => {
 							const catApp = getCatalogApp(pkg.packageName);
+							const updateUrl = updates[pkg.packageName];
 							return (
 								<div
 									key={pkg.packageName}
@@ -148,6 +210,12 @@ export function InstalledAppsList() {
 														<Boxes className="h-3 w-3" />
 														{t("fromCatalog")}
 													</span>
+													{updateUrl && (
+														<span className="flex shrink-0 items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-500">
+															<ArrowUpCircle className="h-3 w-3" />
+															{t("updateAvailable")}
+														</span>
+													)}
 												</div>
 												<p className="truncate font-mono text-[10px] text-muted-foreground">
 													{pkg.packageName}
@@ -167,6 +235,14 @@ export function InstalledAppsList() {
 									<div className="flex items-center gap-1">
 										{busy === pkg.packageName && (
 											<Loader2 className="mr-1 h-4 w-4 animate-spin text-muted-foreground" />
+										)}
+										{updateUrl && (
+											<IconAction
+												title={t("update")}
+												onClick={() => applyUpdate(pkg, updateUrl)}
+											>
+												<ArrowUpCircle className="h-4 w-4 text-sky-500" />
+											</IconAction>
 										)}
 										<IconAction
 											title={t("openApp")}
