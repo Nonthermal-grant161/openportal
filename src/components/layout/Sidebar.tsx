@@ -7,7 +7,6 @@ import {
 	LogOut,
 	MonitorSmartphone,
 	Package,
-	Settings,
 	SlidersHorizontal,
 	Terminal,
 } from "lucide-react";
@@ -26,12 +25,6 @@ const NAV_ITEMS = [
 		to: "/screen",
 		icon: MonitorSmartphone,
 		labelKey: "screen",
-		mode: "all" as const,
-	},
-	{
-		to: "/settings",
-		icon: Settings,
-		labelKey: "settings",
 		mode: "all" as const,
 	},
 	{

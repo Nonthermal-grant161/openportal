@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 const NAV_LABEL_KEYS: Record<string, string> = {
 	d: "dashboard",
 	a: "apps",
-	s: "settings",
 	f: "files",
 	p: "screen",
 	t: "terminal",

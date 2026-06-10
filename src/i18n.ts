@@ -5,13 +5,11 @@ import { initReactI18next } from "react-i18next";
 import appsEn from "@/locales/en/apps.json";
 import commonEn from "@/locales/en/common.json";
 import dashboardEn from "@/locales/en/dashboard.json";
-import settingsEn from "@/locales/en/settings.json";
 import toolsEn from "@/locales/en/tools.json";
 
 import appsFr from "@/locales/fr/apps.json";
 import commonFr from "@/locales/fr/common.json";
 import dashboardFr from "@/locales/fr/dashboard.json";
-import settingsFr from "@/locales/fr/settings.json";
 import toolsFr from "@/locales/fr/tools.json";
 
 i18n
@@ -23,14 +21,12 @@ i18n
 				common: commonEn,
 				dashboard: dashboardEn,
 				apps: appsEn,
-				settings: settingsEn,
 				tools: toolsEn,
 			},
 			fr: {
 				common: commonFr,
 				dashboard: dashboardFr,
 				apps: appsFr,
-				settings: settingsFr,
 				tools: toolsFr,
 			},
 		},

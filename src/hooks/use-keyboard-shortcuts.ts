@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 export const NAV_SHORTCUTS: Record<string, string> = {
 	d: "/",
 	a: "/apps",
-	s: "/settings",
 	f: "/files",
 	p: "/screen",
 	t: "/terminal",
@@ -28,7 +27,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 /**
  * Global keyboard shortcuts:
  *  - `?`      toggle the help overlay
- *  - `g` then d/a/s/f/p/t/l/x  navigate
+ *  - `g` then d/a/f/p/t/l/x  navigate
  *  - `m`      toggle Classic/Advanced mode
  */
 export function useKeyboardShortcuts() {

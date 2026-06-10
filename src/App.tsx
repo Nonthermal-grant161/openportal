@@ -6,7 +6,6 @@ import { MOCK_DEVICE_INFO } from "@/lib/adb/mock";
 import { resolveModel } from "@/lib/portal/models";
 import { AppsPage } from "@/pages/AppsPage";
 import { DashboardPage } from "@/pages/DashboardPage";
-import { SettingsPage } from "@/pages/SettingsPage";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
 import { Suspense, lazy, useEffect } from "react";
@@ -74,7 +73,6 @@ export default function App() {
 							<Route element={<AppShell />}>
 								<Route index element={<DashboardPage />} />
 								<Route path="apps" element={<AppsPage />} />
-								<Route path="settings" element={<SettingsPage />} />
 								<Route path="files" element={<FilesPage />} />
 								<Route path="screen" element={<ScreenPage />} />
 								<Route path="terminal" element={<TerminalPage />} />
