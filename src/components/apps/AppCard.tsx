@@ -9,6 +9,8 @@ import { type InstallStage, installFromUrl } from "@/lib/adb/online-install";
 import type { CatalogApp } from "@/lib/portal/catalog";
 import {
 	canAutoInstall,
+	getSourceLabel,
+	getSourceUrl,
 	isNewerVersion,
 	resolveApk,
 } from "@/lib/portal/sources";
@@ -19,6 +21,7 @@ import {
 	Check,
 	Download,
 	ExternalLink,
+	Info,
 	Loader2,
 	Settings,
 	SquareArrowOutUpRight,
@@ -51,6 +54,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 	// A launcher with auto setup runs on install; the gear is only a fallback for
 	// when it has drifted from being the default again.
 	const autoSetup = setup?.kind === "commands" && setup.auto === true;
+	const sourceUrl = getSourceUrl(app);
 
 	const refreshDefaultLauncher = useCallback(async () => {
 		if (!adb || !isLauncher) return;
@@ -187,7 +191,20 @@ export function AppCard({ app }: { app: CatalogApp }) {
 					className="h-14 w-14 shrink-0 rounded-2xl"
 				/>
 				<div className="min-w-0 flex-1">
-					<h4 className="truncate text-sm font-semibold">{app.name}</h4>
+					<div className="flex items-start justify-between gap-2">
+						<h4 className="truncate text-sm font-semibold">{app.name}</h4>
+						{sourceUrl && (
+							<a
+								href={sourceUrl}
+								target="_blank"
+								rel="noreferrer"
+								title={t("viewSourceOn", { source: getSourceLabel(app) })}
+								className="-mr-1 -mt-1 shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+							>
+								<Info className="h-4 w-4" />
+							</a>
+						)}
+					</div>
 					<div className="mt-1 flex flex-wrap gap-1">
 						{app.verified && (
 							<span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-500">

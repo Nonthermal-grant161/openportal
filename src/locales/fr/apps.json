@@ -31,6 +31,7 @@
 	"downloading": "Téléchargement…",
 	"installingApp": "Installation…",
 	"openPage": "Ouvrir la page",
+	"viewSourceOn": "Voir sur {{source}}",
 	"notAnApk": "Ce fichier n'est pas un APK",
 	"installFailed": "Échec de l'installation",
 	"postInstallDone": "Configuration post-installation terminée",

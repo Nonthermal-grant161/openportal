@@ -31,6 +31,7 @@
 	"downloading": "Downloading…",
 	"installingApp": "Installing…",
 	"openPage": "Open page",
+	"viewSourceOn": "View on {{source}}",
 	"notAnApk": "That file is not an APK",
 	"installFailed": "Install failed",
 	"postInstallDone": "Post-install setup complete",

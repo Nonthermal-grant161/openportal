@@ -13,6 +13,32 @@ export function canAutoInstall(app: CatalogApp): boolean {
 	);
 }
 
+/** Best-effort link to where an app comes from, for a "view source" affordance. */
+export function getSourceUrl(app: CatalogApp): string | undefined {
+	switch (app.source) {
+		case "github":
+			return app.repo ? `https://github.com/${app.repo}` : app.downloadUrl;
+		case "fdroid":
+			return `https://f-droid.org/packages/${app.packageName}`;
+		case "url":
+			return app.apkUrl ?? app.downloadUrl;
+		default:
+			return app.downloadUrl;
+	}
+}
+
+/** Human-facing name of the app's source provider (GitHub, F-Droid, …). */
+export function getSourceLabel(app: CatalogApp): string {
+	switch (app.source) {
+		case "github":
+			return "GitHub";
+		case "fdroid":
+			return "F-Droid";
+		default:
+			return "Web";
+	}
+}
+
 interface GithubAsset {
 	name: string;
 	browser_download_url: string;
