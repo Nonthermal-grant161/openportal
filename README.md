@@ -2,7 +2,7 @@
 
 Manage your Meta Portal directly from the browser. No software to install.
 
-OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/nicccce/ya-webadb) to speak the ADB protocol over USB, giving you full device management from a web page — pure frontend, no backend, no drivers.
+OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/yume-chan/ya-webadb) to speak the ADB protocol over USB, giving you full device management from a web page — pure frontend, no backend, no drivers.
 
 ## Features
 
