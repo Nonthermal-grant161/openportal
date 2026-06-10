@@ -1,55 +1,44 @@
 # OpenPortal
 
-Manage your Meta Portal directly from the browser. No software to install.
+Manage your Meta Portal from the browser. No app to install, no drivers, no backend.
 
-OpenPortal uses [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/yume-chan/ya-webadb) to speak the ADB protocol over USB, giving you full device management from a web page — pure frontend, no backend, no drivers.
+OpenPortal talks to your Portal over USB using [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/yume-chan/ya-webadb) to speak the ADB protocol straight from a web page.
+
+**[Open the app](https://andronedev.github.io/openportal/)** in a Chromium-based browser, no install required.
+
+<!-- Screenshot: drop an image at docs/screenshot.png and uncomment the line below -->
+<!-- ![OpenPortal](docs/screenshot.png) -->
 
 ## Features
 
-- **Connect via USB** — plug in your Portal, click Connect, done. Graceful recovery if the cable is pulled out
-- **App Catalog** — one-click install of community-verified apps: the Portal downloads the APK itself (GitHub releases or F-Droid, so no CORS proxy or backend is needed) and installs it, with update detection and post-install setup
-- **Drag & drop APK install** — sideload any APK directly from your browser
-- **Installed apps manager** — uninstall, clear data, force stop, inspect permissions
-- **File browser** — browse, download, upload, and delete files over ADB sync
-- **Screen mirroring** — your Portal screen on the dashboard, controllable with the mouse, with fullscreen and PNG screenshot (real **scrcpy** over H.264/WebCodecs)
-- **Logcat viewer** — live log streaming with tag, priority, and text filters, plus export
-- **Shell terminal** — a real interactive PTY (xterm.js): `top`, `vi`, `su`, colors, Ctrl-C, resize
-- **Feature flags editor** — browse and edit `device_config` flags and internal settings (no exploits)
-- **Backup & restore** — export device settings + app list to JSON and restore them
-- **Device settings** — toggle dark mode, block OTA updates, disable package verification, keep screen on
-- **One-click presets** — apply recommended settings in a single click
-- **Device dashboard** — model, firmware, SoC, storage, kernel, security patch, status indicators
-- **Classic / Advanced mode** — simple mode for non-technical users, advanced mode with all the knobs
-- **Keyboard shortcuts** — press `?` for the shortcut overlay
-- **PWA** — installable, works offline after first load
-- **i18n** — English and French, structured for easy translation
+- **Connect over USB**: plug in your Portal and click Connect. The RSA key is generated and kept in your browser, and the app recovers on its own if the cable is pulled.
+- **App catalog**: one-click install of community-verified apps. The Portal downloads the APK itself (GitHub releases or F-Droid, so there's no backend or CORS proxy), with update detection and post-install setup.
+- **Sideload APKs**: drag and drop any `.apk` onto the page to install it.
+- **Manage installed apps**: launch, uninstall, clear data, force stop, and inspect permissions.
+- **Screen mirroring**: your Portal's screen in the browser via real **scrcpy** (H.264 to WebCodecs). Control it with the mouse, type with your keyboard, go fullscreen, or grab a PNG screenshot.
+- **File browser**: browse, upload, download, and delete files over ADB sync.
+- **Terminal**: a real interactive shell (xterm.js) with `top`, `vi`, colors, Ctrl-C, resize.
+- **Logcat**: live log streaming with tag, priority, and text filters, plus export.
+- **Feature flags**: browse and edit `device_config` flags and internal settings.
+
+### Built for everyone
+
+- **Classic / Advanced modes**: Classic keeps it to the essentials; Advanced unlocks Files, Terminal, Logcat, and Flags.
+- **Keyboard shortcuts**: press `?` for the overlay.
+- **English & French**, structured so more languages are easy to add.
+- **Installable PWA**: works offline after the first load.
 
 ## Requirements
 
-- A **Chromium-based browser** (Chrome, Edge, Brave, Opera) — WebUSB is not supported in Firefox or Safari
-- **HTTPS** or **localhost** — WebUSB requires a secure context
-- A **Meta Portal** with USB Debugging enabled (Settings > Debug > ADB Enabled)
+- A **Chromium-based browser** (Chrome, Edge, Brave, Opera). WebUSB is not available in Firefox or Safari.
+- **HTTPS or localhost**, because WebUSB needs a secure context.
+- A **Meta Portal** with USB debugging enabled (Settings > Debug > ADB Enabled).
 
 ## Supported devices
 
-| Model | Codename | Android |
-|---|---|---|
-| Portal Mini | omni | 10 |
-| Portal (2nd gen) | aloha | 10 |
-| Portal+ (2nd gen) | porto | 10 |
-| Portal Go | sansa | 10 |
-| Portal TV | pltv | 10 |
-| Portal (1st gen) | — | 9 |
-| Portal+ (1st gen) | — | 9 |
+All Meta Portal devices are supported. If yours isn't recognized or something doesn't work, please [open an issue](https://github.com/andronedev/openportal/issues).
 
-### Finding the USB port
-
-Every Portal exposes a **USB-C** port on the back for data. On some models it's
-tucked away — you may need to remove a small cover or flip out the stand to
-reach it.
-
-Use a known-good **data** USB-C cable (charge-only cables won't enumerate the
-device).
+Every Portal has a **USB-C** data port on the back; you may need to lift a small cover or flip out the stand to reach it. Use a real **data** cable, since charge-only cables won't enumerate the device.
 
 ## Getting started
 
@@ -58,101 +47,31 @@ pnpm install
 pnpm dev
 ```
 
-Open `http://localhost:5173` in Chrome, plug in your Portal via USB, and click **Connect your Portal**.
+Open `http://localhost:5173` in Chrome, plug in your Portal, and click **Connect**.
 
-To preview the UI without a device, add `?demo` to the URL: `http://localhost:5173/?demo`
+No device on hand? Add `?demo` to preview the UI with a mock device: `http://localhost:5173/?demo`
 
-## Build & deploy
+## Build
 
 ```bash
 pnpm build
 ```
 
-The `dist/` folder is a static site ready to deploy anywhere with HTTPS (GitHub Pages, Vercel, Netlify, Cloudflare Pages).
-
-## Project structure
-
-```
-src/
-├── lib/
-│   ├── adb/          # ADB protocol layer (connection, shell, file-system, screen,
-│   │                 #   scrcpy, logcat, device-config, app-manager, settings, backup)
-│   ├── portal/       # Portal-specific logic (device models, catalog.json, presets)
-│   └── utils/        # Formatters, download helper, platform detection
-├── store/            # Zustand stores (device, UI, apps)
-├── hooks/            # React hooks (theme, keyboard shortcuts)
-├── components/
-│   ├── ui/           # Shared primitives (Button, Card, Modal, ConfirmDialog, …)
-│   ├── layout/       # AppShell, Sidebar, Header, ModeToggle, LanguageSwitcher
-│   ├── connection/   # ConnectScreen, BrowserCheck, ConnectionStatus
-│   ├── dashboard/    # DeviceCard, StatusGrid, StorageBar, QuickActions
-│   ├── apps/         # AppCatalog, AppCard, AppIcon, ApkInstaller, InstalledAppsList
-│   ├── files/        # FileBrowser
-│   └── settings/     # PresetsPanel, SettingsPanel, BackupPanel
-├── pages/            # Route pages (Dashboard, Apps, Settings, Files, Screen,
-│                     #   Terminal, Logcat, Flags)
-└── locales/          # i18n translation files (en, fr)
-```
-
-The UI never imports `@yume-chan/*` directly — all ADB operations go through `src/lib/adb/`.
+The `dist/` folder is a static site you can host anywhere with HTTPS (GitHub Pages, Vercel, Netlify, Cloudflare Pages).
 
 ## Tech stack
 
-React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand 5 · React Router 7 · react-i18next (en/fr) · sonner · ya-webadb · xterm.js · Biome · PWA (service worker)
+React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand · React Router 7 · react-i18next · ya-webadb · xterm.js · Biome
 
-## TODO
+## Contributing
 
-### Phase 1 — MVP (in progress)
-
-- [x] Project scaffold (Vite + React + TS + Tailwind + shadcn/ui + i18n)
-- [x] WebUSB connection lifecycle + RSA credential store
-- [x] Device info extraction (getprop parsing, storage, status indicators)
-- [x] Portal model registry (codenames, capabilities)
-- [x] Connect screen with browser compatibility check
-- [x] Dashboard page (device card, status grid, storage bar)
-- [x] Quick actions (Install Immortal, Block OTA, Apply Recommended Settings)
-- [x] Classic / Advanced mode toggle
-- [x] App catalog with 9 verified apps
-- [x] APK drag & drop installer with progress
-- [x] Settings page with presets and toggle switches
-- [x] Demo mode (`?demo` URL param) for development
-- [x] Test with real Portal device over USB (needs hardware)
-- [x] Post-install actions for catalog apps (set default launcher, disable overlay)
-- [x] Error handling polish (disconnect recovery, install failures, timeout)
-- [x] GitHub Pages deploy workflow
-
-### Phase 2 — Power features
-
-- [x] File browser (push/pull files via adb sync)
-- [x] Screenshot capture (framebuffer → PNG)
-- [x] Installed apps list with uninstall, clear data, force stop, permissions
-- [x] Backup/restore device profile (export/import settings as JSON)
-- [x] Responsive design (tablet / mobile-friendly)
-
-### Phase 3 — Developer tools
-
-- [x] Logcat viewer (real-time log streaming with tag/priority filters)
-- [x] Shell terminal (real interactive PTY via xterm.js)
-- [x] Feature flags browser/editor (`device_config` + internal settings)
-- [x] Live screen view (repeated framebuffer)
-- [x] Screen mirroring via scrcpy (H.264 → WebCodecs) with touch control (no audio on Android 10)
-
-### Phase 4 — Community & polish
-
-- [x] French translation
-- [x] Community app catalog (PR-based JSON submissions)
-- [x] Keyboard shortcuts
-- [x] PWA support (offline app shell)
-- [x] Portal Go USB port guide (text; images welcome via PR)
-- [x] App icons in catalog (initials avatars + optional `iconUrl`)
+The app catalog lives in [`src/lib/portal/catalog.json`](src/lib/portal/catalog.json). It's data-only, so you can add an app with a pull request and no code change. See [CONTRIBUTING.md](CONTRIBUTING.md) for the field schema and conventions.
 
 ## Legal
 
-Meta [officially enabled ADB access](https://developers.meta.com/horizon/blog/build-apps-for-portal-with-ai/) on Portal devices. This tool uses only public ADB commands — no exploits, no root, no bootloader unlock.
+Meta [officially enabled ADB access](https://developers.meta.com/horizon/blog/build-apps-for-portal-with-ai/) on Portal devices. OpenPortal uses only public ADB commands: no exploits, no root, no bootloader unlock.
 
-Screen mirroring bundles the [`scrcpy`](https://github.com/Genymobile/scrcpy)
-server binary (`public/scrcpy-server`, v2.3), which is licensed under
-Apache-2.0. It is pushed to the device on demand and never modifies the device.
+Screen mirroring bundles the [scrcpy](https://github.com/Genymobile/scrcpy) server binary (`public/scrcpy-server`, v2.3, Apache-2.0). It is pushed to the device on demand and never modifies it.
 
 ## License
 
