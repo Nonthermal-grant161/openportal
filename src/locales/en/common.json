@@ -57,6 +57,7 @@
 	"shortcutHelp": "Show this help",
 	"shortcutToggleMode": "Toggle Classic / Advanced mode",
 	"shortcutNavigate": "Navigate",
+	"adbAlreadyRunningHint": "If you have ADB running, stop it first with:",
 	"usbGuideTitle": "Can't find the USB port?",
 	"usbGuideBody": "On some Portal models the USB-C port is tucked away on the back. You may need to remove a small cover or flip out the stand to reach it."
 }

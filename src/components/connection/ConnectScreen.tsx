@@ -42,7 +42,13 @@ export function ConnectScreen() {
 
 				{error && (
 					<div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-						{error}
+						<p>{error}</p>
+						{error.toLowerCase().includes("already") && (
+							<p className="mt-1 text-red-300">
+								{t("adbAlreadyRunningHint")}{" "}
+								<code className="rounded bg-red-500/20 px-1 font-mono">adb kill-server</code>
+							</p>
+						)}
 					</div>
 				)}
 
@@ -52,12 +58,6 @@ export function ConnectScreen() {
 					<Step number={3} text={t("step3")} />
 				</div>
 
-				<details className="rounded-lg border border-border bg-card/50 px-4 py-3 text-sm">
-					<summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-						{t("usbGuideTitle")}
-					</summary>
-					<p className="mt-2 text-muted-foreground">{t("usbGuideBody")}</p>
-				</details>
 			</div>
 		</div>
 	);

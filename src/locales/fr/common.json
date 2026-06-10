@@ -57,6 +57,7 @@
 	"shortcutHelp": "Afficher cette aide",
 	"shortcutToggleMode": "Basculer le mode Classique / Avancé",
 	"shortcutNavigate": "Naviguer",
+	"adbAlreadyRunningHint": "Si vous avez ADB en cours d'exécution, arrêtez-le d'abord avec :",
 	"usbGuideTitle": "Vous ne trouvez pas le port USB ?",
 	"usbGuideBody": "Sur certains modèles de Portal, le port USB-C est dissimulé à l'arrière. Il faut parfois retirer un petit cache ou déplier le pied pour y accéder."
 }
