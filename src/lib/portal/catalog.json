@@ -80,30 +80,6 @@
 		"source": "fdroid"
 	},
 	{
-		"id": "home-assistant",
-		"name": "Home Assistant",
-		"packageName": "io.homeassistant.companion.android",
-		"description": "Control your smart home from your Portal",
-		"category": "smartHome",
-		"version": "2024.12",
-		"verified": true,
-		"featured": false,
-		"source": "external",
-		"downloadUrl": "https://play.google.com/store/apps/details?id=io.homeassistant.companion.android"
-	},
-	{
-		"id": "alexa",
-		"name": "Amazon Alexa",
-		"packageName": "com.amazon.dee.app",
-		"description": "Amazon Alexa assistant (works within app only, no wake word)",
-		"category": "assistant",
-		"version": "2.2.508613.0",
-		"verified": true,
-		"featured": false,
-		"source": "external",
-		"downloadUrl": "https://www.amazon.com/gp/mas/get/amazonapp"
-	},
-	{
 		"id": "material-files",
 		"name": "Material Files",
 		"packageName": "me.zhanghai.android.files",
