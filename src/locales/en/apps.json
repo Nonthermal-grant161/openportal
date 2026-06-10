@@ -1,8 +1,13 @@
 {
 	"title": "Apps",
+	"tabCatalog": "Catalog",
+	"tabInstalled": "Installed",
 	"catalog": "App Catalog",
 	"catalogDescription": "Community-verified apps that work on Meta Portal devices",
+	"allCategories": "All",
+	"noResults": "No apps found",
 	"installApk": "Install APK",
+	"dropToInstall": "Drop the .apk file to install it",
 	"dragDropApk": "Drag & drop an APK file here, or click to browse",
 	"browseFiles": "Browse files",
 	"installedApps": "Installed Apps",
@@ -60,5 +65,9 @@
 	"noPermissions": "No permissions found",
 	"granted": "Granted",
 	"denied": "Denied",
-	"actionFailed": "Action failed"
+	"actionFailed": "Action failed",
+	"refresh": "Refresh",
+	"openApp": "Open app",
+	"launched": "Launched {{name}}",
+	"fromCatalog": "Catalog"
 }

@@ -146,6 +146,18 @@ export async function forceStopApp(
 	}
 }
 
+/** Launches an app on the device via its main LAUNCHER activity. */
+export async function launchApp(adb: Adb, packageName: string): Promise<void> {
+	const { stdout } = await execShell(
+		adb,
+		`monkey -p ${packageName} -c android.intent.category.LAUNCHER 1`,
+	);
+	// `monkey` aborts (and says so) when the package has no launchable activity.
+	if (/No activities found|monkey aborted|Error:/i.test(stdout)) {
+		throw new Error(stdout || `Cannot open ${packageName}`);
+	}
+}
+
 export interface AppPermission {
 	name: string;
 	granted: boolean;

@@ -1,5 +1,8 @@
-import { getCatalogByCategory } from "@/lib/portal/catalog";
+import { EmptyState, Segmented } from "@/components/ui/primitives";
+import { type CatalogApp, getCatalogByCategory } from "@/lib/portal/catalog";
 import { useUIStore } from "@/store/ui-store";
+import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppCard } from "./AppCard";
 
@@ -15,39 +18,99 @@ const CATEGORY_ORDER = [
 
 export function AppCatalog() {
 	const { t } = useTranslation("apps");
-	const { mode } = useUIStore();
-	const catalog = getCatalogByCategory();
+	const mode = useUIStore((s) => s.mode);
+	const [search, setSearch] = useState("");
+	const [category, setCategory] = useState<string>("all");
+
+	const catalog = useMemo(() => getCatalogByCategory(), []);
+
+	// Categories with at least one app visible for the current mode (classic
+	// only surfaces featured apps), in the canonical order.
+	const visibleByCategory = useMemo(() => {
+		const map = new Map<string, CatalogApp[]>();
+		for (const cat of CATEGORY_ORDER) {
+			const apps = catalog.get(cat);
+			if (!apps?.length) continue;
+			const visible =
+				mode === "classic" ? apps.filter((a) => a.featured) : apps;
+			if (visible.length) map.set(cat, visible);
+		}
+		return map;
+	}, [catalog, mode]);
+
+	const query = search.trim().toLowerCase();
+	const matches = (app: CatalogApp) =>
+		!query ||
+		app.name.toLowerCase().includes(query) ||
+		app.description.toLowerCase().includes(query) ||
+		app.packageName.toLowerCase().includes(query);
+
+	const categoryOptions = [
+		{ value: "all", label: t("allCategories") },
+		...[...visibleByCategory.keys()].map((cat) => ({
+			value: cat,
+			label: t(`category.${cat}`),
+		})),
+	];
+
+	const activeCats =
+		category === "all"
+			? [...visibleByCategory.keys()]
+			: visibleByCategory.has(category)
+				? [category]
+				: [];
+
+	const sections = activeCats
+		.map((cat) => ({
+			cat,
+			apps: (visibleByCategory.get(cat) ?? []).filter(matches),
+		}))
+		.filter((section) => section.apps.length > 0);
+
+	const totalMatches = sections.reduce((n, s) => n + s.apps.length, 0);
 
 	return (
-		<div className="space-y-6">
-			<div>
-				<h3 className="text-lg font-semibold">{t("catalog")}</h3>
-				<p className="text-sm text-muted-foreground">
-					{t("catalogDescription")}
-				</p>
+		<div className="space-y-5">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+				<div className="relative sm:w-72">
+					<Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+					<input
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder={t("searchApps")}
+						className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm"
+					/>
+				</div>
+				<div className="-mx-1 overflow-x-auto px-1 pb-1 sm:flex-1">
+					<Segmented
+						value={category}
+						onChange={setCategory}
+						options={categoryOptions}
+						size="sm"
+					/>
+				</div>
 			</div>
 
-			{CATEGORY_ORDER.map((category) => {
-				const apps = catalog.get(category);
-				if (!apps?.length) return null;
-
-				const visibleApps =
-					mode === "classic" ? apps.filter((a) => a.featured) : apps;
-				if (!visibleApps.length) return null;
-
-				return (
-					<div key={category}>
-						<h4 className="mb-3 text-sm font-medium text-muted-foreground">
-							{t(`category.${category}`)}
-						</h4>
-						<div className="space-y-2">
-							{visibleApps.map((app) => (
-								<AppCard key={app.id} app={app} />
-							))}
+			{totalMatches === 0 ? (
+				<EmptyState title={t("noResults")} />
+			) : (
+				<div className="space-y-6">
+					{sections.map(({ cat, apps }) => (
+						<div key={cat}>
+							{category === "all" && (
+								<h4 className="mb-3 text-sm font-medium text-muted-foreground">
+									{t(`category.${cat}`)}
+								</h4>
+							)}
+							<div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-3">
+								{apps.map((app) => (
+									<AppCard key={app.id} app={app} />
+								))}
+							</div>
 						</div>
-					</div>
-				);
-			})}
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

@@ -2,6 +2,7 @@ import { ConfirmDialog } from "@/components/ui/primitives";
 import {
 	getDefaultLauncher,
 	getInstalledVersion,
+	launchApp,
 	runPostInstall,
 } from "@/lib/adb/app-manager";
 import { type InstallStage, installFromUrl } from "@/lib/adb/online-install";
@@ -19,6 +20,7 @@ import {
 	Download,
 	ExternalLink,
 	Loader2,
+	SquareArrowOutUpRight,
 	Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -121,6 +123,17 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		}
 	};
 
+	const handleOpen = async () => {
+		if (!adb) return;
+		try {
+			await launchApp(adb, app.packageName);
+		} catch (err) {
+			toast.error(app.name, {
+				description: err instanceof Error ? err.message : undefined,
+			});
+		}
+	};
+
 	const handleUninstall = async () => {
 		setUninstalling(true);
 		try {
@@ -136,36 +149,51 @@ export function AppCard({ app }: { app: CatalogApp }) {
 		}
 	};
 
+	const showSetup =
+		isInstalled &&
+		!updateUrl &&
+		!!app.postInstallCommands &&
+		!(isLauncher && isDefaultLauncher);
+
 	return (
-		<div className="flex items-start gap-4 rounded-xl border border-border bg-card p-4">
-			<AppIcon
-				name={app.name}
-				iconUrl={app.iconUrl}
-				className="h-12 w-12 shrink-0 rounded-xl"
-			/>
-			<div className="min-w-0 flex-1">
-				<div className="flex flex-wrap items-center gap-2">
-					<h4 className="text-sm font-medium">{app.name}</h4>
-					{app.verified && (
-						<span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-500">
-							{t("verified")}
-						</span>
-					)}
-					{updateUrl && (
-						<span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-500">
-							{t("updateAvailable")}
-						</span>
-					)}
+		<div className="flex flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/30">
+			<div className="flex items-start gap-3">
+				<AppIcon
+					name={app.name}
+					iconUrl={app.iconUrl}
+					className="h-14 w-14 shrink-0 rounded-2xl"
+				/>
+				<div className="min-w-0 flex-1">
+					<h4 className="truncate text-sm font-semibold">{app.name}</h4>
+					<div className="mt-1 flex flex-wrap gap-1">
+						{app.verified && (
+							<span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-500">
+								{t("verified")}
+							</span>
+						)}
+						{updateUrl && (
+							<span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-500">
+								{t("updateAvailable")}
+							</span>
+						)}
+						{isLauncher && isDefaultLauncher && (
+							<span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-500">
+								<Check className="h-3 w-3" />
+								{t("defaultLauncher")}
+							</span>
+						)}
+					</div>
 				</div>
-				<p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-					{app.description}
-				</p>
 			</div>
 
-			<div className="flex shrink-0 items-center gap-2">
+			<p className="mt-3 line-clamp-2 min-h-8 text-xs text-muted-foreground">
+				{app.description}
+			</p>
+
+			<div className="mt-4 flex items-center gap-2">
 				{stage ? (
-					<span className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium">
-						<Loader2 className="h-3 w-3 animate-spin" />
+					<span className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-secondary px-3 py-2 text-xs font-medium">
+						<Loader2 className="h-3.5 w-3.5 animate-spin" />
 						{t(stage === "installing" ? "installingApp" : "downloading")}
 					</span>
 				) : isInstalled ? (
@@ -174,45 +202,44 @@ export function AppCard({ app }: { app: CatalogApp }) {
 							<button
 								type="button"
 								onClick={handleInstall}
-								className="flex items-center gap-1.5 rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
+								className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-sky-500 px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-90"
 							>
-								<ArrowUpCircle className="h-3 w-3" />
+								<ArrowUpCircle className="h-3.5 w-3.5" />
 								{t("update")}
 							</button>
-						) : (
-							<>
-								<span className="text-xs text-emerald-500">
-									{t("installed")}
-								</span>
-								{isLauncher && isDefaultLauncher ? (
-									<span className="flex items-center gap-1 px-1 text-xs font-medium text-emerald-500">
-										<Check className="h-3 w-3" />
-										{t("defaultLauncher")}
-									</span>
+						) : showSetup ? (
+							<button
+								type="button"
+								onClick={handlePostInstall}
+								disabled={postInstalling}
+								className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
+							>
+								{postInstalling ? (
+									<Loader2 className="h-3.5 w-3.5 animate-spin" />
 								) : (
-									app.postInstallCommands && (
-										<button
-											type="button"
-											onClick={handlePostInstall}
-											disabled={postInstalling}
-											className="rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:opacity-50"
-										>
-											{postInstalling ? (
-												<Loader2 className="h-3 w-3 animate-spin" />
-											) : (
-												t(app.postInstallLabelKey ?? "installAndSetup")
-											)}
-										</button>
-									)
+									t(app.postInstallLabelKey ?? "installAndSetup")
 								)}
-							</>
+							</button>
+						) : (
+							<span className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-500">
+								<Check className="h-3.5 w-3.5" />
+								{t("installed")}
+							</span>
 						)}
+						<button
+							type="button"
+							onClick={handleOpen}
+							title={t("openApp")}
+							className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+						>
+							<SquareArrowOutUpRight className="h-4 w-4" />
+						</button>
 						<button
 							type="button"
 							onClick={() => setConfirmUninstall(true)}
 							disabled={uninstalling}
 							title={t("uninstall")}
-							className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 disabled:opacity-50"
+							className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-500 disabled:opacity-50"
 						>
 							{uninstalling ? (
 								<Loader2 className="h-4 w-4 animate-spin" />
@@ -225,9 +252,9 @@ export function AppCard({ app }: { app: CatalogApp }) {
 					<button
 						type="button"
 						onClick={handleInstall}
-						className="flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90"
+						className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-foreground px-3 py-2 text-xs font-medium text-background transition-opacity hover:opacity-90"
 					>
-						<Download className="h-3 w-3" />
+						<Download className="h-3.5 w-3.5" />
 						{t("install")}
 					</button>
 				) : (
@@ -236,9 +263,9 @@ export function AppCard({ app }: { app: CatalogApp }) {
 							href={app.downloadUrl}
 							target="_blank"
 							rel="noreferrer"
-							className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium transition-colors hover:bg-accent"
+							className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-accent"
 						>
-							<ExternalLink className="h-3 w-3" />
+							<ExternalLink className="h-3.5 w-3.5" />
 							{t("openPage")}
 						</a>
 					)

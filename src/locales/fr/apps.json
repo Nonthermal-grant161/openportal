@@ -1,8 +1,13 @@
 {
 	"title": "Applications",
+	"tabCatalog": "Catalogue",
+	"tabInstalled": "Installées",
 	"catalog": "Catalogue d'applications",
 	"catalogDescription": "Applications vérifiées par la communauté et compatibles avec les Meta Portal",
+	"allCategories": "Tous",
+	"noResults": "Aucune application trouvée",
 	"installApk": "Installer un APK",
+	"dropToInstall": "Lâchez le fichier .apk pour l'installer",
 	"dragDropApk": "Glissez-déposez un fichier APK ici, ou cliquez pour parcourir",
 	"browseFiles": "Parcourir les fichiers",
 	"installedApps": "Applications installées",
@@ -60,5 +65,9 @@
 	"noPermissions": "Aucune autorisation trouvée",
 	"granted": "Accordée",
 	"denied": "Refusée",
-	"actionFailed": "L'action a échoué"
+	"actionFailed": "L'action a échoué",
+	"refresh": "Actualiser",
+	"openApp": "Ouvrir l'application",
+	"launched": "{{name}} lancé",
+	"fromCatalog": "Catalogue"
 }

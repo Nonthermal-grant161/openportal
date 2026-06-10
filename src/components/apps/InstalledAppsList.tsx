@@ -2,7 +2,7 @@ import {
 	ConfirmDialog,
 	EmptyState,
 	Modal,
-	SectionTitle,
+	Segmented,
 	Spinner,
 } from "@/components/ui/primitives";
 import {
@@ -10,15 +10,20 @@ import {
 	clearAppData,
 	forceStopApp,
 	getAppPermissions,
+	launchApp,
 } from "@/lib/adb/app-manager";
 import type { InstalledPackage } from "@/lib/adb/types";
+import { getCatalogApp } from "@/lib/portal/catalog";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
+import { useUIStore } from "@/store/ui-store";
 import {
+	Boxes,
 	KeyRound,
 	Loader2,
 	Octagon,
-	RefreshCw,
+	Search,
+	SquareArrowOutUpRight,
 	Trash,
 	Trash2,
 } from "lucide-react";
@@ -31,12 +36,14 @@ type Filter = "all" | "user" | "system";
 
 export function InstalledAppsList() {
 	const { t } = useTranslation("apps");
+	const mode = useUIStore((s) => s.mode);
 	const adb = useDeviceStore((s) => s.adb);
 	const packages = useAppStore((s) => s.installedPackages);
 	const loading = useAppStore((s) => s.loading);
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
 	const uninstall = useAppStore((s) => s.uninstall);
 
+	const advanced = mode === "advanced";
 	const [filter, setFilter] = useState<Filter>("user");
 	const [search, setSearch] = useState("");
 	const [busy, setBusy] = useState<string | null>(null);
@@ -48,19 +55,22 @@ export function InstalledAppsList() {
 		refreshInstalled();
 	}, [refreshInstalled]);
 
+	// Classic mode only ever deals with user-installed apps.
+	const effectiveFilter: Filter = advanced ? filter : "user";
+
 	const filtered = useMemo(() => {
 		const query = search.toLowerCase();
 		return packages
 			.filter((pkg) =>
-				filter === "all"
+				effectiveFilter === "all"
 					? true
-					: filter === "system"
+					: effectiveFilter === "system"
 						? pkg.isSystem
 						: !pkg.isSystem,
 			)
 			.filter((pkg) => pkg.packageName.toLowerCase().includes(query))
 			.sort((a, b) => a.packageName.localeCompare(b.packageName));
-	}, [packages, filter, search]);
+	}, [packages, effectiveFilter, search]);
 
 	const runAction = async (
 		pkg: InstalledPackage,
@@ -80,51 +90,30 @@ export function InstalledAppsList() {
 		}
 	};
 
-	const filters: Filter[] = ["user", "system", "all"];
-
 	return (
-		<div className="rounded-xl border border-border bg-card p-6">
-			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-				<SectionTitle>{t("manageInstalled")}</SectionTitle>
-				<button
-					type="button"
-					onClick={() => refreshInstalled()}
-					className="text-muted-foreground hover:text-foreground"
-					title={t("manageInstalled")}
-				>
-					<RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-				</button>
-			</div>
-
-			<div className="mb-4 flex flex-wrap items-center gap-2">
-				<div className="flex rounded-lg bg-secondary p-1">
-					{filters.map((f) => (
-						<button
-							key={f}
-							type="button"
-							onClick={() => setFilter(f)}
-							className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-								filter === f
-									? "bg-background text-foreground shadow-sm"
-									: "text-muted-foreground hover:text-foreground"
-							}`}
-						>
-							{t(
-								f === "all"
-									? "filterAll"
-									: f === "user"
-										? "filterUser"
-										: "filterSystem",
-							)}
-						</button>
-					))}
+		<div className="space-y-4">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+				{advanced && (
+					<Segmented
+						value={filter}
+						onChange={setFilter}
+						size="sm"
+						options={[
+							{ value: "user", label: t("filterUser") },
+							{ value: "system", label: t("filterSystem") },
+							{ value: "all", label: t("filterAll") },
+						]}
+					/>
+				)}
+				<div className="relative sm:w-72">
+					<Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+					<input
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder={t("searchApps")}
+						className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm"
+					/>
 				</div>
-				<input
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					placeholder={t("searchApps")}
-					className="ml-auto min-w-48 flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
-				/>
 			</div>
 
 			{loading && packages.length === 0 ? (
@@ -134,67 +123,111 @@ export function InstalledAppsList() {
 			) : filtered.length === 0 ? (
 				<EmptyState title={t("noInstalledApps")} />
 			) : (
-				<div className="divide-y divide-border">
-					{filtered.map((pkg) => (
-						<div
-							key={pkg.packageName}
-							className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
-						>
-							<AppIcon
-								name={pkg.packageName}
-								className="h-9 w-9 shrink-0 rounded-lg text-xs"
-							/>
-							<div className="min-w-0 flex-1">
-								<p className="truncate font-mono text-xs">{pkg.packageName}</p>
-								<span className="text-[10px] text-muted-foreground">
-									{pkg.isSystem ? t("systemApp") : t("userApp")}
-								</span>
-							</div>
-							<div className="flex items-center gap-1">
-								{busy === pkg.packageName && (
-									<Loader2 className="mr-1 h-4 w-4 animate-spin text-muted-foreground" />
-								)}
-								<IconAction
-									title={t("forceStop")}
-									onClick={() => {
-										if (adb)
-											runAction(
-												pkg,
-												() => forceStopApp(adb, pkg.packageName),
-												t("forceStopped", { name: pkg.packageName }),
-											);
-									}}
+				<div className="overflow-hidden rounded-xl border border-border bg-card">
+					<div className="divide-y divide-border">
+						{filtered.map((pkg) => {
+							const catApp = getCatalogApp(pkg.packageName);
+							return (
+								<div
+									key={pkg.packageName}
+									className="flex items-center gap-3 px-4 py-3"
 								>
-									<Octagon className="h-4 w-4" />
-								</IconAction>
-								<IconAction
-									title={t("clearData")}
-									onClick={() => setToClear(pkg)}
-								>
-									<Trash className="h-4 w-4" />
-								</IconAction>
-								<IconAction
-									title={t("viewPermissions")}
-									onClick={() => setPermsFor(pkg)}
-								>
-									<KeyRound className="h-4 w-4" />
-								</IconAction>
-								{!pkg.isSystem && (
-									<IconAction
-										title={t("uninstall")}
-										danger
-										onClick={() => setToUninstall(pkg)}
-									>
-										<Trash2 className="h-4 w-4" />
-									</IconAction>
-								)}
-							</div>
-						</div>
-					))}
+									<AppIcon
+										name={catApp?.name ?? pkg.packageName}
+										iconUrl={catApp?.iconUrl}
+										className="h-9 w-9 shrink-0 rounded-lg text-xs"
+									/>
+									<div className="min-w-0 flex-1">
+										{catApp ? (
+											<>
+												<div className="flex items-center gap-2">
+													<span className="truncate text-sm font-medium">
+														{catApp.name}
+													</span>
+													<span className="flex shrink-0 items-center gap-1 rounded-full bg-sky-500/10 px-2 py-0.5 text-[10px] font-medium text-sky-500">
+														<Boxes className="h-3 w-3" />
+														{t("fromCatalog")}
+													</span>
+												</div>
+												<p className="truncate font-mono text-[10px] text-muted-foreground">
+													{pkg.packageName}
+												</p>
+											</>
+										) : (
+											<>
+												<p className="truncate font-mono text-xs">
+													{pkg.packageName}
+												</p>
+												<span className="text-[10px] text-muted-foreground">
+													{pkg.isSystem ? t("systemApp") : t("userApp")}
+												</span>
+											</>
+										)}
+									</div>
+									<div className="flex items-center gap-1">
+										{busy === pkg.packageName && (
+											<Loader2 className="mr-1 h-4 w-4 animate-spin text-muted-foreground" />
+										)}
+										<IconAction
+											title={t("openApp")}
+											onClick={() => {
+												if (adb)
+													runAction(
+														pkg,
+														() => launchApp(adb, pkg.packageName),
+														t("launched", { name: pkg.packageName }),
+													);
+											}}
+										>
+											<SquareArrowOutUpRight className="h-4 w-4" />
+										</IconAction>
+										{advanced && (
+											<>
+												<IconAction
+													title={t("forceStop")}
+													onClick={() => {
+														if (adb)
+															runAction(
+																pkg,
+																() => forceStopApp(adb, pkg.packageName),
+																t("forceStopped", { name: pkg.packageName }),
+															);
+													}}
+												>
+													<Octagon className="h-4 w-4" />
+												</IconAction>
+												<IconAction
+													title={t("clearData")}
+													onClick={() => setToClear(pkg)}
+												>
+													<Trash className="h-4 w-4" />
+												</IconAction>
+												<IconAction
+													title={t("viewPermissions")}
+													onClick={() => setPermsFor(pkg)}
+												>
+													<KeyRound className="h-4 w-4" />
+												</IconAction>
+											</>
+										)}
+										{!pkg.isSystem && (
+											<IconAction
+												title={t("uninstall")}
+												danger
+												onClick={() => setToUninstall(pkg)}
+											>
+												<Trash2 className="h-4 w-4" />
+											</IconAction>
+										)}
+									</div>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			)}
 
-			<p className="mt-4 text-right text-xs text-muted-foreground">
+			<p className="text-right text-xs text-muted-foreground">
 				{t("appCount", { count: filtered.length })}
 			</p>
 

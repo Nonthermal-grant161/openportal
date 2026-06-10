@@ -55,3 +55,10 @@ export function getCatalogByCategory(): Map<string, CatalogApp[]> {
 export function getFeaturedApps(): CatalogApp[] {
 	return APP_CATALOG.filter((app) => app.featured);
 }
+
+const BY_PACKAGE = new Map(APP_CATALOG.map((app) => [app.packageName, app]));
+
+/** Looks up a catalog entry by its Android package name, if any. */
+export function getCatalogApp(packageName: string): CatalogApp | undefined {
+	return BY_PACKAGE.get(packageName);
+}
