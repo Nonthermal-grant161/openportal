@@ -54,7 +54,7 @@
 		"category": "store",
 		"version": "1.21.0",
 		"verified": true,
-		"featured": false,
+		"featured": true,
 		"source": "fdroid"
 	},
 	{
@@ -65,7 +65,7 @@
 		"category": "media",
 		"version": "3.6.4",
 		"verified": true,
-		"featured": false,
+		"featured": true,
 		"source": "fdroid"
 	},
 	{
@@ -76,7 +76,7 @@
 		"category": "media",
 		"version": "2.6.2",
 		"verified": true,
-		"featured": false,
+		"featured": true,
 		"source": "fdroid"
 	},
 	{
@@ -87,7 +87,7 @@
 		"category": "utility",
 		"version": "1.8.0",
 		"verified": true,
-		"featured": false,
+		"featured": true,
 		"source": "fdroid"
 	}
 ]
