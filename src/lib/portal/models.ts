@@ -8,15 +8,14 @@ export type PortalModel =
 	| "portal-1"
 	| "unknown";
 
+// Marketing/topology metadata only — anything the device reports itself
+// (SoC, Android version, battery/camera presence) is read live in
+// `getDeviceInfo` and must not be duplicated here.
 export interface PortalModelInfo {
 	codename: PortalModel;
 	displayName: string;
 	generation: 1 | 2;
 	screenSize: string;
-	soc: string;
-	androidVersion: string;
-	hasBattery: boolean;
-	hasCamera: boolean;
 	hasScreen: boolean;
 }
 
@@ -26,10 +25,6 @@ const MODELS: Record<string, PortalModelInfo> = {
 		displayName: "Portal Mini",
 		generation: 2,
 		screenSize: '8"',
-		soc: "QCS605",
-		androidVersion: "10",
-		hasBattery: false,
-		hasCamera: true,
 		hasScreen: true,
 	},
 	aloha: {
@@ -37,10 +32,6 @@ const MODELS: Record<string, PortalModelInfo> = {
 		displayName: "Portal (2nd Gen)",
 		generation: 2,
 		screenSize: '10"',
-		soc: "QCS605",
-		androidVersion: "10",
-		hasBattery: false,
-		hasCamera: true,
 		hasScreen: true,
 	},
 	porto: {
@@ -48,10 +39,6 @@ const MODELS: Record<string, PortalModelInfo> = {
 		displayName: "Portal+ (2nd Gen)",
 		generation: 2,
 		screenSize: '15.6"',
-		soc: "QCS605",
-		androidVersion: "10",
-		hasBattery: false,
-		hasCamera: true,
 		hasScreen: true,
 	},
 	sansa: {
@@ -59,10 +46,6 @@ const MODELS: Record<string, PortalModelInfo> = {
 		displayName: "Portal Go",
 		generation: 2,
 		screenSize: '10"',
-		soc: "QCS605",
-		androidVersion: "10",
-		hasBattery: true,
-		hasCamera: true,
 		hasScreen: true,
 	},
 	pltv: {
@@ -70,10 +53,6 @@ const MODELS: Record<string, PortalModelInfo> = {
 		displayName: "Portal TV",
 		generation: 2,
 		screenSize: "HDMI",
-		soc: "SDM835",
-		androidVersion: "10",
-		hasBattery: false,
-		hasCamera: true,
 		hasScreen: false,
 	},
 };
@@ -96,10 +75,6 @@ export function resolveModel(codename: string): PortalModelInfo {
 		displayName: codename || "Unknown Portal",
 		generation: 2,
 		screenSize: "Unknown",
-		soc: "Unknown",
-		androidVersion: "Unknown",
-		hasBattery: false,
-		hasCamera: true,
 		hasScreen: true,
 	};
 }
