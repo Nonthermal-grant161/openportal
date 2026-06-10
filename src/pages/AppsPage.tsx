@@ -28,7 +28,7 @@ export function AppsPage() {
 	const isCatalog = tab === "catalog";
 
 	return (
-		<div className="space-y-5">
+		<div className="mx-auto max-w-4xl space-y-5">
 			<div className="flex flex-wrap items-start justify-between gap-3">
 				<div>
 					<h1 className="text-2xl font-bold">
