@@ -84,4 +84,31 @@
 		@apply bg-background text-foreground antialiased;
 		font-family: var(--font-sans);
 	}
+
+	/* Custom scrollbar — Firefox */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--border) transparent;
+	}
+
+	/* Custom scrollbar — Chromium/WebKit */
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: var(--border);
+		border-radius: 9999px;
+		border: 2px solid transparent;
+		background-clip: padding-box;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background-color: var(--muted-foreground);
+	}
+	::-webkit-scrollbar-corner {
+		background: transparent;
+	}
 }
