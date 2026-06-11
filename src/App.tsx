@@ -56,6 +56,7 @@ export default function App() {
 	const theme = useUIStore((s) => s.theme);
 	useTheme();
 	useDemoMode();
+	const connected = state === "connected";
 
 	return (
 		<>
@@ -64,11 +65,9 @@ export default function App() {
 				position="top-right"
 				theme={theme === "system" ? "system" : theme}
 			/>
-			{state !== "connected" ? (
-				<ConnectScreen />
-			) : (
-				<BrowserRouter basename={import.meta.env.BASE_URL}>
-					<Suspense fallback={<PageFallback />}>
+			<BrowserRouter basename={import.meta.env.BASE_URL}>
+				<Suspense fallback={<PageFallback />}>
+					{connected ? (
 						<Routes>
 							<Route element={<AppShell />}>
 								<Route index element={<DashboardPage />} />
@@ -80,9 +79,14 @@ export default function App() {
 								<Route path="flags" element={<FlagsPage />} />
 							</Route>
 						</Routes>
-					</Suspense>
-				</BrowserRouter>
-			)}
+					) : (
+						<Routes>
+							<Route path="apps" element={<AppsPage visitor />} />
+							<Route path="*" element={<ConnectScreen />} />
+						</Routes>
+					)}
+				</Suspense>
+			</BrowserRouter>
 		</>
 	);
 }

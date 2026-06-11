@@ -25,6 +25,7 @@ export type AppActionKind =
 export function useAppActions(packageName: string, displayName: string) {
 	const { t } = useTranslation("apps");
 	const adb = useDeviceStore((s) => s.adb);
+	const connect = useDeviceStore((s) => s.connect);
 	const isInstalled = useAppStore((s) => s.isInstalled(packageName));
 	const update = useAppStore((s) => s.updates[packageName]);
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
@@ -56,7 +57,11 @@ export function useAppActions(packageName: string, displayName: string) {
 
 	const install = () =>
 		run(hasUpdate ? "update" : "install", async () => {
-			if (!adb || !app) return;
+			if (!app) return;
+			if (!adb) {
+				await connect();
+				return;
+			}
 			const updating = hasUpdate;
 			setStage("downloading");
 			setProgress(null);

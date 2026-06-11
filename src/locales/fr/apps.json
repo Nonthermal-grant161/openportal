@@ -4,6 +4,8 @@
 	"tabInstalled": "Installées",
 	"catalog": "Catalogue d'applications",
 	"catalogDescription": "Applications vérifiées par la communauté pour Meta Portal",
+	"visitorCatalogDescription": "Parcourez les applications vérifiées par la communauté avant de connecter un Meta Portal",
+	"visitorConnectHint": "Vous pouvez parcourir le catalogue sans appareil. Connectez votre Portal au moment d'installer une application ou de vérifier ce qui est déjà installé.",
 	"allCategories": "Tous",
 	"noResults": "Aucune application trouvée",
 	"installApk": "Installer un APK",

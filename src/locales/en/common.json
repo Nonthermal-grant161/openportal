@@ -32,6 +32,7 @@
 	"browserNotSupported": "This tool requires a Chromium-based browser (Chrome, Edge, Brave, Opera)",
 	"httpsRequired": "HTTPS is required for WebUSB access",
 	"connectYourPortal": "Connect your Portal",
+	"browseCatalog": "Browse the app catalog",
 	"connectDescription": "Manage your Meta Portal directly from your browser. No software to install.",
 	"step1": "Connect your Portal via USB",
 	"step2": "Allow USB Debugging on your Portal screen",

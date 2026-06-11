@@ -2,6 +2,7 @@ import { getPlatformSupport } from "@/lib/utils/platform";
 import { useDeviceStore } from "@/store/device-store";
 import { ArrowRight, Github, Monitor, Usb } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { BrowserCheck } from "./BrowserCheck";
 
 export function ConnectScreen() {
@@ -39,7 +40,6 @@ export function ConnectScreen() {
 					)}
 					{isConnecting ? t("connecting") : t("connectYourPortal")}
 				</button>
-
 				{error && (
 					<div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
 						<p>{error}</p>
@@ -58,6 +58,15 @@ export function ConnectScreen() {
 					<Step number={1} text={t("step1")} />
 					<Step number={2} text={t("step2")} />
 					<Step number={3} text={t("step3")} />
+				</div>
+
+				<div className="text-center">
+					<Link
+						to="/apps"
+						className="text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+					>
+						{t("browseCatalog")}
+					</Link>
 				</div>
 			</div>
 
