@@ -2,7 +2,7 @@
   <img src="docs/banner.svg" alt="OpenPortal — manage your Meta Portal from the browser" width="100%">
 </p>
 
-Manage your Meta Portal from the browser. No app to install, no drivers, no backend.
+Your Meta Portal doesn't have to end up in a drawer. OpenPortal gives it a second life — install new apps, mirror its screen, and manage the whole device, right from your browser. No app to install, no drivers, no backend.
 
 OpenPortal talks to your Portal over USB using [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/yume-chan/ya-webadb) to speak the ADB protocol straight from a web page.
 
