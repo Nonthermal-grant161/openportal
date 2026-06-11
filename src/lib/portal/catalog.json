@@ -11,6 +11,7 @@
 		"source": "github",
 		"repo": "starbrightlab/immortal",
 		"downloadUrl": "https://github.com/starbrightlab/immortal/releases/latest",
+		"iconUrl": "https://raw.githubusercontent.com/starbrightlab/immortal/main/immortal-icon.png",
 		"setup": {
 			"kind": "commands",
 			"auto": true,
@@ -30,7 +31,8 @@
 		"version": "4.6.1",
 		"verified": true,
 		"featured": true,
-		"source": "fdroid"
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/com.aurora.store/en-US/icon.png"
 	},
 	{
 		"id": "google-photos-screensaver",
@@ -44,6 +46,7 @@
 		"source": "github",
 		"repo": "ram-nat/portal-gphotos",
 		"downloadUrl": "https://github.com/ram-nat/portal-gphotos/releases/latest",
+		"iconUrl": "https://raw.githubusercontent.com/ram-nat/portal-gphotos/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
 		"skipUpdateCheck": true,
 		"setup": {
 			"kind": "custom",
@@ -60,7 +63,8 @@
 		"version": "1.21.0",
 		"verified": true,
 		"featured": true,
-		"source": "fdroid"
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/org.fdroid.fdroid/en-US/icon.png"
 	},
 	{
 		"id": "vlc",
@@ -71,7 +75,8 @@
 		"version": "3.6.4",
 		"verified": true,
 		"featured": true,
-		"source": "fdroid"
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/org.videolan.vlc/en-US/icon.png"
 	},
 	{
 		"id": "jellyfin",
@@ -82,7 +87,36 @@
 		"version": "2.6.2",
 		"verified": true,
 		"featured": true,
-		"source": "fdroid"
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/org.jellyfin.mobile/en-US/icon.png"
+	},
+	{
+		"id": "cromite",
+		"name": "Cromite",
+		"packageName": "org.cromite.cromite",
+		"description": "Privacy-focused Chromium browser with built-in ad blocking",
+		"category": "utility",
+		"version": "latest",
+		"verified": false,
+		"featured": true,
+		"source": "github",
+		"repo": "uazo/cromite",
+		"downloadUrl": "https://github.com/uazo/cromite/releases/latest",
+		"iconUrl": "https://web.archive.org/web/20260314054730im_/https://www.cromite.org/app_icon.png"
+	},
+	{
+		"id": "archivetune",
+		"name": "ArchiveTune",
+		"packageName": "moe.koiverse.archivetune",
+		"description": "Material 3 music player with local files and YouTube Music support",
+		"category": "media",
+		"version": "latest",
+		"verified": false,
+		"featured": true,
+		"source": "github",
+		"repo": "koiverse/ArchiveTune",
+		"downloadUrl": "https://github.com/koiverse/ArchiveTune/releases/latest",
+		"iconUrl": "https://apt.izzysoft.de/fdroid/repo/moe.koiverse.archivetune/en-US/icon.png"
 	},
 	{
 		"id": "material-files",
@@ -93,6 +127,97 @@
 		"version": "1.8.0",
 		"verified": true,
 		"featured": true,
-		"source": "fdroid"
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/me.zhanghai.android.files/en-US/icon.png"
+	},
+	{
+		"id": "newpipe",
+		"name": "NewPipe",
+		"packageName": "org.schabi.newpipe",
+		"description": "Lightweight YouTube client with background play and downloads",
+		"category": "media",
+		"version": "latest",
+		"verified": false,
+		"featured": true,
+		"source": "github",
+		"repo": "TeamNewPipe/NewPipe",
+		"downloadUrl": "https://github.com/TeamNewPipe/NewPipe/releases/latest",
+		"iconUrl": "https://raw.githubusercontent.com/TeamNewPipe/NewPipe/dev/fastlane/metadata/android/en-US/images/icon.png"
+	},
+	{
+		"id": "libretube",
+		"name": "LibreTube",
+		"packageName": "com.github.libretube",
+		"description": "Privacy-focused YouTube client with SponsorBlock built in",
+		"category": "media",
+		"version": "31.4",
+		"verified": false,
+		"featured": true,
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/com.github.libretube/en-US/icon.png"
+	},
+	{
+		"id": "home-assistant",
+		"name": "Home Assistant",
+		"packageName": "io.homeassistant.companion.android.minimal",
+		"description": "Companion app for the Home Assistant smart home platform",
+		"category": "smartHome",
+		"version": "2026.4.4-minimal",
+		"verified": false,
+		"featured": true,
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/io.homeassistant.companion.android.minimal/en-US/icon.png"
+	},
+	{
+		"id": "antennapod",
+		"name": "AntennaPod",
+		"packageName": "de.danoeh.antennapod",
+		"description": "Open-source podcast manager and player",
+		"category": "media",
+		"version": "3.11.4",
+		"verified": false,
+		"featured": true,
+		"source": "fdroid",
+		"iconUrl": "https://f-droid.org/repo/de.danoeh.antennapod/en-US/icon.png"
+	},
+	{
+		"id": "kodi",
+		"name": "Kodi",
+		"packageName": "org.xbmc.kodi",
+		"description": "Open-source media center for videos, music, and streaming add-ons",
+		"category": "media",
+		"version": "21.3",
+		"verified": false,
+		"featured": true,
+		"source": "fdroid",
+		"iconUrl": "https://raw.githubusercontent.com/xbmc/xbmc/master/media/icon256x256.png"
+	},
+	{
+		"id": "stremio",
+		"name": "Stremio",
+		"packageName": "com.stremio.one",
+		"description": "Media center for streaming movies and series through add-ons",
+		"category": "media",
+		"version": "2.2.3",
+		"verified": false,
+		"featured": true,
+		"source": "url",
+		"apkUrl": "https://dl.strem.io/android/v2.2.3-android/com.stremio.one-2.2.3-6145731-arm64-v8a.apk",
+		"downloadUrl": "https://www.stremio.com/downloads",
+		"iconUrl": "https://www.stremio.com/website/stremio-logo-small.png"
+	},
+	{
+		"id": "smarttube",
+		"name": "SmartTube",
+		"packageName": "com.teamsmart.videomanager.tv",
+		"description": "Ad-free YouTube client for TV screens with SponsorBlock built in",
+		"category": "media",
+		"version": "latest",
+		"verified": false,
+		"featured": true,
+		"source": "github",
+		"repo": "yuliskov/SmartTube",
+		"downloadUrl": "https://github.com/yuliskov/SmartTube/releases/latest",
+		"iconUrl": "https://raw.githubusercontent.com/yuliskov/SmartTube/master/smarttubetv/src/ststable/res/mipmap-nodpi/app_icon.png"
 	}
 ]
