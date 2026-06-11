@@ -16,15 +16,12 @@ function NeedsDeviceEmptyState() {
 	const { t } = useTranslation();
 
 	return (
-		<div className="space-y-4">
-			<EmptyState
-				icon={Usb}
-				title={t("needsDeviceTitle")}
-				description={t("needsDeviceDescription")}
-			/>
-			<div className="flex justify-center">
-				<ConnectButton />
-			</div>
-		</div>
+		<EmptyState
+			icon={Usb}
+			title={t("needsDeviceTitle")}
+			description={t("needsDeviceDescription")}
+		>
+			<ConnectButton />
+		</EmptyState>
 	);
 }
