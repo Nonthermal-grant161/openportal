@@ -48,7 +48,12 @@ export interface CatalogApp {
 	 * automatically (the device downloads them); `external` only opens a page.
 	 */
 	source?: AppSource;
-	/** `owner/repo` for `source: "github"`. */
+	/**
+	 * `owner/repo` on GitHub. Required for `source: "github"` (the APK is
+	 * resolved from its releases). For any other source it is optional and only
+	 * used to render the project's README on the app's detail page — set it to a
+	 * GitHub mirror to give an F-Droid/URL app a rich description.
+	 */
 	repo?: string;
 	/** Direct APK URL for `source: "url"`. */
 	apkUrl?: string;

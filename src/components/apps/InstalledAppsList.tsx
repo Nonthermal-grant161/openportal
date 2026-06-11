@@ -22,9 +22,9 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { AppBadge } from "./AppBadge";
-import { AppDetailSheet } from "./AppDetailSheet";
 import { AppIcon } from "./AppIcon";
 import { AppSetupPanel } from "./setup/AppSetupPanel";
 import { useAppActions } from "./use-app-actions";
@@ -45,10 +45,10 @@ export function InstalledAppsList() {
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
 	const clearUpdate = useAppStore((s) => s.clearUpdate);
 
+	const navigate = useNavigate();
 	const advanced = mode === "advanced";
 	const [filter, setFilter] = useState<Filter>("user");
 	const [search, setSearch] = useState("");
-	const [detailFor, setDetailFor] = useState<InstalledPackage | null>(null);
 	const [updatingAll, setUpdatingAll] = useState(false);
 
 	const effectiveFilter: Filter = advanced ? filter : "user";
@@ -155,7 +155,7 @@ export function InstalledAppsList() {
 							<InstalledRow
 								key={pkg.packageName}
 								pkg={pkg}
-								onDetail={() => setDetailFor(pkg)}
+								onDetail={() => navigate(`/apps/${pkg.packageName}`)}
 							/>
 						))}
 					</div>
@@ -165,12 +165,6 @@ export function InstalledAppsList() {
 			<p className="text-right text-xs text-muted-foreground">
 				{t("appCount", { count: filtered.length })}
 			</p>
-
-			<AppDetailSheet
-				pkg={detailFor}
-				open={detailFor !== null}
-				onClose={() => setDetailFor(null)}
-			/>
 		</div>
 	);
 }

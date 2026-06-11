@@ -81,6 +81,10 @@ Field reference:
 - `advancedOnly` — optional; `true` restricts the app to Advanced mode. By default
   (omitted) every app is listed in Classic mode too
 - `downloadUrl`, `iconUrl` — optional
+- `repo` — optional `owner/repo` on GitHub. Required for `source: "github"` (the
+  APK is resolved from its releases); for any source it also renders that repo's
+  README on the app's detail page, so pointing an F-Droid or URL app at its GitHub
+  mirror gives it a rich description
 - `iconFile` — optional; use instead of `iconUrl` when the app has no hosted
   icon to link to. Drop a square PNG at `public/app-icons/<packageName>.png` and
   set `"iconFile": true` (or pass an extension like `"svg"`). `iconUrl` wins when

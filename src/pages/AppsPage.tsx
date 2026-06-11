@@ -3,16 +3,13 @@ import {
 	ApkInstallModal,
 } from "@/components/apps/ApkInstaller";
 import { AppCatalog } from "@/components/apps/AppCatalog";
-import { AppDetailSheet } from "@/components/apps/AppDetailSheet";
 import { InstalledAppsList } from "@/components/apps/InstalledAppsList";
 import { Button, Segmented } from "@/components/ui/primitives";
-import { getCatalogApp } from "@/lib/portal/catalog";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
 import { FileUp, RefreshCw, Usb } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router";
 
 type Tab = "catalog" | "installed";
 
@@ -27,14 +24,6 @@ export function AppsPage() {
 	const loading = useAppStore((s) => s.loading);
 	const [tab, setTab] = useState<Tab>("catalog");
 	const [apkOpen, setApkOpen] = useState(false);
-
-	const { packageName } = useParams();
-	const navigate = useNavigate();
-	const deepLinkedApp = packageName ? getCatalogApp(packageName) : undefined;
-
-	useEffect(() => {
-		if (packageName && !deepLinkedApp) navigate("/apps", { replace: true });
-	}, [packageName, deepLinkedApp, navigate]);
 
 	useEffect(() => {
 		if (isVisitor) return;
@@ -130,12 +119,6 @@ export function AppsPage() {
 					<ApkDropOverlay />
 				</>
 			)}
-
-			<AppDetailSheet
-				app={deepLinkedApp}
-				open={!!deepLinkedApp}
-				onClose={() => navigate("/apps", { replace: true })}
-			/>
 		</>
 	);
 

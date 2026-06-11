@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { AppBadge } from "./AppBadge";
-import { AppDetailSheet } from "./AppDetailSheet";
 import { AppIcon } from "./AppIcon";
 import { InstallProgress } from "./InstallProgress";
 import { AppSetupPanel } from "./setup/AppSetupPanel";
@@ -34,7 +34,6 @@ export function AppCard({ app }: { app: CatalogApp }) {
 
 	const [confirmUninstall, setConfirmUninstall] = useState(false);
 	const [setupOpen, setSetupOpen] = useState(false);
-	const [detailOpen, setDetailOpen] = useState(false);
 
 	const isLauncher = app.category === "launcher";
 	const setup = app.setup;
@@ -53,9 +52,8 @@ export function AppCard({ app }: { app: CatalogApp }) {
 
 	return (
 		<div className="flex flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/30">
-			<button
-				type="button"
-				onClick={() => setDetailOpen(true)}
+			<Link
+				to={`/apps/${app.packageName}`}
 				title={t("viewDetails")}
 				className="group flex items-start gap-3 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
 			>
@@ -92,7 +90,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 						)}
 					</div>
 				</div>
-			</button>
+			</Link>
 
 			<p className="mt-3 line-clamp-2 min-h-8 text-xs text-muted-foreground">
 				{app.description}
@@ -197,12 +195,6 @@ export function AppCard({ app }: { app: CatalogApp }) {
 				app={app}
 				open={setupOpen}
 				onClose={() => setSetupOpen(false)}
-			/>
-
-			<AppDetailSheet
-				app={app}
-				open={detailOpen}
-				onClose={() => setDetailOpen(false)}
 			/>
 		</div>
 	);

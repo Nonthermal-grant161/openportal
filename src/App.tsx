@@ -11,7 +11,11 @@ import { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Toaster } from "sonner";
 
-// Advanced tools are split into their own chunks; most users never open them.
+// The detail page pulls in the markdown renderer; keep it out of the catalog
+// bundle. Advanced tools are likewise split — most users never open them.
+const AppDetailPage = lazy(() =>
+	import("@/pages/AppDetailPage").then((m) => ({ default: m.AppDetailPage })),
+);
 const FilesPage = lazy(() =>
 	import("@/pages/FilesPage").then((m) => ({ default: m.FilesPage })),
 );
@@ -68,7 +72,7 @@ export default function App() {
 						<Route element={<AppShell />}>
 							<Route index element={<DashboardPage />} />
 							<Route path="apps" element={<AppsPage />} />
-							<Route path="apps/:packageName" element={<AppsPage />} />
+							<Route path="apps/:packageName" element={<AppDetailPage />} />
 							<Route path="files" element={<FilesPage />} />
 							<Route path="screen" element={<ScreenPage />} />
 							<Route path="terminal" element={<TerminalPage />} />

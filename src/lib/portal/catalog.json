@@ -68,6 +68,7 @@
 		"category": "media",
 		"version": "3.6.4",
 		"source": "fdroid",
+		"repo": "videolan/vlc-android",
 		"iconUrl": "https://f-droid.org/repo/org.videolan.vlc/en-US/icon.png"
 	},
 	{
@@ -78,6 +79,7 @@
 		"category": "media",
 		"version": "2.6.2",
 		"source": "fdroid",
+		"repo": "jellyfin/jellyfin-android",
 		"iconUrl": "https://f-droid.org/repo/org.jellyfin.mobile/en-US/icon.png"
 	},
 	{
@@ -112,6 +114,7 @@
 		"category": "utility",
 		"version": "1.8.0",
 		"source": "fdroid",
+		"repo": "zhanghai/MaterialFiles",
 		"iconUrl": "https://f-droid.org/repo/me.zhanghai.android.files/en-US/icon.png"
 	},
 	{
@@ -134,6 +137,7 @@
 		"category": "media",
 		"version": "31.4",
 		"source": "fdroid",
+		"repo": "libre-tube/LibreTube",
 		"iconUrl": "https://f-droid.org/repo/com.github.libretube/en-US/icon.png"
 	},
 	{
@@ -144,6 +148,7 @@
 		"category": "smartHome",
 		"version": "2026.4.4-minimal",
 		"source": "fdroid",
+		"repo": "home-assistant/android",
 		"iconUrl": "https://f-droid.org/repo/io.homeassistant.companion.android.minimal/en-US/icon.png"
 	},
 	{
@@ -154,6 +159,7 @@
 		"category": "media",
 		"version": "3.11.4",
 		"source": "fdroid",
+		"repo": "AntennaPod/AntennaPod",
 		"iconUrl": "https://f-droid.org/repo/de.danoeh.antennapod/en-US/icon.png"
 	},
 	{
@@ -164,6 +170,7 @@
 		"category": "media",
 		"version": "21.3",
 		"source": "fdroid",
+		"repo": "xbmc/xbmc",
 		"iconUrl": "https://raw.githubusercontent.com/xbmc/xbmc/master/media/icon256x256.png"
 	},
 	{
