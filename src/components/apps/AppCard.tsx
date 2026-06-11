@@ -9,6 +9,7 @@ import {
 	ExternalLink,
 	Loader2,
 	Settings,
+	Sparkles,
 	SquareArrowOutUpRight,
 	Trash2,
 } from "lucide-react";
@@ -68,8 +69,11 @@ export function AppCard({ app }: { app: CatalogApp }) {
 						{app.name}
 					</h4>
 					<div className="mt-1 flex flex-wrap gap-1">
-						{app.verified && (
-							<AppBadge tone="emerald">{t("verified")}</AppBadge>
+						{app.madeForPortal && (
+							<AppBadge tone="violet">
+								<Sparkles className="h-3 w-3" />
+								{t("madeForPortal")}
+							</AppBadge>
 						)}
 						{actions.hasUpdate && actions.update && (
 							<AppBadge

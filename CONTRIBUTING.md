@@ -60,8 +60,6 @@ array:
   "description": "What it does, in one sentence.",
   "category": "utility",
   "version": "1.0.0",
-  "verified": true,
-  "featured": false,
   "downloadUrl": "https://...",
   "iconUrl": "https://...",
   "setup": {
@@ -78,8 +76,10 @@ Field reference:
 - `packageName` — exact Android package name
 - `category` — one of `launcher`, `store`, `media`, `photo`, `smartHome`,
   `assistant`, `utility`
-- `verified` — `true` only if the app was tested on a Portal
-- `featured` — featured apps are the ones shown in Classic mode
+- `madeForPortal` — optional; `true` for apps built specifically for the Portal.
+  They get a "Made for Portal" badge and a pinned section at the top of the catalog
+- `advancedOnly` — optional; `true` restricts the app to Advanced mode. By default
+  (omitted) every app is listed in Classic mode too
 - `downloadUrl`, `iconUrl` — optional
 - `iconFile` — optional; use instead of `iconUrl` when the app has no hosted
   icon to link to. Drop a square PNG at `public/app-icons/<packageName>.png` and
@@ -101,8 +101,6 @@ Field reference:
 
 Guidelines:
 
-- Only mark `verified: true` for apps that have been confirmed working on a Meta
-  Portal device. Note which model(s) you tested in the PR description.
 - Prefer open-source apps and official download sources.
 - Do **not** submit apps that require root, exploits, or that violate the device
   owner's terms — OpenPortal only uses public ADB commands.

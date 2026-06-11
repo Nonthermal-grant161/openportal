@@ -16,6 +16,7 @@ import {
 	Loader2,
 	Search,
 	Settings,
+	Sparkles,
 	SquareArrowOutUpRight,
 	Trash2,
 } from "lucide-react";
@@ -228,6 +229,12 @@ function InstalledRow({
 							<span className="truncate font-mono text-xs group-hover:underline">
 								{pkg.packageName}
 							</span>
+						)}
+						{catApp?.madeForPortal && (
+							<AppBadge tone="violet" title={t("madeForPortal")}>
+								<Sparkles className="h-3 w-3" />
+								{t("madeForPortal")}
+							</AppBadge>
 						)}
 						{catApp?.category === "launcher" && isDefaultLauncher && (
 							<AppBadge tone="emerald">

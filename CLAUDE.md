@@ -39,7 +39,7 @@ This is the key constraint when touching UI: components that issue live device I
 
 **Routing / gating** (`src/App.tsx`): while `state !== "connected"` the app renders `ConnectScreen` only — there is no router. Once connected, a `BrowserRouter` (basename `import.meta.env.BASE_URL`) mounts the pages. Dashboard and Apps are eager; the advanced tools (Files, Screen, Terminal, Logcat, Flags) are `React.lazy` code-split so the heavy chunks load on demand.
 
-**Classic vs Advanced mode** (`useUIStore().mode`): keep powerful or confusing features behind Advanced mode. In the catalog, `featured` apps are the ones shown in Classic mode.
+**Classic vs Advanced mode** (`useUIStore().mode`): keep powerful or confusing features behind Advanced mode. In the catalog, every app shows in Classic mode by default; set `advancedOnly: true` to restrict one to Advanced mode. Apps flagged `madeForPortal` get a pinned "Made for Portal" section at the top of the catalog plus a badge.
 
 ## i18n — no hard-coded user-facing strings
 
@@ -55,7 +55,7 @@ Real scrcpy over H.264 → WebCodecs (`src/lib/adb/scrcpy.ts`, decoded via `@yum
 - Formatting/linting is **Biome**, not Prettier/ESLint: tabs, organized imports. `src/lib/portal/catalog.json` and `public/scrcpy-server` are excluded from Biome.
 - Path alias: `@/` → `src/`.
 - Tailwind CSS 4 utilities inline; use `cn()` (from `src/lib/utils.ts`) for conditional classes. Shared primitives live in `src/components/ui/primitives.tsx`.
-- The app catalog (`src/lib/portal/catalog.json`) is **data-only** so apps can be added via PR with no code change. See CONTRIBUTING.md for the field schema and the `verified`/`featured`/`postInstallCommands` semantics.
+- The app catalog (`src/lib/portal/catalog.json`) is **data-only** so apps can be added via PR with no code change. See CONTRIBUTING.md for the field schema and the `madeForPortal`/`advancedOnly`/`postInstallCommands` semantics.
 - This tool uses only public ADB commands — no exploits, root, or bootloader unlock. Don't add capabilities that require them.
 
 ## PWA

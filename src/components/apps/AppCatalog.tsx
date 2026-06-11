@@ -1,5 +1,9 @@
 import { EmptyState, Segmented } from "@/components/ui/primitives";
-import { type CatalogApp, getCatalogByCategory } from "@/lib/portal/catalog";
+import {
+	APP_CATALOG,
+	type CatalogApp,
+	getCatalogByCategory,
+} from "@/lib/portal/catalog";
 import { useUIStore } from "@/store/ui-store";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -25,18 +29,26 @@ export function AppCatalog() {
 	const catalog = useMemo(() => getCatalogByCategory(), []);
 
 	// Categories with at least one app visible for the current mode (classic
-	// only surfaces featured apps), in the canonical order.
+	// hides apps flagged advancedOnly), in the canonical order.
 	const visibleByCategory = useMemo(() => {
 		const map = new Map<string, CatalogApp[]>();
 		for (const cat of CATEGORY_ORDER) {
 			const apps = catalog.get(cat);
 			if (!apps?.length) continue;
 			const visible =
-				mode === "classic" ? apps.filter((a) => a.featured) : apps;
+				mode === "classic" ? apps.filter((a) => !a.advancedOnly) : apps;
 			if (visible.length) map.set(cat, visible);
 		}
 		return map;
 	}, [catalog, mode]);
+
+	const portalApps = useMemo(
+		() =>
+			APP_CATALOG.filter(
+				(a) => a.madeForPortal && (mode === "advanced" || !a.advancedOnly),
+			),
+		[mode],
+	);
 
 	const query = search.trim().toLowerCase();
 	const matches = (app: CatalogApp) =>
@@ -60,14 +72,21 @@ export function AppCatalog() {
 				? [category]
 				: [];
 
+	const showPortalSection =
+		category === "all" && !query && portalApps.length > 0;
+	const portalIds = new Set(portalApps.map((a) => a.id));
+
 	const sections = activeCats
 		.map((cat) => ({
 			cat,
-			apps: (visibleByCategory.get(cat) ?? []).filter(matches),
+			apps: (visibleByCategory.get(cat) ?? [])
+				.filter((a) => !(showPortalSection && portalIds.has(a.id)))
+				.filter(matches),
 		}))
 		.filter((section) => section.apps.length > 0);
 
 	const totalMatches = sections.reduce((n, s) => n + s.apps.length, 0);
+	const hasContent = showPortalSection || totalMatches > 0;
 
 	return (
 		<div className="space-y-3">
@@ -90,10 +109,22 @@ export function AppCatalog() {
 				/>
 			</div>
 
-			{totalMatches === 0 ? (
+			{!hasContent ? (
 				<EmptyState title={t("noResults")} />
 			) : (
 				<div className="space-y-6">
+					{showPortalSection && (
+						<div>
+							<h4 className="mb-3 text-sm font-medium text-muted-foreground">
+								{t("madeForPortal")}
+							</h4>
+							<div className="grid grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-3">
+								{portalApps.map((app) => (
+									<AppCard key={app.id} app={app} />
+								))}
+							</div>
+						</div>
+					)}
 					{sections.map(({ cat, apps }) => (
 						<div key={cat}>
 							{category === "all" && (

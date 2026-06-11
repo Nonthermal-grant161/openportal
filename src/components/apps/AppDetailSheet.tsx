@@ -31,6 +31,7 @@ import {
 	KeyRound,
 	Octagon,
 	Settings,
+	Sparkles,
 	SquareArrowOutUpRight,
 	Trash,
 	Trash2,
@@ -143,8 +144,11 @@ export function AppDetailSheet({
 								{packageName}
 							</p>
 							<div className="mt-1.5 flex flex-wrap gap-1">
-								{catApp?.verified && (
-									<AppBadge tone="emerald">{t("verified")}</AppBadge>
+								{catApp?.madeForPortal && (
+									<AppBadge tone="violet">
+										<Sparkles className="h-3 w-3" />
+										{t("madeForPortal")}
+									</AppBadge>
 								)}
 								{catApp?.category === "launcher" && isDefaultLauncher && (
 									<AppBadge tone="emerald">

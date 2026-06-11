@@ -158,10 +158,12 @@ export function EmptyState({
 	icon: Icon,
 	title,
 	description,
+	children,
 }: {
 	icon?: React.ComponentType<{ className?: string }>;
 	title: string;
 	description?: string;
+	children?: React.ReactNode;
 }) {
 	return (
 		<div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border px-6 py-12 text-center">
@@ -170,6 +172,7 @@ export function EmptyState({
 			{description && (
 				<p className="max-w-sm text-xs text-muted-foreground">{description}</p>
 			)}
+			{children && <div className="mt-4">{children}</div>}
 		</div>
 	);
 }

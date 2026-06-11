@@ -32,8 +32,17 @@ export interface CatalogApp {
 	description: string;
 	category: CatalogCategory;
 	version: string;
-	verified: boolean;
-	featured: boolean;
+	/**
+	 * Restrict the app to Advanced mode. When `true`, the catalog only lists it
+	 * while the UI is in Advanced mode; by default (absent/`false`) it shows in
+	 * Classic mode too.
+	 */
+	advancedOnly?: boolean;
+	/**
+	 * App built specifically for the Portal. Highlighted in a dedicated "Made for
+	 * Portal" section at the top of the catalog and with a badge on its card.
+	 */
+	madeForPortal?: boolean;
 	/**
 	 * Where the APK comes from. `github`/`fdroid`/`url` can be installed
 	 * automatically (the device downloads them); `external` only opens a page.
@@ -74,10 +83,6 @@ export function getCatalogByCategory(): Map<string, CatalogApp[]> {
 		map.set(app.category, existing);
 	}
 	return map;
-}
-
-export function getFeaturedApps(): CatalogApp[] {
-	return APP_CATALOG.filter((app) => app.featured);
 }
 
 const BY_PACKAGE = new Map(APP_CATALOG.map((app) => [app.packageName, app]));
