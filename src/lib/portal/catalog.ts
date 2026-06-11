@@ -101,3 +101,8 @@ export function getAppIconUrl(app: CatalogApp): string | undefined {
 	}
 	return undefined;
 }
+
+/** Canonical, shareable deep-link to an app's catalog entry, keyed by package. */
+export function getAppShareUrl(packageName: string): string {
+	return `${window.location.origin}${import.meta.env.BASE_URL}apps/${packageName}`;
+}

@@ -68,6 +68,7 @@ export default function App() {
 						<Route element={<AppShell />}>
 							<Route index element={<DashboardPage />} />
 							<Route path="apps" element={<AppsPage />} />
+							<Route path="apps/:packageName" element={<AppsPage />} />
 							<Route path="files" element={<FilesPage />} />
 							<Route path="screen" element={<ScreenPage />} />
 							<Route path="terminal" element={<TerminalPage />} />

@@ -1,7 +1,8 @@
+import { LogoMark, LogoWordmark } from "@/components/ui/Logo";
 import { Card } from "@/components/ui/primitives";
 import { getPlatformSupport } from "@/lib/utils/platform";
 import { useDeviceStore } from "@/store/device-store";
-import { ArrowRight, Monitor, Usb } from "lucide-react";
+import { ArrowRight, Usb } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { BrowserCheck } from "./BrowserCheck";
 
@@ -15,10 +16,12 @@ export function ConnectPanel() {
 	return (
 		<Card className="space-y-8">
 			<div className="text-center">
-				<div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-foreground/5">
-					<Monitor className="h-8 w-8" />
+				<div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10">
+					<LogoMark className="h-9 w-9" />
 				</div>
-				<h1 className="text-3xl font-bold tracking-tight">{t("appName")}</h1>
+				<h1 className="text-3xl font-bold tracking-tight">
+					<LogoWordmark />
+				</h1>
 				<p className="mt-2 text-muted-foreground">{t("connectDescription")}</p>
 			</div>
 

@@ -1,3 +1,4 @@
+import { LogoMark, LogoWordmark } from "@/components/ui/Logo";
 import { ConfirmDialog } from "@/components/ui/primitives";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
@@ -91,8 +92,9 @@ export function Sidebar({
 					mobileOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
 			>
-				<div className="flex items-center px-4 py-5">
-					<span className="text-base font-semibold">{t("appName")}</span>
+				<div className="flex items-center gap-2.5 px-4 py-5">
+					<LogoMark className="h-6 w-6" />
+					<LogoWordmark className="text-base font-bold" />
 				</div>
 
 				<nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">

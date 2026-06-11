@@ -32,6 +32,8 @@
 	"updatesAvailable_one": "{{count}} update available",
 	"updatesAvailable_other": "{{count}} updates available",
 	"viewDetails": "View details",
+	"copyLink": "Copy link",
+	"linkCopied": "Link copied",
 	"installedVersion": "Installed version",
 	"latestVersion": "Latest version",
 	"source": "Source",

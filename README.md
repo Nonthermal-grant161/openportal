@@ -63,6 +63,22 @@ The `dist/` folder is a static site you can host anywhere with HTTPS (GitHub Pag
 
 React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand · React Router 7 · react-i18next · ya-webadb · xterm.js · Biome
 
+## Add a badge to your app
+
+Built an app that's in the catalog? Link straight to it from your own README or website. Every catalog app has a shareable page at `…/apps/<package-name>` that opens the app's card — no device required.
+
+Paste this into your README and replace `YOUR.PACKAGE.NAME` with your app's Android package name (the same `packageName` as in its catalog entry):
+
+```md
+[![Get it on OpenPortal](https://andronedev.github.io/openportal/openportal-badge.svg)](https://andronedev.github.io/openportal/apps/YOUR.PACKAGE.NAME)
+```
+
+For example, Portal Calendar (`com.portal.calendar`) renders as:
+
+[![Get it on OpenPortal](https://andronedev.github.io/openportal/openportal-badge.svg)](https://andronedev.github.io/openportal/apps/com.portal.calendar)
+
+Just want the plain link? It's `https://andronedev.github.io/openportal/apps/YOUR.PACKAGE.NAME` — you can also grab it straight from the app's detail dialog with the **Copy link** button.
+
 ## Contributing
 
 The app catalog lives in [`src/lib/portal/catalog.json`](src/lib/portal/catalog.json). It's data-only, so you can add an app with a pull request and no code change. See [CONTRIBUTING.md](CONTRIBUTING.md) for the field schema and conventions.

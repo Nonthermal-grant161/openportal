@@ -13,6 +13,7 @@ import type { InstalledPackage } from "@/lib/adb/types";
 import {
 	type CatalogApp,
 	getAppIconUrl,
+	getAppShareUrl,
 	getCatalogApp,
 } from "@/lib/portal/catalog";
 import {
@@ -29,6 +30,7 @@ import {
 	Download,
 	ExternalLink,
 	KeyRound,
+	Link2,
 	Octagon,
 	Settings,
 	Sparkles,
@@ -38,6 +40,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { AppBadge } from "./AppBadge";
 import { AppIcon } from "./AppIcon";
 import { InstallProgress } from "./InstallProgress";
@@ -71,6 +74,7 @@ export function AppDetailSheet({
 	const storeVersion = useAppStore((s) => s.versions[packageName]);
 
 	const [liveVersion, setLiveVersion] = useState<string | null>(null);
+	const [copiedLink, setCopiedLink] = useState(false);
 	const [confirmUninstall, setConfirmUninstall] = useState(false);
 	const [confirmClear, setConfirmClear] = useState(false);
 	const [setupOpen, setSetupOpen] = useState(false);
@@ -82,6 +86,7 @@ export function AppDetailSheet({
 			setLiveVersion(null);
 			setPermsOpen(false);
 			setPerms(null);
+			setCopiedLink(false);
 			return;
 		}
 		if (!adb || !packageName || !actions.isInstalled || actions.busy !== null)
@@ -122,6 +127,17 @@ export function AppDetailSheet({
 		if (!setup) return;
 		if (setup.kind === "custom") setSetupOpen(true);
 		else actions.runSetup();
+	};
+
+	const handleCopyLink = async () => {
+		try {
+			await navigator.clipboard.writeText(getAppShareUrl(packageName));
+			setCopiedLink(true);
+			toast.success(t("linkCopied"));
+			setTimeout(() => setCopiedLink(false), 1500);
+		} catch {
+			toast.error(t("actionFailed"));
+		}
 	};
 
 	const sourceUrl = catApp ? getSourceUrl(catApp) : undefined;
@@ -165,6 +181,24 @@ export function AppDetailSheet({
 								{isSystem && <AppBadge>{t("systemApp")}</AppBadge>}
 							</div>
 						</div>
+						{catApp && (
+							<button
+								type="button"
+								onClick={handleCopyLink}
+								title={t("copyLink")}
+								aria-label={t("copyLink")}
+								className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+							>
+								{copiedLink ? (
+									<Check className="h-3.5 w-3.5 text-emerald-500" />
+								) : (
+									<Link2 className="h-3.5 w-3.5" />
+								)}
+								<span className="hidden sm:inline">
+									{copiedLink ? t("linkCopied") : t("copyLink")}
+								</span>
+							</button>
+						)}
 					</div>
 
 					{catApp?.description && (
