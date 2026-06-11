@@ -6,15 +6,16 @@ import { AppCatalog } from "@/components/apps/AppCatalog";
 import { InstalledAppsList } from "@/components/apps/InstalledAppsList";
 import { Button, Segmented } from "@/components/ui/primitives";
 import { useAppStore } from "@/store/app-store";
-import { FileUp, Monitor, RefreshCw, Usb } from "lucide-react";
+import { useDeviceStore } from "@/store/device-store";
+import { FileUp, RefreshCw, Usb } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Tab = "catalog" | "installed";
 
-export function AppsPage({ visitor = false }: { visitor?: boolean }) {
+export function AppsPage() {
 	const { t } = useTranslation("apps");
-	const { t: tCommon } = useTranslation();
+	const isVisitor = useDeviceStore((s) => s.state) !== "connected";
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
 	const checkUpdates = useAppStore((s) => s.checkUpdates);
 	const refreshDefaultLauncher = useAppStore((s) => s.refreshDefaultLauncher);
@@ -25,12 +26,12 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 	const [apkOpen, setApkOpen] = useState(false);
 
 	useEffect(() => {
-		if (visitor) return;
+		if (isVisitor) return;
 		refreshInstalled().then(() => {
 			checkUpdates();
 			refreshDefaultLauncher();
 		});
-	}, [visitor, refreshInstalled, checkUpdates, refreshDefaultLauncher]);
+	}, [isVisitor, refreshInstalled, checkUpdates, refreshDefaultLauncher]);
 
 	const handleRefresh = () => {
 		refreshInstalled().then(() => {
@@ -52,7 +53,7 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 					</h1>
 					<p className="mt-1 text-sm text-muted-foreground">
 						{t(
-							visitor
+							isVisitor
 								? "visitorCatalogDescription"
 								: isCatalog
 									? "catalogDescription"
@@ -61,7 +62,7 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 					</p>
 				</div>
 				<div className="flex shrink-0 flex-wrap items-center gap-2">
-					{!visitor && (
+					{!isVisitor && (
 						<>
 							<Segmented
 								value={tab}
@@ -96,7 +97,7 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 				</div>
 			</div>
 
-			{visitor && (
+			{isVisitor && (
 				<div className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm">
 					<Usb className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 					<p className="text-muted-foreground">{t("visitorConnectHint")}</p>
@@ -106,13 +107,13 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 			<div className={isCatalog ? undefined : "hidden"}>
 				<AppCatalog />
 			</div>
-			{!visitor && (
+			{!isVisitor && (
 				<div className={isCatalog ? "hidden" : undefined}>
 					<InstalledAppsList />
 				</div>
 			)}
 
-			{!visitor && (
+			{!isVisitor && (
 				<>
 					<ApkInstallModal open={apkOpen} onClose={() => setApkOpen(false)} />
 					<ApkDropOverlay />
@@ -120,22 +121,6 @@ export function AppsPage({ visitor = false }: { visitor?: boolean }) {
 			)}
 		</>
 	);
-
-	if (visitor) {
-		return (
-			<div className="min-h-screen bg-background text-foreground">
-				<header className="border-b border-border">
-					<div className="mx-auto flex h-14 max-w-4xl items-center gap-3 px-4 md:px-6">
-						<Monitor className="h-5 w-5" />
-						<span className="font-semibold">{tCommon("appName")}</span>
-					</div>
-				</header>
-				<main className="mx-auto max-w-4xl space-y-5 p-4 md:p-6">
-					{content}
-				</main>
-			</div>
-		);
-	}
 
 	return <div className="mx-auto max-w-4xl space-y-5">{content}</div>;
 }

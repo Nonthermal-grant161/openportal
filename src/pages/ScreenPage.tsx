@@ -1,3 +1,4 @@
+import { ConnectGate } from "@/components/connection/ConnectGate";
 import { ScreenMirror } from "@/components/screen/ScreenMirror";
 import { PageHeader } from "@/components/ui/primitives";
 import { useTranslation } from "react-i18next";
@@ -8,7 +9,9 @@ export function ScreenPage() {
 	return (
 		<div className="mx-auto max-w-4xl space-y-6">
 			<PageHeader title={t("screen.title")} />
-			<ScreenMirror autoStart textInput />
+			<ConnectGate>
+				<ScreenMirror autoStart textInput />
+			</ConnectGate>
 		</div>
 	);
 }

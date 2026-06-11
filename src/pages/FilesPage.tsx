@@ -1,3 +1,4 @@
+import { ConnectGate } from "@/components/connection/ConnectGate";
 import { FileBrowser } from "@/components/files/FileBrowser";
 import { PageHeader } from "@/components/ui/primitives";
 import { useTranslation } from "react-i18next";
@@ -8,7 +9,9 @@ export function FilesPage() {
 	return (
 		<div className="mx-auto max-w-4xl space-y-6">
 			<PageHeader title={t("files.title")} />
-			<FileBrowser />
+			<ConnectGate>
+				<FileBrowser />
+			</ConnectGate>
 		</div>
 	);
 }

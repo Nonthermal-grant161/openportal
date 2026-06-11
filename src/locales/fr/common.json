@@ -37,6 +37,8 @@
 	"step1": "Branchez votre Portal en USB",
 	"step2": "Autorisez le débogage USB sur l'écran du Portal",
 	"step3": "Cliquez sur le bouton Connecter ci-dessous",
+	"needsDeviceTitle": "Connectez un appareil pour utiliser cet outil",
+	"needsDeviceDescription": "Branchez votre Portal en USB et connectez-vous pour utiliser cet outil.",
 	"previousDevices": "Appareils déjà connectés",
 	"reconnect": "Reconnecter",
 	"noDeviceConnected": "Aucun appareil connecté",

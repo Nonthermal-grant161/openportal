@@ -1,3 +1,4 @@
+import { ConnectPanel } from "@/components/connection/ConnectPanel";
 import { DeviceCard } from "@/components/dashboard/DeviceCard";
 import { DeviceHero } from "@/components/dashboard/DeviceHero";
 import { QuickActions } from "@/components/dashboard/QuickActions";
@@ -13,10 +14,12 @@ import { useTranslation } from "react-i18next";
 
 export function DashboardPage() {
 	const { t } = useTranslation("dashboard");
+	const state = useDeviceStore((s) => s.state);
 	const adb = useDeviceStore((s) => s.adb);
 	const mode = useUIStore((s) => s.mode);
 	const refreshInstalled = useAppStore((s) => s.refreshInstalled);
 	const [showScreen, setShowScreen] = useState(false);
+	const connected = state === "connected";
 
 	useEffect(() => {
 		refreshInstalled();
@@ -36,6 +39,14 @@ export function DashboardPage() {
 				{t("showScreen")}
 			</button>
 		));
+
+	if (!connected) {
+		return (
+			<div className="mx-auto max-w-md space-y-6">
+				<ConnectPanel />
+			</div>
+		);
+	}
 
 	// Classic: a welcoming, action-first page for newcomers. Storage lives in the
 	// hero, the snapshot is the doorway to the Screen page, and the technical

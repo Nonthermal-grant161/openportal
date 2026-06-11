@@ -37,6 +37,8 @@
 	"step1": "Connect your Portal via USB",
 	"step2": "Allow USB Debugging on your Portal screen",
 	"step3": "Click the Connect button below",
+	"needsDeviceTitle": "Connect a device to use this tool",
+	"needsDeviceDescription": "Plug your Portal in over USB and connect to start using this tool.",
 	"previousDevices": "Previously connected devices",
 	"reconnect": "Reconnect",
 	"noDeviceConnected": "No device connected",

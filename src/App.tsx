@@ -1,4 +1,3 @@
-import { ConnectScreen } from "@/components/connection/ConnectScreen";
 import { AppShell } from "@/components/layout/AppShell";
 import { Spinner } from "@/components/ui/primitives";
 import { useTheme } from "@/hooks/use-theme";
@@ -52,11 +51,9 @@ function PageFallback() {
 }
 
 export default function App() {
-	const state = useDeviceStore((s) => s.state);
 	const theme = useUIStore((s) => s.theme);
 	useTheme();
 	useDemoMode();
-	const connected = state === "connected";
 
 	return (
 		<>
@@ -67,24 +64,17 @@ export default function App() {
 			/>
 			<BrowserRouter basename={import.meta.env.BASE_URL}>
 				<Suspense fallback={<PageFallback />}>
-					{connected ? (
-						<Routes>
-							<Route element={<AppShell />}>
-								<Route index element={<DashboardPage />} />
-								<Route path="apps" element={<AppsPage />} />
-								<Route path="files" element={<FilesPage />} />
-								<Route path="screen" element={<ScreenPage />} />
-								<Route path="terminal" element={<TerminalPage />} />
-								<Route path="logcat" element={<LogcatPage />} />
-								<Route path="flags" element={<FlagsPage />} />
-							</Route>
-						</Routes>
-					) : (
-						<Routes>
-							<Route path="apps" element={<AppsPage visitor />} />
-							<Route path="*" element={<ConnectScreen />} />
-						</Routes>
-					)}
+					<Routes>
+						<Route element={<AppShell />}>
+							<Route index element={<DashboardPage />} />
+							<Route path="apps" element={<AppsPage />} />
+							<Route path="files" element={<FilesPage />} />
+							<Route path="screen" element={<ScreenPage />} />
+							<Route path="terminal" element={<TerminalPage />} />
+							<Route path="logcat" element={<LogcatPage />} />
+							<Route path="flags" element={<FlagsPage />} />
+						</Route>
+					</Routes>
 				</Suspense>
 			</BrowserRouter>
 		</>

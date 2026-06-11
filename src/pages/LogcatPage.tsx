@@ -1,3 +1,4 @@
+import { ConnectGate } from "@/components/connection/ConnectGate";
 import { Button, PageHeader } from "@/components/ui/primitives";
 import {
 	type LogLine,
@@ -139,97 +140,99 @@ export function LogcatPage() {
 	};
 
 	return (
-		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-4">
+		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-6">
 			<PageHeader title={t("logcat.title")} />
 
-			<div className="flex flex-wrap items-center gap-2">
-				{running ? (
-					<Button variant="danger" onClick={stop}>
-						<Square className="h-4 w-4" />
-						{t("logcat.stop")}
+			<ConnectGate>
+				<div className="flex flex-wrap items-center gap-2">
+					{running ? (
+						<Button variant="danger" onClick={stop}>
+							<Square className="h-4 w-4" />
+							{t("logcat.stop")}
+						</Button>
+					) : (
+						<Button variant="primary" onClick={start}>
+							<Play className="h-4 w-4" />
+							{t("logcat.start")}
+						</Button>
+					)}
+					<Button variant="ghost" onClick={() => setLines([])}>
+						<Trash2 className="h-4 w-4" />
+						{t("logcat.clear")}
 					</Button>
-				) : (
-					<Button variant="primary" onClick={start}>
-						<Play className="h-4 w-4" />
-						{t("logcat.start")}
+					<Button
+						variant="ghost"
+						onClick={handleExport}
+						disabled={lines.length === 0}
+					>
+						<Download className="h-4 w-4" />
+						{t("logcat.download")}
 					</Button>
-				)}
-				<Button variant="ghost" onClick={() => setLines([])}>
-					<Trash2 className="h-4 w-4" />
-					{t("logcat.clear")}
-				</Button>
-				<Button
-					variant="ghost"
-					onClick={handleExport}
-					disabled={lines.length === 0}
-				>
-					<Download className="h-4 w-4" />
-					{t("logcat.download")}
-				</Button>
 
-				<input
-					value={tagFilter}
-					onChange={(e) => setTagFilter(e.target.value)}
-					placeholder={t("logcat.filterTag")}
-					className="w-32 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
-				/>
-				<input
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					placeholder={t("logcat.search")}
-					className="min-w-40 flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
-				/>
-				<select
-					value={minPriority}
-					onChange={(e) =>
-						setMinPriority(e.target.value as LogPriority | "all")
-					}
-					className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-				>
-					{PRIORITIES.map((p) => (
-						<option key={p} value={p}>
-							{p === "all" ? t("logcat.priorityAll") : p}
-						</option>
-					))}
-				</select>
-				<label className="flex items-center gap-1.5 text-sm text-muted-foreground">
 					<input
-						type="checkbox"
-						checked={autoscroll}
-						onChange={(e) => setAutoscroll(e.target.checked)}
+						value={tagFilter}
+						onChange={(e) => setTagFilter(e.target.value)}
+						placeholder={t("logcat.filterTag")}
+						className="w-32 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
 					/>
-					{t("logcat.autoscroll")}
-				</label>
-			</div>
+					<input
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder={t("logcat.search")}
+						className="min-w-40 flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+					/>
+					<select
+						value={minPriority}
+						onChange={(e) =>
+							setMinPriority(e.target.value as LogPriority | "all")
+						}
+						className="rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+					>
+						{PRIORITIES.map((p) => (
+							<option key={p} value={p}>
+								{p === "all" ? t("logcat.priorityAll") : p}
+							</option>
+						))}
+					</select>
+					<label className="flex items-center gap-1.5 text-sm text-muted-foreground">
+						<input
+							type="checkbox"
+							checked={autoscroll}
+							onChange={(e) => setAutoscroll(e.target.checked)}
+						/>
+						{t("logcat.autoscroll")}
+					</label>
+				</div>
 
-			<div
-				ref={scrollRef}
-				className="min-h-0 flex-1 overflow-auto rounded-xl border border-border bg-black/40 p-3 font-mono text-xs leading-relaxed"
-			>
-				{filtered.length === 0 ? (
-					<div className="flex h-full items-center justify-center text-muted-foreground">
-						{t("logcat.empty")}
-					</div>
-				) : (
-					filtered.map((line) => (
-						<div key={line.id} className="whitespace-pre-wrap break-all">
-							<span className="text-muted-foreground">{line.time} </span>
-							<span className={PRIORITY_COLOR[line.priority]}>
-								{line.priority}{" "}
-							</span>
-							{line.tag && (
-								<span className="text-violet-400">{line.tag}: </span>
-							)}
-							<span>{line.message}</span>
+				<div
+					ref={scrollRef}
+					className="min-h-0 flex-1 overflow-auto rounded-xl border border-border bg-black/40 p-3 font-mono text-xs leading-relaxed"
+				>
+					{filtered.length === 0 ? (
+						<div className="flex h-full items-center justify-center text-muted-foreground">
+							{t("logcat.empty")}
 						</div>
-					))
-				)}
-			</div>
+					) : (
+						filtered.map((line) => (
+							<div key={line.id} className="whitespace-pre-wrap break-all">
+								<span className="text-muted-foreground">{line.time} </span>
+								<span className={PRIORITY_COLOR[line.priority]}>
+									{line.priority}{" "}
+								</span>
+								{line.tag && (
+									<span className="text-violet-400">{line.tag}: </span>
+								)}
+								<span>{line.message}</span>
+							</div>
+						))
+					)}
+				</div>
 
-			<div className="flex items-center justify-between text-xs text-muted-foreground">
-				<span>{running ? t("logcat.streaming") : t("logcat.paused")}</span>
-				<span>{t("logcat.lines", { count: filtered.length })}</span>
-			</div>
+				<div className="flex items-center justify-between text-xs text-muted-foreground">
+					<span>{running ? t("logcat.streaming") : t("logcat.paused")}</span>
+					<span>{t("logcat.lines", { count: filtered.length })}</span>
+				</div>
+			</ConnectGate>
 		</div>
 	);
 }

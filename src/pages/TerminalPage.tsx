@@ -1,6 +1,7 @@
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal as Xterm } from "@xterm/xterm";
 import "@xterm/xterm/css/xterm.css";
+import { ConnectGate } from "@/components/connection/ConnectGate";
 import { PageHeader } from "@/components/ui/primitives";
 import { type PtyHandle, openPty } from "@/lib/adb/pty";
 import { useDeviceStore } from "@/store/device-store";
@@ -81,7 +82,7 @@ export function TerminalPage() {
 	}, [adb, t]);
 
 	return (
-		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-4">
+		<div className="mx-auto flex h-full max-w-4xl flex-col space-y-6">
 			<PageHeader title={t("terminal.title")} />
 
 			{error && (
@@ -90,10 +91,12 @@ export function TerminalPage() {
 				</div>
 			)}
 
-			<div
-				ref={containerRef}
-				className="min-h-0 flex-1 overflow-hidden rounded-xl border border-border bg-black p-2"
-			/>
+			<ConnectGate>
+				<div
+					ref={containerRef}
+					className="min-h-0 flex-1 overflow-hidden rounded-xl border border-border bg-black p-2"
+				/>
+			</ConnectGate>
 		</div>
 	);
 }

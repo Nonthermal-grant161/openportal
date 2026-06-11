@@ -65,8 +65,10 @@ export function Sidebar({
 }) {
 	const { t } = useTranslation();
 	const { mode } = useUIStore();
+	const state = useDeviceStore((s) => s.state);
 	const disconnect = useDeviceStore((s) => s.disconnect);
 	const [confirmDisconnect, setConfirmDisconnect] = useState(false);
+	const connected = state === "connected";
 
 	const visibleItems = NAV_ITEMS.filter(
 		(item) => item.mode === "all" || mode === "advanced",
@@ -124,26 +126,30 @@ export function Sidebar({
 						<Github className="h-4 w-4" />
 						{t("sourceCode")}
 					</a>
-					<button
-						type="button"
-						onClick={() => setConfirmDisconnect(true)}
-						className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
-					>
-						<LogOut className="h-4 w-4" />
-						{t("disconnect")}
-					</button>
+					{connected && (
+						<button
+							type="button"
+							onClick={() => setConfirmDisconnect(true)}
+							className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
+						>
+							<LogOut className="h-4 w-4" />
+							{t("disconnect")}
+						</button>
+					)}
 				</div>
 			</aside>
 
-			<ConfirmDialog
-				open={confirmDisconnect}
-				onClose={() => setConfirmDisconnect(false)}
-				onConfirm={disconnect}
-				title={t("disconnectConfirmTitle")}
-				message={t("disconnectConfirmMessage")}
-				confirmLabel={t("disconnect")}
-				danger
-			/>
+			{connected && (
+				<ConfirmDialog
+					open={confirmDisconnect}
+					onClose={() => setConfirmDisconnect(false)}
+					onConfirm={disconnect}
+					title={t("disconnectConfirmTitle")}
+					message={t("disconnectConfirmMessage")}
+					confirmLabel={t("disconnect")}
+					danger
+				/>
+			)}
 		</>
 	);
 }
