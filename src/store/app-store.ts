@@ -18,6 +18,7 @@ import { useDeviceStore } from "./device-store";
 
 export interface AppUpdate {
 	url: string;
+	urls: string[];
 	latestVersion: string;
 	installedVersion: string;
 }
@@ -105,6 +106,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
 							) {
 								found[app.packageName] = {
 									url: latest.url,
+									urls: latest.urls,
 									latestVersion: latest.version,
 									installedVersion: installed.versionName,
 								};

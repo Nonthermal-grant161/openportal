@@ -66,8 +66,8 @@ export function useAppActions(packageName: string, displayName: string) {
 			setStage("downloading");
 			setProgress(null);
 			try {
-				const url = update?.url ?? (await resolveApk(adb, app)).url;
-				await installFromUrl(adb, url, (s, percent) => {
+				const urls = update?.urls ?? (await resolveApk(adb, app)).urls;
+				await installFromUrl(adb, urls, (s, percent) => {
 					setStage(s);
 					setProgress(percent);
 				});

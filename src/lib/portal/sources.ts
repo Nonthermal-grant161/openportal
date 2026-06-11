@@ -1,10 +1,15 @@
 import { deviceFetchText } from "@/lib/adb/online-install";
 import type { Adb } from "@yume-chan/adb";
 import type { CatalogApp } from "./catalog";
+import fdroidMirrors from "./fdroid-mirrors.json";
+
+const FDROID_MIRRORS: string[] =
+	fdroidMirrors.length > 0 ? fdroidMirrors : ["https://f-droid.org/repo"];
 
 export interface ResolvedApk {
 	version: string;
 	url: string;
+	urls: string[];
 }
 
 export function canAutoInstall(app: CatalogApp): boolean {
@@ -65,6 +70,7 @@ export async function resolveGithubLatest(repo: string): Promise<ResolvedApk> {
 	return {
 		version: (data.tag_name ?? "").replace(/^v/i, ""),
 		url: apk.browser_download_url,
+		urls: [apk.browser_download_url],
 	};
 }
 
@@ -96,9 +102,12 @@ export async function resolveFdroidLatest(
 	}
 	const entry =
 		data.packages?.find((p) => p.versionCode === code) ?? data.packages?.[0];
+	const file = `${packageName}_${code}.apk`;
+	const urls = FDROID_MIRRORS.map((base) => `${base}/${file}`);
 	return {
 		version: entry?.versionName ?? String(code),
-		url: `https://f-droid.org/repo/${packageName}_${code}.apk`,
+		url: urls[0] ?? `https://f-droid.org/repo/${file}`,
+		urls,
 	};
 }
 
@@ -114,7 +123,7 @@ export async function resolveApk(
 			return resolveFdroidLatest(adb, app.packageName);
 		case "url":
 			if (!app.apkUrl) throw new Error("Missing APK URL");
-			return { version: app.version, url: app.apkUrl };
+			return { version: app.version, url: app.apkUrl, urls: [app.apkUrl] };
 		default:
 			throw new Error("This app can't be installed automatically");
 	}

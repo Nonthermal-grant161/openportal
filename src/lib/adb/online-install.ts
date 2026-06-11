@@ -66,6 +66,33 @@ async function getRemoteSize(
 	}
 }
 
+async function measureSpeed(adb: Adb, url: string): Promise<number> {
+	try {
+		const { stdout } = await execShell(
+			adb,
+			`curl -fsSL --max-time 5 -r 0-524287 -o /dev/null -w "%{speed_download}" "${url}"`,
+			{ timeoutMs: 7000 },
+		);
+		const speed = Number(stdout.trim());
+		return Number.isFinite(speed) && speed > 0 ? speed : 0;
+	} catch {
+		return 0;
+	}
+}
+
+async function orderByMeasuredSpeed(
+	adb: Adb,
+	downloader: Downloader,
+	urls: string[],
+): Promise<string[]> {
+	if (downloader !== "curl") return urls;
+	const probes = await Promise.all(
+		urls.map(async (url) => ({ url, speed: await measureSpeed(adb, url) })),
+	);
+	if (probes.every((p) => p.speed === 0)) return urls;
+	return [...probes].sort((a, b) => b.speed - a.speed).map((p) => p.url);
+}
+
 /**
  * Downloads an APK on the device and installs it. The whole transfer happens
  * device-side (no CORS, no browser memory), then `pm install` runs locally.
@@ -75,7 +102,7 @@ async function getRemoteSize(
  */
 export async function installFromUrl(
 	adb: Adb,
-	url: string,
+	urls: string | string[],
 	onProgress?: (stage: InstallStage, percent: number | null) => void,
 ): Promise<void> {
 	const downloader = await detectDownloader(adb);
@@ -85,9 +112,56 @@ export async function installFromUrl(
 		);
 	}
 
+	const candidates = Array.isArray(urls) ? urls : [urls];
+	if (candidates.length === 0) {
+		throw new Error("No download URL");
+	}
+
 	const dest = `/data/local/tmp/openportal-${Date.now()}.apk`;
 
 	onProgress?.("downloading", null);
+
+	const ordered =
+		candidates.length > 1
+			? await orderByMeasuredSpeed(adb, downloader, candidates)
+			: candidates;
+
+	let downloaded = false;
+	let lastError: Error | null = null;
+	for (const url of ordered) {
+		try {
+			await downloadToDevice(adb, downloader, url, dest, onProgress);
+			downloaded = true;
+			break;
+		} catch (err) {
+			lastError = err instanceof Error ? err : new Error(String(err));
+			await execShell(adb, `rm -f "${dest}"`);
+		}
+	}
+	if (!downloaded) {
+		throw lastError ?? new Error("Download failed on the device");
+	}
+
+	onProgress?.("downloading", 100);
+	onProgress?.("installing", null);
+	const install = await execShell(adb, `pm install -r "${dest}"`, {
+		timeoutMs: 180_000,
+	});
+	await execShell(adb, `rm -f "${dest}"`);
+	if (!install.stdout.includes("Success")) {
+		throw new Error(install.stdout || "Install failed");
+	}
+
+	onProgress?.("done", null);
+}
+
+async function downloadToDevice(
+	adb: Adb,
+	downloader: Downloader,
+	url: string,
+	dest: string,
+	onProgress?: (stage: InstallStage, percent: number | null) => void,
+): Promise<void> {
 	const total = await getRemoteSize(adb, downloader, url);
 
 	const download =
@@ -105,7 +179,7 @@ export async function installFromUrl(
 	const progressLoop = (async () => {
 		if (!total) return;
 		while (!downloadDone) {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+			await new Promise((resolve) => setTimeout(resolve, 300));
 			if (downloadDone) break;
 			try {
 				const { stdout } = await execShell(
@@ -126,29 +200,14 @@ export async function installFromUrl(
 	const downloadResult = await downloadPromise;
 	await progressLoop;
 	if (downloadResult.exitCode !== 0) {
-		await execShell(adb, `rm -f "${dest}"`);
-		throw new Error("Download failed on the device");
+		throw new Error(`Download failed: ${url}`);
 	}
 
-	// Make sure we actually got a non-empty file.
 	const sizeResult = await execShell(
 		adb,
 		`wc -c < "${dest}" 2>/dev/null || echo 0`,
 	);
 	if (Number(sizeResult.stdout.trim()) <= 0) {
-		await execShell(adb, `rm -f "${dest}"`);
 		throw new Error("Downloaded file is empty");
 	}
-
-	onProgress?.("downloading", 100);
-	onProgress?.("installing", null);
-	const install = await execShell(adb, `pm install -r "${dest}"`, {
-		timeoutMs: 180_000,
-	});
-	await execShell(adb, `rm -f "${dest}"`);
-	if (!install.stdout.includes("Success")) {
-		throw new Error(install.stdout || "Install failed");
-	}
-
-	onProgress?.("done", null);
 }
