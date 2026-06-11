@@ -1,4 +1,6 @@
-# OpenPortal
+<p align="center">
+  <img src="docs/banner.svg" alt="OpenPortal — manage your Meta Portal from the browser" width="100%">
+</p>
 
 Manage your Meta Portal from the browser. No app to install, no drivers, no backend.
 
