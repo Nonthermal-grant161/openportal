@@ -219,5 +219,25 @@
 		"repo": "yuliskov/SmartTube",
 		"downloadUrl": "https://github.com/yuliskov/SmartTube/releases/latest",
 		"iconUrl": "https://raw.githubusercontent.com/yuliskov/SmartTube/master/smarttubetv/src/ststable/res/mipmap-nodpi/app_icon.png"
+	},
+	{
+		"id": "portal-calendar",
+		"name": "Portal Calendar",
+		"packageName": "com.portal.calendar",
+		"description": "Turn your Portal into a family calendar board synced from Google, iCloud, or any iCal feed",
+		"category": "utility",
+		"version": "latest",
+		"verified": false,
+		"featured": false,
+		"source": "github",
+		"repo": "thefloppytaco/portal-calendar",
+		"downloadUrl": "https://github.com/thefloppytaco/portal-calendar/releases/latest",
+		"iconFile": true,
+		"skipUpdateCheck": true,
+		"setup": {
+			"kind": "custom",
+			"id": "portal-calendar",
+			"labelKey": "setUpCalendar"
+		}
 	}
 ]

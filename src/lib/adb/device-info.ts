@@ -40,6 +40,26 @@ export async function getDeviceInfo(adb: Adb): Promise<DeviceInfo> {
 	};
 }
 
+export async function getIpAddress(adb: Adb): Promise<string | null> {
+	const { stdout } = await execShell(adb, "ip -o -4 addr show");
+	const entries: { iface: string; ip: string }[] = [];
+	for (const line of stdout.split("\n")) {
+		const match = /^\d+:\s+(\S+)\s+inet\s+(\d+\.\d+\.\d+\.\d+)/.exec(
+			line.trim(),
+		);
+		if (
+			match?.[1] &&
+			match[2] &&
+			match[1] !== "lo" &&
+			!match[2].startsWith("127.")
+		) {
+			entries.push({ iface: match[1], ip: match[2] });
+		}
+	}
+	const wifi = entries.find((e) => e.iface.startsWith("wlan"));
+	return wifi?.ip ?? entries[0]?.ip ?? null;
+}
+
 function parseStorageOutput(output: string): {
 	total: number;
 	used: number;

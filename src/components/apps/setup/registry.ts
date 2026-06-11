@@ -17,4 +17,5 @@ export const SETUP_PANELS: Record<
 	LazyExoticComponent<ComponentType<SetupPanelProps>>
 > = {
 	gphotos: lazy(() => import("./GPhotosSetup")),
+	"portal-calendar": lazy(() => import("./PortalCalendarSetup")),
 };

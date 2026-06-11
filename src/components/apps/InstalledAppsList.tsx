@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/primitives";
 import { installFromUrl } from "@/lib/adb/online-install";
 import type { InstalledPackage } from "@/lib/adb/types";
-import { getCatalogApp } from "@/lib/portal/catalog";
+import { getAppIconUrl, getCatalogApp } from "@/lib/portal/catalog";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
 import { useUIStore } from "@/store/ui-store";
@@ -215,7 +215,7 @@ function InstalledRow({
 			>
 				<AppIcon
 					name={name}
-					iconUrl={catApp?.iconUrl}
+					iconUrl={catApp ? getAppIconUrl(catApp) : undefined}
 					className="h-9 w-9 shrink-0 rounded-lg text-xs"
 				/>
 				<div className="min-w-0 flex-1">

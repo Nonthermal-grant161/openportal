@@ -46,6 +46,12 @@ export interface CatalogApp {
 	downloadUrl?: string;
 	/** Optional remote icon URL; falls back to an initials avatar when absent. */
 	iconUrl?: string;
+	/**
+	 * Bundled icon under `public/app-icons/`, for apps with no hosted image to
+	 * link. `true` resolves to `app-icons/<packageName>.png`; a string is the
+	 * file extension (e.g. `"svg"`). `iconUrl` wins when both are set.
+	 */
+	iconFile?: boolean | string;
 	/** Optional post-install configuration (see {@link AppSetup}). */
 	setup?: AppSetup;
 	/**
@@ -79,4 +85,14 @@ const BY_PACKAGE = new Map(APP_CATALOG.map((app) => [app.packageName, app]));
 /** Looks up a catalog entry by its Android package name, if any. */
 export function getCatalogApp(packageName: string): CatalogApp | undefined {
 	return BY_PACKAGE.get(packageName);
+}
+
+/** Resolves the icon source for an app: remote `iconUrl`, else a bundled file. */
+export function getAppIconUrl(app: CatalogApp): string | undefined {
+	if (app.iconUrl) return app.iconUrl;
+	if (app.iconFile) {
+		const ext = typeof app.iconFile === "string" ? app.iconFile : "png";
+		return `${import.meta.env.BASE_URL}app-icons/${app.packageName}.${ext}`;
+	}
+	return undefined;
 }

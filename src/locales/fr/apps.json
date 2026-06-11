@@ -49,6 +49,7 @@
 	"setAsDefault": "Définir comme launcher par défaut",
 	"defaultLauncher": "Launcher par défaut",
 	"setUpGphotos": "Configurer l'économiseur",
+	"setUpCalendar": "Configurer le calendrier",
 	"runSetup": "Lancer la configuration",
 	"installAndConfigure": "Installer et configurer",
 	"getApk": "Obtenir l'APK",
@@ -91,5 +92,17 @@
 		"chooseFile": "Choisir un fichier",
 		"apply": "Appliquer et lancer",
 		"done": "Économiseur configuré — terminez la connexion sur le Portal."
+	},
+	"portalCalendar": {
+		"intro": "Transformez votre Portal en calendrier mural. La configuration se fait depuis votre navigateur.",
+		"step1": "Ajoutez vos calendriers via des flux iCal (Google, iCloud ou toute URL .ics) et donnez à chacun une couleur et un nom.",
+		"step2": "Connectez éventuellement iCloud ou Google pour une synchronisation bidirectionnelle et créer des événements depuis le Portal.",
+		"step3": "Activez « Afficher le calendrier quand le Portal est inactif » pour l'utiliser comme économiseur d'écran.",
+		"finding": "Recherche de l'adresse du Portal…",
+		"retry": "Réessayer",
+		"addressLabel": "Ouvrez cette adresse dans votre navigateur",
+		"addressHint": "Utilisez un téléphone ou un ordinateur sur le même Wi-Fi que votre Portal.",
+		"copy": "Copier l'adresse",
+		"noAddress": "Adresse réseau du Portal introuvable. Vérifiez qu'il est connecté au Wi-Fi."
 	}
 }

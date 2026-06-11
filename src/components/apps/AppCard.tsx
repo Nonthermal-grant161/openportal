@@ -1,5 +1,5 @@
 import { ConfirmDialog } from "@/components/ui/primitives";
-import type { CatalogApp } from "@/lib/portal/catalog";
+import { type CatalogApp, getAppIconUrl } from "@/lib/portal/catalog";
 import { canAutoInstall } from "@/lib/portal/sources";
 import { useAppStore } from "@/store/app-store";
 import {
@@ -60,7 +60,7 @@ export function AppCard({ app }: { app: CatalogApp }) {
 			>
 				<AppIcon
 					name={app.name}
-					iconUrl={app.iconUrl}
+					iconUrl={getAppIconUrl(app)}
 					className="h-14 w-14 shrink-0 rounded-2xl"
 				/>
 				<div className="min-w-0 flex-1">

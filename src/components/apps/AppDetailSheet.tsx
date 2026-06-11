@@ -10,7 +10,11 @@ import {
 	getInstalledVersion,
 } from "@/lib/adb/app-manager";
 import type { InstalledPackage } from "@/lib/adb/types";
-import { type CatalogApp, getCatalogApp } from "@/lib/portal/catalog";
+import {
+	type CatalogApp,
+	getAppIconUrl,
+	getCatalogApp,
+} from "@/lib/portal/catalog";
 import {
 	canAutoInstall,
 	getSourceLabel,
@@ -130,7 +134,7 @@ export function AppDetailSheet({
 					<div className="flex items-start gap-3">
 						<AppIcon
 							name={name}
-							iconUrl={catApp?.iconUrl}
+							iconUrl={catApp ? getAppIconUrl(catApp) : undefined}
 							className="h-14 w-14 shrink-0 rounded-2xl"
 						/>
 						<div className="min-w-0 flex-1">
