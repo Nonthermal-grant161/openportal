@@ -25,6 +25,7 @@
 	},
 	"madeForPortal": "Made for Portal",
 	"installed": "Installed",
+	"alreadyInstalled": "Already installed on this device",
 	"install": "Install",
 	"update": "Update",
 	"updateAvailable": "Update available",

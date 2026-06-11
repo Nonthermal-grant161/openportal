@@ -8,7 +8,7 @@ import { Button, Segmented } from "@/components/ui/primitives";
 import { useAppStore } from "@/store/app-store";
 import { useDeviceStore } from "@/store/device-store";
 import { FileUp, RefreshCw, Usb } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Tab = "catalog" | "installed";
@@ -24,14 +24,6 @@ export function AppsPage() {
 	const loading = useAppStore((s) => s.loading);
 	const [tab, setTab] = useState<Tab>("catalog");
 	const [apkOpen, setApkOpen] = useState(false);
-
-	useEffect(() => {
-		if (isVisitor) return;
-		refreshInstalled().then(() => {
-			checkUpdates();
-			refreshDefaultLauncher();
-		});
-	}, [isVisitor, refreshInstalled, checkUpdates, refreshDefaultLauncher]);
 
 	const handleRefresh = () => {
 		refreshInstalled().then(() => {

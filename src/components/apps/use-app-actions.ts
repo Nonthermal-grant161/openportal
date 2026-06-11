@@ -58,16 +58,23 @@ export function useAppActions(packageName: string, displayName: string) {
 	const install = () =>
 		run(hasUpdate ? "update" : "install", async () => {
 			if (!app) return;
-			if (!adb) {
+			let activeAdb = adb;
+			if (!activeAdb) {
 				await connect();
-				return;
+				activeAdb = useDeviceStore.getState().adb;
+				if (!activeAdb) return;
+				await refreshInstalled();
+				if (useAppStore.getState().isInstalled(packageName)) {
+					toast.info(displayName, { description: t("alreadyInstalled") });
+					return;
+				}
 			}
 			const updating = hasUpdate;
 			setStage("downloading");
 			setProgress(null);
 			try {
-				const urls = update?.urls ?? (await resolveApk(adb, app)).urls;
-				await installFromUrl(adb, urls, (s, percent) => {
+				const urls = update?.urls ?? (await resolveApk(activeAdb, app)).urls;
+				await installFromUrl(activeAdb, urls, (s, percent) => {
 					setStage(s);
 					setProgress(percent);
 				});
@@ -83,7 +90,7 @@ export function useAppActions(packageName: string, displayName: string) {
 			await refreshInstalled();
 			if (!updating && app.setup?.kind === "commands" && app.setup.auto) {
 				try {
-					await runPostInstall(adb, app.setup.commands);
+					await runPostInstall(activeAdb, app.setup.commands);
 					await refreshDefaultLauncher();
 				} catch {}
 			}
