@@ -16,13 +16,14 @@ export function LogoMark({ className }: { className?: string }) {
 				</linearGradient>
 			</defs>
 			<path
-				d="M 27.44 12.39 A 12 12 0 1 1 19.61 4.56"
+				d="M 27.5 13.5 L 27.5 20.5 A 7 7 0 0 1 20.5 27.5 L 11.5 27.5 A 7 7 0 0 1 4.5 20.5 L 4.5 11.5 A 7 7 0 0 1 11.5 4.5 L 18.5 4.5"
 				fill="none"
 				stroke={`url(#${id})`}
 				strokeWidth="4.5"
 				strokeLinecap="round"
+				strokeLinejoin="round"
 			/>
-			<circle cx="25.43" cy="6.57" r="2.1" fill="#a78bfa" />
+			<circle cx="25.45" cy="6.55" r="2.1" fill="#a78bfa" />
 		</svg>
 	);
 }
