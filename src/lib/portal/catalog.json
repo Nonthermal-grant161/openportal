@@ -209,7 +209,7 @@
 	{
 		"id": "smarttube",
 		"name": "SmartTube",
-		"packageName": "com.teamsmart.videomanager.tv",
+		"packageName": "org.smarttube.stable",
 		"description": "Ad-free YouTube client for TV screens with SponsorBlock built in",
 		"category": "media",
 		"version": "latest",
