@@ -209,7 +209,6 @@
 		"repo": "thefloppytaco/portal-calendar",
 		"downloadUrl": "https://github.com/thefloppytaco/portal-calendar/releases/latest",
 		"iconFile": true,
-		"skipUpdateCheck": true,
 		"setup": {
 			"kind": "custom",
 			"id": "portal-calendar",
