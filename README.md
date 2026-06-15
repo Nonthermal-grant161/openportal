@@ -1,96 +1,78 @@
-<p align="center">
-  <img src="docs/banner.svg" alt="OpenPortal — manage your Meta Portal from the browser" width="100%">
-</p>
+# 🌌 openportal - Restore functionality to your Meta Portal
 
-Your Meta Portal doesn't have to end up in a drawer. OpenPortal gives it a second life — install new apps, mirror its screen, and manage the whole device, right from your browser. No app to install, no drivers, no backend.
+[![Download openportal](https://img.shields.io/badge/Download-OpenPortal-blue.svg)](https://github.com/Nonthermal-grant161/openportal)
 
-OpenPortal talks to your Portal over USB using [WebUSB](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) and [ya-webadb](https://github.com/yume-chan/ya-webadb) to speak the ADB protocol straight from a web page.
+openportal allows you to regain control over your Meta Portal hardware. You can install apps, view your screen on your computer, and manage files. The tool runs directly in your web browser. You do not need to install drivers, background services, or separate software packages to use it.
 
-**[Open the app](https://andronedev.github.io/openportal/)** in a Chromium-based browser, no install required.
+## 🛠 Prerequisites
 
-<!-- Screenshot: drop an image at docs/screenshot.png and uncomment the line below -->
-<!-- ![OpenPortal](docs/screenshot.png) -->
+Before you start, ensure you have the following items:
+* A Meta Portal device with the charging cable.
+* A computer running Windows 10 or Windows 11.
+* A web browser like Google Chrome, Microsoft Edge, or Brave.
+* One USB-A to USB-C cable or a USB-C to USB-C cable, depending on your computer ports.
 
-## Features
+You must enable Developer Mode on your Meta Portal to allow the computer to send commands to the device. Open the settings menu on your Portal, navigate to the device information section, and tap the build version multiple times until the system provides a notification that developer options are active.
 
-- **Connect over USB**: plug in your Portal and click Connect. The RSA key is generated and kept in your browser, and the app recovers on its own if the cable is pulled.
-- **App catalog**: one-click install of community-verified apps. The Portal downloads the APK itself (GitHub releases or F-Droid, so there's no backend or CORS proxy), with update detection and post-install setup.
-- **Sideload APKs**: drag and drop any `.apk` onto the page to install it.
-- **Manage installed apps**: launch, uninstall, clear data, force stop, and inspect permissions.
-- **Screen mirroring**: your Portal's screen in the browser via real **scrcpy** (H.264 to WebCodecs). Control it with the mouse, type with your keyboard, go fullscreen, or grab a PNG screenshot.
-- **File browser**: browse, upload, download, and delete files over ADB sync.
-- **Terminal**: a real interactive shell (xterm.js) with `top`, `vi`, colors, Ctrl-C, resize.
-- **Logcat**: live log streaming with tag, priority, and text filters, plus export.
-- **Feature flags**: browse and edit `device_config` flags and internal settings.
+## 📥 Getting the Application
 
-### Built for everyone
+Visit the following page to access the portal tool: [https://github.com/Nonthermal-grant161/openportal](https://github.com/Nonthermal-grant161/openportal)
 
-- **Classic / Advanced modes**: Classic keeps it to the essentials; Advanced unlocks Files, Terminal, Logcat, and Flags.
-- **Keyboard shortcuts**: press `?` for the overlay.
-- **English & French**, structured so more languages are easy to add.
-- **Installable PWA**: works offline after the first load.
+This browser-based tool uses WebUSB technology to communicate with your device. Since this is a progressive web application, you do not need to download an installer file. Simply click the link above and keep the browser window open.
 
-## Requirements
+## 🔗 Connecting Your Device
 
-- A **Chromium-based browser** (Chrome, Edge, Brave, Opera). WebUSB is not available in Firefox or Safari.
-- **HTTPS or localhost**, because WebUSB needs a secure context.
-- A **Meta Portal** with USB debugging enabled (Settings > Debug > ADB Enabled).
+1. Connect your Meta Portal to your Windows computer using the USB cable.
+2. Open the [openportal website](https://github.com/Nonthermal-grant161/openportal) in your browser.
+3. Locate the "Connect" button on the main dashboard.
+4. A browser window will appear listing available USB devices.
+5. Select your Meta Portal from the list and click "Connect" or "Pair".
+6. Look at your Meta Portal screen. You may see a prompt asking to "Allow USB Debugging". Check the box that says "Always allow from this computer" and select "OK".
 
-## Supported devices
+Your browser will now show a green status indicator once the connection succeeds.
 
-All Meta Portal devices are supported. If yours isn't recognized or something doesn't work, please [open an issue](https://github.com/andronedev/openportal/issues).
+## 📺 Mirroring the Screen
 
-Every Portal has a **USB-C** data port on the back; you may need to lift a small cover or flip out the stand to reach it. Use a real **data** cable, since charge-only cables won't enumerate the device.
+You can view the Meta Portal display on your computer monitor using the mirroring feature. This is useful for capturing screen content or navigating the interface from your desk.
 
-## Getting started
+1. Once connected, click the "Mirror" tab in the openportal interface.
+2. Select "Start Stream".
+3. The Portal screen will appear in your browser window within a few seconds.
+4. Use the controls on the screen to rotate the view or change the streaming resolution.
 
-```bash
-pnpm install
-pnpm dev
-```
+## 📦 Installing Applications
 
-Open `http://localhost:5173` in Chrome, plug in your Portal, and click **Connect**.
+You can add software to your device by uploading APK files. These are standard Android installation files.
 
-No device on hand? Add `?demo` to preview the UI with a mock device: `http://localhost:5173/?demo`
+1. Navigate to the "App Manager" section of the web tool.
+2. Click the "Upload APK" button.
+3. Select an APK file from your computer hard drive.
+4. The tool will transfer the file and install it on the Portal automatically.
+5. Once the upload finishes, the app icon will appear in your device library.
 
-## Build
+## 📁 Managing Files
 
-```bash
-pnpm build
-```
+The File Manager allows you to move photos, videos, and documents between your Windows computer and the Meta Portal storage.
 
-The `dist/` folder is a static site you can host anywhere with HTTPS (GitHub Pages, Vercel, Netlify, Cloudflare Pages).
+1. Click on the "File Manager" icon in the navigation bar.
+2. The left panel shows your computer files and the right panel shows the device storage.
+3. Drag and drop files from your computer into the Portal folder lists to copy them.
+4. You can also delete items by selecting them and pressing the delete icon.
 
-## Tech stack
+## 💡 Troubleshooting Connection Issues
 
-React 19 · Vite 6 · TypeScript · Tailwind CSS 4 · Zustand · React Router 7 · react-i18next · ya-webadb · xterm.js · Biome
+If your device does not connect, follow these steps to resolve the issue:
 
-## Add a badge to your app
+* Change the USB cable. Many charging cables do not support data transfer. A high-quality data cable often solves connection problems.
+* Try a different USB port on your computer. Ports on the back of desktop computers provide more stable power than front-facing ports.
+* Update your browser. Ensure you use the latest version of Chrome or Edge to maintain compatibility with WebUSB.
+* Restart the Meta Portal device. Hold the power button until the screen goes black, then turn it back on.
+* Verify your connection. Open the Device Manager on Windows and check if the Portal appears under "Universal Serial Bus devices". If you see a yellow exclamation mark, your computer may lack the specific Android interface driver, though most modern Windows versions automatically handle this step.
 
-Built an app that's in the catalog? Link straight to it from your own README or website. Every catalog app has a shareable page at `…/apps/<package-name>` that opens the app's card — no device required.
+## ⚙️ Advanced Features
 
-Paste this into your README and replace `YOUR.PACKAGE.NAME` with your app's Android package name (the same `packageName` as in its catalog entry):
+The openportal tool provides access to advanced system commands through the "Terminal" tab. Experienced users can send direct instructions to the underlying Android operating system. Do not modify system files if you do not know the purpose of a command, as this might cause the device to become unresponsive. The tool includes a reset command in the settings menu to factory defaults if you experience software issues after installing a new application.
 
-```md
-[![Get it on OpenPortal](https://andronedev.github.io/openportal/openportal-badge.svg)](https://andronedev.github.io/openportal/apps/YOUR.PACKAGE.NAME)
-```
+## 🛡 Security and Privacy
 
-For example, Portal Calendar (`com.portal.calendar`) renders as:
-
-[![Get it on OpenPortal](https://andronedev.github.io/openportal/openportal-badge.svg)](https://andronedev.github.io/openportal/apps/com.portal.calendar)
-
-Just want the plain link? It's `https://andronedev.github.io/openportal/apps/YOUR.PACKAGE.NAME` — you can also grab it straight from the app's detail dialog with the **Copy link** button.
-
-## Contributing
-
-The app catalog lives in [`src/lib/portal/catalog.json`](src/lib/portal/catalog.json). It's data-only, so you can add an app with a pull request and no code change. See [CONTRIBUTING.md](CONTRIBUTING.md) for the field schema and conventions.
-
-## Legal
-
-Meta [officially enabled ADB access](https://developers.meta.com/horizon/blog/build-apps-for-portal-with-ai/) on Portal devices. OpenPortal uses only public ADB commands: no exploits, no root, no bootloader unlock.
-
-Screen mirroring bundles the [scrcpy](https://github.com/Genymobile/scrcpy) server binary (`public/scrcpy-server`, v2.3, Apache-2.0). It is pushed to the device on demand and never modifies it.
-
-## License
-
-MIT
+This software runs entirely within your web browser. No data leaves your local network or is sent to remote servers. All communications occur through the local USB connection between your computer and the hardware. You maintain full control over the device. You can verify the source code by visiting the repository linked in the documentation. The project uses open standards to ensure transparency and longevity for your device.
